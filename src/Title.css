@@ -1,0 +1,24 @@
+/* Asegurar que el título tenga un gradiente de texto llamativo y un tamaño grande */
+.text-gradient {
+  background: linear-gradient(180deg, #000, #ff0000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Aumentar el tamaño del texto del título */
+.text-large {
+  font-size: 4rem; /* Ajusta el tamaño según tus necesidades, 64px por defecto */
+}
+
+/* Posicionar el título arriba del NavBar */
+.title {
+  text-align: center;
+  padding: 1rem; /* Ajusta el padding para la distancia del título del borde superior */
+  width: 100%;
+  background-color: #ffffff; /* Fondo blanco para el título */
+  position: absolute;
+  top: 0;
+  left: 0;
+}
