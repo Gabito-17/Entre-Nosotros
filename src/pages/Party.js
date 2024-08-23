@@ -18,12 +18,18 @@ function Party() {
   };
 
   const handleInputChange = (e, index, playerName) => {
-    const value = e.target.value === "" ? 0 : Number(e.target.value);
-    setRoundScores((prev) => {
-      const newScores = [...prev];
-      newScores[index] = { ...newScores[index], [playerName]: value };
-      return newScores;
-    });
+    const value = Number(e.target.value);
+
+    // Permitir solo números de dos dígitos entre 0 y 100
+    if (value >= 0 && value <= 100) {
+      setRoundScores((prev) => {
+        const newScores = [...prev];
+        newScores[index] = { ...newScores[index], [playerName]: value };
+        return newScores;
+      });
+    } else {
+      alert("Número inválido: debe ser 0 o mayor, máximo 100");
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -37,7 +43,7 @@ function Party() {
     const newPlayers = [...players];
     roundScores.forEach((score, index) => {
       const playerName = players[index].name;
-      const roundScore = score?.[playerName] || 0;
+      const roundScore = Number(score?.[playerName] || 0);
       newPlayers[index].scores.push(roundScore);
       setTotalScores((prev) => ({
         ...prev,
@@ -46,6 +52,14 @@ function Party() {
     });
     setPlayers(newPlayers);
     setRoundScores([]);
+  };
+
+  const setBritney = (index, playerName) => {
+    setRoundScores((prev) => {
+      const newScores = [...prev];
+      newScores[index] = { ...newScores[index], [playerName]: -10 };
+      return newScores;
+    });
   };
 
   const openModal = (player) => {
@@ -100,17 +114,21 @@ function Party() {
                       {player.name}
                     </button>
                   </td>
-                  <td className="border p-2">
+                  <td className="border p-2 flex justify-between">
                     <input
                       type="number"
                       min="0"
-                      max="99"
+                      max="100"
                       value={(roundScores[index] || {})[player.name] || ""}
-                      onChange={(e) =>
-                        handleInputChange(e, index, player.name)
-                      }
+                      onChange={(e) => handleInputChange(e, index, player.name)}
                       className="w-full p-1 border border-gray-300 rounded"
                     />
+                    <button
+                      onClick={() => setBritney(index, player.name)}
+                      className="ml-2 bg-yellow-400 text-yellow-800 p-1 rounded"
+                    >
+                      -10
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -147,7 +165,7 @@ function Party() {
                   <td className="border p-2">
                     <button
                       onClick={() => openModal(player)}
-                      className="text-blue-500 underline"
+                      className="font-bold font-serif  text-blue-950 underline border-2 rounded-md bg-blue-300 pr-2 pl-2"
                     >
                       {player.name}
                     </button>
@@ -178,10 +196,15 @@ const PlayerHistoryModal = ({ player, onClose }) => {
         <h2 className="text-xl font-semibold mb-4">{`${player.name}'s Score History`}</h2>
         <ul className="list-disc pl-5">
           {player.scores.map((score, index) => (
-            <li key={index}>Round {index + 1}: {score}</li>
+            <li key={index}>
+              Round {index + 1}: {score}
+            </li>
           ))}
         </ul>
-        <button onClick={onClose} className="mt-4 bg-red-500 text-white p-2 rounded">
+        <button
+          onClick={onClose}
+          className="mt-4 bg-red-500 text-white p-2 rounded"
+        >
           Close
         </button>
       </div>
