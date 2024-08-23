@@ -85,7 +85,7 @@ function Party() {
         />
         <button
           onClick={addPlayer}
-          className="mb-2 bg-blue-700 text-center text-white p-1 rounded"
+          className="font-bold font-serif mb-2 bg-blue-700 text-center text-white p-1 rounded"
         >
           Add Player
         </button>
@@ -125,7 +125,7 @@ function Party() {
                     />
                     <button
                       onClick={() => setBritney(index, player.name)}
-                      className="ml-2 bg-yellow-400 text-yellow-800 p-1 rounded"
+                      className="font-bold font-serif ml-2 bg-yellow-400 text-yellow-800 p-1 rounded"
                     >
                       -10
                     </button>
@@ -145,7 +145,7 @@ function Party() {
               <h3 className="text-xl font-semibold">{`Players Count: ${players.length}`}</h3>
               <button
                 onClick={loadRound}
-                className="bg-green-500 text-white p-2 rounded"
+                className="font-bold font-serif bg-green-500 text-white p-2 rounded"
               >
                 Load Round
               </button>
