@@ -109,7 +109,7 @@ function Party() {
                   <td className="border p-2">
                     <button
                       onClick={() => openModal(player)}
-                      className="text-blue-500 underline"
+                      className="font-bold font-serif  text-blue-950 underline border-2 rounded-md bg-blue-300 pr-2 pl-2"
                     >
                       {player.name}
                     </button>
