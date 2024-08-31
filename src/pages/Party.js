@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function Party() {
   const [players, setPlayers] = useState([]);
@@ -8,6 +8,14 @@ function Party() {
 
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    Object.keys(totalScores).forEach((playerName) => {
+      if (totalScores[playerName] >= 100) {
+        alert(`${playerName} ha perdido!`);
+      }
+    });
+  }, [totalScores]);
 
   const addPlayer = () => {
     if (newPlayerName.trim() !== "") {
