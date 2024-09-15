@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 function Party() {
   const [players, setPlayers] = useState([]);
@@ -6,38 +6,71 @@ function Party() {
   const [roundScores, setRoundScores] = useState([]);
   const [totalScores, setTotalScores] = useState({});
 
+  const [isGameOverModalOpen, setIsGameOverModalOpen] = useState(false);
+  const [losingPlayer, setLosingPlayer] = useState(null); // Guardar el jugador que ha perdido
+
+  const [isPlay, setIsPlay] = useState(false);
+
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     Object.keys(totalScores).forEach((playerName) => {
       if (totalScores[playerName] >= 100) {
-        alert(`${playerName} ha perdido!`);
+        setLosingPlayer(playerName); // Guardar el jugador que ha perdido
+        setIsGameOverModalOpen(true); // Abrir el modal
       }
     });
   }, [totalScores]);
 
   const addPlayer = () => {
     if (newPlayerName.trim() !== "") {
-      setPlayers([{ name: newPlayerName, scores: [] }, ...players]);
-      setNewPlayerName("");
-      setTotalScores((prev) => ({ ...prev, [newPlayerName]: 0 }));
+      if (isPlay) {
+        alert("Esta Partida ya está en curso");
+      } else {
+        setPlayers([{ name: newPlayerName, scores: [] }, ...players]);
+        setNewPlayerName("");
+        setTotalScores((prev) => ({ ...prev, [newPlayerName]: 0 }));
+      }
     }
+  };
+
+  const handleContinueGame = () => {
+    // Cerrar el modal
+    setIsGameOverModalOpen(false);
+
+    // Eliminar el jugador que ha perdido
+    setPlayers((prevPlayers) =>
+      prevPlayers.filter((player) => player.name !== losingPlayer)
+    );
+
+    // Eliminar el puntaje acumulado de ese jugador
+    setTotalScores((prevTotalScores) => {
+      const newScores = { ...prevTotalScores };
+      delete newScores[losingPlayer];
+      return newScores;
+    });
+
+    // Limpiar el jugador perdedor
+    setLosingPlayer(null);
+  };
+
+  const handleEndGame = () => {
+    // Puedes reiniciar el juego, redirigir a otra página, etc.
+    setPlayers([]); // O reiniciar el estado de jugadores
+    setTotalScores({});
+    setRoundScores([]);
+    setIsGameOverModalOpen(false);
+    setLosingPlayer(null);
   };
 
   const handleInputChange = (e, index, playerName) => {
     const value = Number(e.target.value);
-
-    // Permitir solo números de dos dígitos entre 0 y 100
-    if (value >= 0 && value <= 100) {
-      setRoundScores((prev) => {
-        const newScores = [...prev];
-        newScores[index] = { ...newScores[index], [playerName]: value };
-        return newScores;
-      });
-    } else {
-      alert("Número inválido: debe ser 0 o mayor, máximo 100");
-    }
+    setRoundScores((prev) => {
+      const newScores = [...prev];
+      newScores[index] = { ...newScores[index], [playerName]: value };
+      return newScores;
+    });
   };
 
   const handleKeyDown = (e) => {
@@ -48,16 +81,49 @@ function Party() {
   };
 
   const loadRound = () => {
-    const newPlayers = [...players];
-    roundScores.forEach((score, index) => {
+    if (!isPlay) {
+      setIsPlay(true);
+    }
+    let hasNegativeTen = false; // Para rastrear si ya se ha utilizado el -10
+
+    // Validación: Recorrer primero todos los puntajes y asegurarse de que son válidos
+    for (let index = 0; index < roundScores.length; index++) {
       const playerName = players[index].name;
-      const roundScore = Number(score?.[playerName] || 0);
+      const roundScore = Number(roundScores[index]?.[playerName] || 0);
+
+      // Validación: permitir números entre 0 y 100, o solo un -10
+      if (roundScore === -10) {
+        if (hasNegativeTen) {
+          alert(
+            `Solo un jugador puede tener -10 en una ronda. Error en ${playerName}`
+          );
+          return; // Salir de la función si ya hay un -10 registrado
+        }
+        hasNegativeTen = true; // Marcar que ya se usó el -10
+      } else if (roundScore < 0 || roundScore > 100) {
+        alert(
+          `Número inválido para ${playerName}: debe ser entre 0 y 100 o -10`
+        );
+        return; // Salir de la función si el número no es válido
+      }
+    }
+
+    // Si todas las validaciones pasaron, ahora sí actualizamos los puntajes
+    const newPlayers = [...players];
+
+    for (let index = 0; index < roundScores.length; index++) {
+      const playerName = players[index].name;
+      const roundScore = Number(roundScores[index]?.[playerName] || 0);
+
+      // Añadir el puntaje al jugador
       newPlayers[index].scores.push(roundScore);
       setTotalScores((prev) => ({
         ...prev,
         [playerName]: (prev[playerName] || 0) + roundScore,
       }));
-    });
+    }
+
+    // Actualizar el estado de jugadores y limpiar los puntajes de la ronda
     setPlayers(newPlayers);
     setRoundScores([]);
   };
@@ -142,6 +208,53 @@ function Party() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+      {isGameOverModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">
+              {losingPlayer} ha perdido. ¿Seguirán jugando?
+            </h2>
+            <div className="flex justify-end">
+              <button
+                onClick={() => handleContinueGame()}
+                className="bg-green-500 text-white p-2 rounded mr-2"
+              >
+                Sí
+              </button>
+              <button
+                onClick={() => handleEndGame()}
+                className="bg-red-500 text-white p-2 rounded"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isGameOverModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">
+              {losingPlayer} ha perdido. ¿Quieres seguir jugando?
+            </h2>
+            <div className="flex justify-end">
+              <button
+                onClick={() => handleContinueGame()}
+                className="bg-green-500 text-white p-2 rounded mr-2"
+              >
+                Sí
+              </button>
+              <button
+                onClick={() => handleEndGame()}
+                className="bg-red-500 text-white p-2 rounded"
+              >
+                No
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
