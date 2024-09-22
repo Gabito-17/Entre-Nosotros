@@ -10,8 +10,12 @@ body {
 
 /* Ajusta el root para que el contenido no se sobreponga al NavBar */
 #root {
-  background-color: #ffffff; /* Fondo blanco para el contenido */
-  padding-top: 16px; /* Ajusta este valor según la altura del NavBar */
+  background-color: white;
+  min-height: 100vh;
+}
+
+.dark #root {
+  background-color: #1a202c;
 }
 
 /* Estilo básico para el body */

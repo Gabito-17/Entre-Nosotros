@@ -27,45 +27,27 @@ function Anotador() {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-6 sm:py-12">
-      <h1 className="text-2xl font-bold text-center mb-4">
-        Anotador de Tareas
-      </h1>
-      <div className="flex mb-4">
+    <div>
+      <h1>Anotador de Tareas</h1>
+      <div>
         <input
           type="text"
           value={task}
           onChange={(e) => setTask(e.target.value)}
-          className="flex-grow p-2 border rounded-l-md"
           placeholder="Agregar una nueva tarea..."
         />
-        <button
-          onClick={handleAddTask}
-          className="bg-blue-500 text-white p-2 rounded-r-md"
-        >
-          Agregar
-        </button>
+        <button onClick={handleAddTask}>Agregar</button>
       </div>
       <ul>
         {tasks.map((t, index) => (
-          <li
-            key={index}
-            className={`flex justify-between items-center p-2 border-b ${
-              t.completed ? "line-through text-gray-500" : ""
-            }`}
-          >
+          <li key={index}>
             <span
               onClick={() => handleToggleTask(index)}
-              className="cursor-pointer flex-grow"
+              style={{ textDecoration: t.completed ? "line-through" : "none" }}
             >
               {t.text}
             </span>
-            <button
-              onClick={() => handleDeleteTask(index)}
-              className="bg-red-500 text-white p-1 rounded"
-            >
-              Eliminar
-            </button>
+            <button onClick={() => handleDeleteTask(index)}>Eliminar</button>
           </li>
         ))}
       </ul>
