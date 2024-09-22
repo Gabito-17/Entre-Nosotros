@@ -1,7 +1,6 @@
 import React from "react";
 import Title from "./components/Title";
 import Anotador from "./pages/Anotador";
-import Party from "./pages/Party";
 
 const App = () => {
   return (
@@ -9,10 +8,9 @@ const App = () => {
       <div className="mb-4">
         <Title />
       </div>
-      <div className="items-center w-full max-w-lg">
-        <Party />
+      <div >
+        <Anotador />
       </div>
-      
     </div>
   );
 };
