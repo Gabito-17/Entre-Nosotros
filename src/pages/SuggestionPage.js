@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Modal from "../components/Modal";
 
 const SuggestionsPage = () => {
   const [name, setName] = useState("");
@@ -77,9 +78,7 @@ const SuggestionsPage = () => {
             ></textarea>
           </div>
 
-          <button type="submit" className="btn btn-primary w-full">
-            Enviar Sugerencia
-          </button>
+          <Modal />
         </form>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function Party() {
+function Anotador() {
   const [players, setPlayers] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
   const [roundScores, setRoundScores] = useState([]);
@@ -148,146 +148,154 @@ function Party() {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-base-100">
-  <div className="rounded-lg mt-2 shadow-lg p-6 w-full max-w-lg border bg-white">
-    <div className="flex justify-between items-center mb-4">
-      <input
-        type="text"
-        placeholder="Jugador"
-        value={newPlayerName}
-        onChange={(e) => setNewPlayerName(e.target.value)}
-        className="input input-bordered w-full max-w-xs"
-        onKeyDown={handleKeyDown}
-      />
-      <button onClick={addPlayer} className="btn btn-primary ml-2">
-        Agregar Jugador
-      </button>
-    </div>
-
-    {players.length > 0 && (
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold mb-4 text-center">Ingresar Puntajes</h2>
-
-        <table className="table table-xs w-full">
-          <thead>
-            <tr>
-              <th className="border p-2 text-center">Jugador</th>
-              <th className="border p-2 text-center">
-                Ronda {players[0]?.scores.length + 1}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {players.map((player, index) => (
-              <tr key={index} className="hover">
-                <td className="border p-2 text-center">
-                  <p>{player.name}</p>
-                </td>
-                <td className="flex justify-center items-center border p-2">
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={(roundScores[index] || {})[player.name] || ""}
-                    onChange={(e) => handleInputChange(e, index, player.name)}
-                    className="input input-bordered w-20"
-                  />
-                  <button
-                    onClick={() => setBritney(index, player.name)}
-                    className="btn btn-warning btn-circle ml-2"
-                  >
-                    -10
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    )}
-
-    {isGameOverModalOpen && (
-      <div className="modal modal-open">
-        <div className="modal-box">
-          <h2 className="font-bold text-lg">
-            {losingPlayer} ha perdido. ¿Quieres seguir jugando?
-          </h2>
-          <div className="modal-action">
-            <button onClick={handleContinueGame} className="btn btn-success">
-              Sí
-            </button>
-            <button onClick={handleEndGame} className="btn btn-error">
-              No
-            </button>
-          </div>
-        </div>
-      </div>
-    )}
-
-    {players.length > 0 && (
-      <div className="my-6">
-        <h2 className="text-xl font-semibold text-center">Historial de Puntajes</h2>
-        <div className="my-4 flex justify-between items-center">
-          <h3 className="text-lg font-semibold">{`Total de Jugadores: ${players.length}`}</h3>
-          <button onClick={loadRound} className="btn btn-accent">
-            Cargar Ronda
+      <div className="rounded-lg mt-2 shadow-lg p-6 w-full max-w-lg border">
+        <div className="flex justify-between items-center mb-4">
+          <input
+            type="text"
+            placeholder="Jugador"
+            value={newPlayerName}
+            onChange={(e) => setNewPlayerName(e.target.value)}
+            className="input input-bordered w-full max-w-xs"
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={addPlayer} className="btn btn-primary ml-2">
+            Agregar Jugador
           </button>
         </div>
 
-        <table className="table table-xs w-full">
-          <thead>
-            <tr>
-              <th className="border p-2 text-center">Jugador</th>
-              <th className="border p-2 text-center">Última Ronda</th>
-              <th className="border p-2 text-center">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {players.map((player, playerIndex) => (
-              <tr key={playerIndex}>
-                <td className="border p-2 text-center">
-                  <button
-                    onClick={() => openModal(player)}
-                    className="btn btn-link text-blue-500 underline"
-                  >
-                    {player.name}
-                  </button>
-                </td>
-                <td className="border p-2 text-center">
-                  {player.scores[player.scores.length - 1] || 0}
-                </td>
-                <td className="border p-2 text-center">
-                  {totalScores[player.name] || 0}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    )}
+        {players.length > 0 && (
+          <div className="mt-6">
+            <h2 className="text-xl font-semibold mb-4 text-center">
+              Ingresar Puntajes
+            </h2>
 
-    {isModalOpen && selectedPlayer && (
-      <div className="modal modal-open">
-        <div className="modal-box">
-          <h2 className="font-bold text-lg">{`${selectedPlayer.name}'s Score History`}</h2>
-          <ul className="list-disc pl-5">
-            {selectedPlayer.scores.map((score, index) => (
-              <li key={index}>
-                Ronda {index + 1}: {score}
-              </li>
-            ))}
-          </ul>
-          <div className="modal-action">
-            <button onClick={closeModal} className="btn btn-error">
-              Cerrar
-            </button>
+            <table className="table table-xs w-full">
+              <thead>
+                <tr>
+                  <th className="border p-2 text-center">Jugador</th>
+                  <th className="border p-2 text-center">
+                    Ronda {players[0]?.scores.length + 1}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {players.map((player, index) => (
+                  <tr key={index} className="hover">
+                    <td className="border p-2 text-center">
+                      <p>{player.name}</p>
+                    </td>
+                    <td className="flex justify-center items-center border p-2">
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={(roundScores[index] || {})[player.name] || ""}
+                        onChange={(e) =>
+                          handleInputChange(e, index, player.name)
+                        }
+                        className="input input-bordered w-20"
+                      />
+                      <button
+                        onClick={() => setBritney(index, player.name)}
+                        className="btn btn-warning btn-circle ml-2"
+                      >
+                        -10
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div>
-      </div>
-    )}
-  </div>
-</div>
+        )}
 
+        {isGameOverModalOpen && (
+          <div className="modal modal-open">
+            <div className="modal-box">
+              <h2 className="font-bold text-lg">
+                {losingPlayer} ha perdido. ¿Quieres seguir jugando?
+              </h2>
+              <div className="modal-action">
+                <button
+                  onClick={handleContinueGame}
+                  className="btn btn-success"
+                >
+                  Sí
+                </button>
+                <button onClick={handleEndGame} className="btn btn-error">
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {players.length > 0 && (
+          <div className="my-6">
+            <h2 className="text-xl font-semibold text-center">
+              Historial de Puntajes
+            </h2>
+            <div className="my-4 flex justify-between items-center">
+              <h3 className="text-lg font-semibold">{`Total de Jugadores: ${players.length}`}</h3>
+              <button onClick={loadRound} className="btn btn-accent">
+                Cargar Ronda
+              </button>
+            </div>
+
+            <table className="table table-xs w-full">
+              <thead>
+                <tr>
+                  <th className="border p-2 text-center">Jugador</th>
+                  <th className="border p-2 text-center">Última Ronda</th>
+                  <th className="border p-2 text-center">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {players.map((player, playerIndex) => (
+                  <tr key={playerIndex}>
+                    <td className="border p-2 text-center">
+                      <button
+                        onClick={() => openModal(player)}
+                        className="btn btn-link text-blue-500 underline"
+                      >
+                        {player.name}
+                      </button>
+                    </td>
+                    <td className="border p-2 text-center">
+                      {player.scores[player.scores.length - 1] || 0}
+                    </td>
+                    <td className="border p-2 text-center">
+                      {totalScores[player.name] || 0}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {isModalOpen && selectedPlayer && (
+          <div className="modal modal-open">
+            <div className="modal-box">
+              <h2 className="font-bold text-lg">{`${selectedPlayer.name}'s Score History`}</h2>
+              <ul className="list-disc pl-5">
+                {selectedPlayer.scores.map((score, index) => (
+                  <li key={index}>
+                    Ronda {index + 1}: {score}
+                  </li>
+                ))}
+              </ul>
+              <div className="modal-action">
+                <button onClick={closeModal} className="btn btn-error">
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
-export default Party;
+export default Anotador;

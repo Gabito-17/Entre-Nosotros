@@ -22,9 +22,12 @@ const NavBar = () => {
         </a>
       </div>
 
-      <div className="navbar-end flex items-center">
-        <ChangeTheme />
+      <div className="navbar-center flex items-center">
+        {" "}
+        <ChangeTheme />{" "}
+      </div>
 
+      <div className="navbar-end flex items-center">
         {/* Menú desplegable para dispositivos móviles */}
         <div className="dropdown dropdown-left lg:hidden">
           <label tabIndex={0} className="btn btn-ghost">

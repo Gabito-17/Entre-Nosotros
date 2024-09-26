@@ -62,7 +62,9 @@ const LandingPage = () => {
           Simplifica la forma en que juegas y mantén todo organizado con
           Britney.
         </p>
-        <button className="btn btn-primary btn-lg">Regístrate ahora</button>
+        <a href="/anotador" className="btn btn-primary btn-lg">
+          Utilizar anotador
+        </a>
       </section>
 
       {/* Footer */}
