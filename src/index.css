@@ -9,17 +9,6 @@ body {
   font-family: Arial, sans-serif; /* Fuente básica */
 }
 
-.bg-blurred {
-  background-image: url("C:\Users\Gabito\OneDrive\Documentos\React\anotador-frontend\src\resources\i4.jpg"); /* URL de la imagen */
-  background-size: cover; /* Asegura que la imagen cubra toda la pantalla */
-  background-position: center; /* Centra la imagen */
-  background-repeat: no-repeat; /* Evita que la imagen se repita */
-  filter: blur(10px); /* Aplica el desenfoque */
-  height: 100vh; /* Asegura que el fondo cubra toda la pantalla */
-  position: absolute;
-  width: 100%;
-  z-index: -1; /* Coloca el fondo detrás del contenido */
-}
 /* Estructura para escritorio (pantallas grandes) */
 @media (min-width: 1024px) {
   .container {

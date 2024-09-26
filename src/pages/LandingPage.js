@@ -1,20 +1,12 @@
 import React from "react";
 import Carousel from "../components/Carousel";
 import i1 from "../resources/i1.jpg";
-import backgroundImage from "../resources/i4.jpg";
 
 const LandingPage = () => {
   return (
-    <div
-      className="min-h-screen bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat">
       {/* Introducción */}
-      <section className="py-8 bg-base-100 bg-opacity-55">
+      <section className="py-8">
         <div className="container rounded-lg mx-auto text-center px-4 lg:text-left lg:flex lg:items-center lg:space-x-8 overflow-x-hidden">
           {/* Texto descriptivo */}
           <div className="lg:w-1/2">
@@ -53,7 +45,7 @@ const LandingPage = () => {
       </section>
 
       {/* Características */}
-      <section className="py-12 sm:py-16 bg-base-200 bg-opacity-55">
+      <section className="py-12 sm:py-16 ">
         <div className="mx-auto px-4">
           <div className="flex justify-center content">
             <Carousel />
@@ -62,7 +54,7 @@ const LandingPage = () => {
       </section>
 
       {/* Llamado a la acción */}
-      <section className="py-12 sm:py-16 bg-base-100 bg-opacity-55 text-center px-4">
+      <section className="py-12 sm:py-16 text-center px-4">
         <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">
           ¡Empieza a usar Britney hoy!
         </h2>

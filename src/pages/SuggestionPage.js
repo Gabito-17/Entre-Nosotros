@@ -17,13 +17,14 @@ const SuggestionsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-no-repeat py-6 bg-black px-4">
+    <div className="min-h-screen py-6  px-4">
       <div className="mx-auto text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-white">
+        <h2 className="text-3xl sm:text-4xl font-bold mb-6">
           Déjanos tu Sugerencia
         </h2>
-        <p className="text-md sm:text-lg mb-6 text-gray-300">
-          Queremos mejorar la experiencia en Britney, deja tu sugerencia o comentario.
+        <p className="text-md sm:text-lg mb-6">
+          Queremos mejorar la experiencia en Britney, deja tu sugerencia o
+          comentario.
         </p>
 
         {success && (
@@ -32,7 +33,7 @@ const SuggestionsPage = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="max-w-lg mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg"
+          className="max-w-lg mx-auto p-8 rounded-lg shadow-lg"
         >
           <div className="mb-4">
             <label htmlFor="name" className="block text-left mb-2">
