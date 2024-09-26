@@ -4,13 +4,13 @@ const RulesPage = () => {
   return (
     <div className="min-h-screen bg-base-100 py-12 flex flex-col items-center">
       {/* Título */}
-      <section className="text-center mb-12">
-        <h1 className="text-4xl font-bold">Reglas del Juego: Britney</h1>
+      <section className="text-center">
+        <h1 className="text-4xl font-bold">Reglas del Juego</h1>
         <p className="text-sm mt-4">Sigue estos pasos para aprender a jugar.</p>
       </section>
 
       {/* Paso a Paso */}
-      <section className="container mx-auto px-4">
+      <section className="container mx-auto px-2">
         <ul className="content steps steps-vertical lg:steps-horizontal">
           {/* Paso 1 */}
           <li className="step step-primary">

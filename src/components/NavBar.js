@@ -11,7 +11,7 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="navbar bg-base-100 shadow-md w-full max-w-screen-xl mx-auto px-4">
+    <nav className="navbar w-full max-w-screen-xl mx-auto">
       <div className="navbar-start flex items-center">
         <Title />
         <a className="ml-4 btn btn-outline btn-sm" href="/sugerencias">

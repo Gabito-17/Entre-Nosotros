@@ -8,7 +8,7 @@ import SuggestionsPage from "./pages/SuggestionPage";
 
 const App = () => {
   return (
-    <div id="root" className="bg-base-100 dark:bg-gray-800 min-h-screen">
+    <div>
       <NavBar />
       <Router>
         <Routes>
