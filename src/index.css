@@ -20,9 +20,8 @@ body {
 
 /* Estilo básico para el body */
 body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* Para evitar desbordamientos horizontales */
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0; /* Fondo base */
 }
 .bg-blurred {
   background-image: url("C:\Users\Gabito\OneDrive\Documentos\React\anotador-frontend\src\resources\i4.jpg"); /* URL de la imagen */
