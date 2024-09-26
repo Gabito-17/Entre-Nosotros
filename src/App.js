@@ -3,19 +3,19 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import LandingPage from "./pages/LandingPage";
 import Party from "./pages/Party";
-import SuggestionsPage from "./pages/SuggestionPage";
 import RulesPage from "./pages/RulesPage";
+import SuggestionsPage from "./pages/SuggestionPage";
 
 const App = () => {
   return (
-    <div>
+    <div id="root" className="bg-base-100 dark:bg-gray-800 min-h-screen">
       <NavBar />
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
 
           <Route path="/anotador" element={<Party />} />
-          <Route path="/reglas" element={<RulesPage />}/>
+          <Route path="/reglas" element={<RulesPage />} />
           <Route path="/sugerencias" element={<SuggestionsPage />} />
         </Routes>
       </Router>

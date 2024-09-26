@@ -1,5 +1,6 @@
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
 import React from "react";
+import ChangeTheme from "./ChangeTheme";
 import Title from "./Title";
 
 const NavBar = () => {
@@ -10,21 +11,23 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="navbar bg-black shadow-md w-full">
-      <div className="navbar-start">
+    <nav className="navbar bg-base-100 shadow-md w-full max-w-screen-xl mx-auto px-4">
+      <div className="navbar-start flex items-center">
         <Title />
-        <a className="ml-8 btn btn-outline btn-sm" href="/sugerencias">
+        <a className="ml-4 btn btn-outline btn-sm" href="/sugerencias">
           <ChatBubbleBottomCenterTextIcon
-            className="h-6 w-6 text-white"
+            className="h-4 w-4 text-base-content"
             aria-hidden="true"
           />
         </a>
       </div>
 
-      <div className="navbar-end">
+      <div className="navbar-end flex items-center">
+        <ChangeTheme />
+
         {/* Menú desplegable para dispositivos móviles */}
-        <div className="dropdown dropdown-left">
-          <label tabIndex={0} className="btn btn-ghost lg:hidden ">
+        <div className="dropdown dropdown-left lg:hidden">
+          <label tabIndex={0} className="btn btn-ghost">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -60,7 +63,7 @@ const NavBar = () => {
             <li key={index}>
               <a
                 href={item.href}
-                className="hover:text-white transition-colors duration-200 text-gray-700"
+                className="hover:text-base-content transition-colors duration-200 text-base-content"
               >
                 {item.label}
               </a>
