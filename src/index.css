@@ -20,6 +20,48 @@ body {
 
 /* Estilo básico para el body */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f0f0; /* Fondo base */
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Para evitar desbordamientos horizontales */
+}
+.bg-blurred {
+  background-image: url("C:\Users\Gabito\OneDrive\Documentos\React\anotador-frontend\src\resources\i4.jpg"); /* URL de la imagen */
+  background-size: cover; /* Asegura que la imagen cubra toda la pantalla */
+  background-position: center; /* Centra la imagen */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  filter: blur(10px); /* Aplica el desenfoque */
+  height: 100vh; /* Asegura que el fondo cubra toda la pantalla */
+  position: absolute;
+  width: 100%;
+  z-index: -1; /* Coloca el fondo detrás del contenido */
+}
+/* Estructura para escritorio (pantallas grandes) */
+@media (min-width: 1024px) {
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    gap: 1rem;
+  }
+  .sidebar {
+    grid-column: 1;
+  }
+  .content {
+    grid-column: 2;
+  }
+  .aside {
+    grid-column: 3;
+  }
+}
+
+/* Estructura para smartphones (pantallas pequeñas) */
+@media (max-width: 767px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar,
+  .content,
+  .aside {
+    width: 100%;
+  }
 }

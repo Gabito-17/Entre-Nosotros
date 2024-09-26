@@ -1,16 +1,23 @@
 import React from "react";
-import Title from "./components/Title";
-import Anotador from "./pages/Anotador";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import LandingPage from "./pages/LandingPage";
+import Party from "./pages/Party";
+import SuggestionsPage from "./pages/SuggestionPage";
 
 const App = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center bg-white dark:bg-gray-900 text-black dark:text-white">
-      <div className="mb-4">
-        <Title />
-      </div>
-      <div >
-        <Anotador />
-      </div>
+    <div>
+      <NavBar />
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+
+          <Route path="/anotador" element={<Party />} />
+          <Route path="/reglas" />
+          <Route path="/sugerencias" element={<SuggestionsPage />} />
+        </Routes>
+      </Router>
     </div>
   );
 };
