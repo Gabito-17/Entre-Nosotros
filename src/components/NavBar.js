@@ -6,7 +6,7 @@ import Title from "./Title";
 const NavBar = () => {
   const menuItems = [
     { label: "Sobre Nosotros", href: "/" },
-    { label: "Anotador", href: "/Anotador" },
+    { label: "Anotador", href: "/anotador" },
     { label: "Reglas", href: "/reglas" },
   ];
 
