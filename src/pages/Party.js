@@ -147,8 +147,8 @@ function Anotador() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-base-100">
-      <div className="rounded-lg mt-2 shadow-lg p-6 w-full max-w-lg border">
+    <div className="flex justify-center min-h-screen bg-base-100">
+      <div className="rounded-lg shadow-lg p-4 max-w-lg border">
         <div className="flex justify-between items-center mb-4">
           <input
             type="text"
