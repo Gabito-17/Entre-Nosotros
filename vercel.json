@@ -1,6 +1,3 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/" },
-    { "source": "/anotador", "destination": "/anotador" }
-  ]
+  "rewrites": [{ "source": "/", "destination": "/" }]
 }
