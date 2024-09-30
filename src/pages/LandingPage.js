@@ -1,6 +1,6 @@
 import React from "react";
 import Carousel from "../components/Carousel";
-import i1 from "../resources/i1.jpg";
+import i5 from "../resources/i5.jpg";
 
 const LandingPage = () => {
   return (
@@ -36,7 +36,7 @@ const LandingPage = () => {
           {/* Imagen */}
           <div className="lg:w-1/2 mt-6 lg:mt-0">
             <img
-              src={i1}
+              src={i5}
               alt="Britney preview"
               className="mx-auto rounded-lg shadow-xl w-full max-w-full"
             />
