@@ -3,8 +3,8 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import LandingPage from "./pages/LandingPage";
 import Party from "./pages/Party";
-import RulesPage from "./pages/RulesPage";
 import SuggestionPage from "./pages/SuggestionPage";
+import RulesPage from "./pages/RulesPage";
 
 const App = () => {
   return (

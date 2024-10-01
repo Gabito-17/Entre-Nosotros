@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import i1 from "../resources/i5.jpg";
 import i2 from "../resources/i5.jpg";
 import i3 from "../resources/i5.jpg";
-import i4 from "../resources/i5.jpg"; // Asegúrate de tener una imagen para la cuarta característica
+import i4 from "../resources/i5.jpg";
 
 const features = [
   {
@@ -39,7 +39,7 @@ const Carousel = () => {
   };
 
   return (
-    <div className="features-section w-full md:w-3/4 lg:w-1/2 mx-auto py-8">
+    <div>
       <h2 className="text-2xl font-bold text-center mb-6">
         Características del Juego
       </h2>
