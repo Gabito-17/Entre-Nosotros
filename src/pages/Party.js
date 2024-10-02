@@ -1,4 +1,9 @@
-import { UserPlusIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowUturnLeftIcon,
+  ArrowUturnRightIcon,
+  UserGroupIcon,
+  UserPlusIcon,
+} from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 
 function Anotador() {
@@ -154,7 +159,7 @@ function Anotador() {
       </h1>
       <div className="flex justify-center items-start">
         <div className="rounded-lg shadow-lg p-4 max-w-lg w-full bg-base-100">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center ">
             <input
               type="text"
               placeholder="Jugador"
@@ -163,34 +168,29 @@ function Anotador() {
               className="input input-bordered w-full max-w-xs"
               onKeyDown={handleKeyDown}
             />
-
-            <button onClick={addPlayer} className="btn btn-primary btn-sm">
+            <button onClick={addPlayer} className="btn btn-primary btn-sm ml-4">
               <UserPlusIcon className="h-6 w-6 " />
             </button>
           </div>
 
           {players.length > 0 && (
             <div className="mt-6">
-              <h2 className="text-xl font-semibold mb-4 text-center">
-                Ingresar Puntajes
-              </h2>
+              <h2 className="text-xl mb-4">Ingresar Puntajes</h2>
 
-              <table className="table table-xs w-full">
+              <table className="table table-sm w-full">
                 <thead>
                   <tr>
-                    <th className="border p-2 text-center">Jugador</th>
-                    <th className="border p-2 text-center">
-                      Ronda {players[0]?.scores.length + 1}
-                    </th>
+                    <th className=" p-2 text-center">Jugador</th>
+                    <th className=" p-2 text-center">Puntaje</th>
                   </tr>
                 </thead>
                 <tbody>
                   {players.map((player, index) => (
                     <tr key={index} className="hover">
-                      <td className="border p-2 text-center">
+                      <td className=" p-2 text-center">
                         <p>{player.name}</p>
                       </td>
-                      <td className="flex justify-center items-center border p-2">
+                      <td className="flex justify-end items-center  p-2">
                         <input
                           type="number"
                           min="0"
@@ -203,7 +203,7 @@ function Anotador() {
                         />
                         <button
                           onClick={() => setBritney(index, player.name)}
-                          className="btn btn-warning btn-circle ml-2"
+                          className="btn btn-warning btn-circle btn-sm ml-2"
                         >
                           -10
                         </button>
@@ -238,28 +238,37 @@ function Anotador() {
 
           {players.length > 0 && (
             <div className="my-6">
-              <h2 className="text-xl font-semibold text-center">
-                Historial de Puntajes
-              </h2>
+              <h2 className="text-xl ">Historial de Puntajes</h2>
               <div className="my-4 flex justify-between items-center">
-                <h3 className="text-lg font-semibold">{`Total de Jugadores: ${players.length}`}</h3>
-                <button onClick={loadRound} className="btn btn-accent">
-                  Cargar Ronda
-                </button>
+                <div className="flex justify">
+                  <UserGroupIcon className="h-8 w-8" />
+                  <h3 className="text-lg font-semibold mt-1">{`${players.length}`}</h3>
+                </div>
+                <div>
+                  <button className="btn btn-primary btn-circle btn-sm mr-4 ">
+                    <ArrowUturnLeftIcon className="w-6 h-6" />
+                  </button>
+                  <button
+                    onClick={loadRound}
+                    className="btn btn-accent btn-circle btn-sm"
+                  >
+                    <ArrowUturnRightIcon className="w-6 h-6" />
+                  </button>
+                </div>
               </div>
 
               <table className="table table-xs w-full">
                 <thead>
                   <tr>
-                    <th className="border p-2 text-center">Jugador</th>
-                    <th className="border p-2 text-center">Última Ronda</th>
-                    <th className="border p-2 text-center">Total</th>
+                    <th className="p-2 text-center">Jugador</th>
+                    <th className="p-2 text-center">Última Ronda</th>
+                    <th className="p-2 text-center">Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   {players.map((player, playerIndex) => (
                     <tr key={playerIndex}>
-                      <td className="border p-2 text-center">
+                      <td className="p-2 text-center">
                         <button
                           onClick={() => openModal(player)}
                           className="btn btn-link text-blue-500 underline"
@@ -267,10 +276,10 @@ function Anotador() {
                           {player.name}
                         </button>
                       </td>
-                      <td className="border p-2 text-center">
+                      <td className="p-2 text-center">
                         {player.scores[player.scores.length - 1] || 0}
                       </td>
-                      <td className="border p-2 text-center">
+                      <td className="p-2 text-center">
                         {totalScores[player.name] || 0}
                       </td>
                     </tr>

@@ -14,7 +14,7 @@ const NavBar = () => {
     <nav className="navbar w-full max-w-screen-xl mx-auto">
       <div className="navbar-start flex items-center">
         <Title />
-        <a className="ml-4 btn btn-outline btn-sm" href="/sugerencias">
+        <a className="ml-4 btn btn-ghost btn-sm" href="/sugerencias">
           <ChatBubbleBottomCenterTextIcon
             className="h-4 w-4 text-base-content"
             aria-hidden="true"
