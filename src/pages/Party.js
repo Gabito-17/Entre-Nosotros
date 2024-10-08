@@ -9,6 +9,8 @@ import React, { useEffect, useState } from "react";
 function Anotador() {
   const [players, setPlayers] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
+  const [disqualifiedPlayers, setDisqualifiedPlayers] = useState([]);
+
   const [roundScores, setRoundScores] = useState([]);
   const [totalScores, setTotalScores] = useState({});
 
@@ -21,18 +23,22 @@ function Anotador() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    Object.keys(totalScores).forEach((playerName) => {
-      if (totalScores[playerName] >= 100) {
-        setLosingPlayer(playerName); // Guardar el jugador que ha perdido
-        setIsGameOverModalOpen(true); // Abrir el modal
-      }
-    });
-  }, [totalScores]);
+    players
+      .filter((player) => !disqualifiedPlayers.includes(player.name))
+      .forEach((player) => {
+        if (totalScores[player.name] >= 100) {
+          setLosingPlayer(player.name); // Guardar el jugador que ha perdido
+          setIsGameOverModalOpen(true); // Abrir el modal
+        }
+      });
+  }, [totalScores, players, disqualifiedPlayers]);
 
   const addPlayer = () => {
     if (newPlayerName.trim() !== "") {
       if (isPlay) {
-        alert("Esta Partida ya está en curso");
+        alert(
+          "Esta Partida ya está en curso, NO se puede añadir un nuevo jugador. Si desea añadir un nuevo jugador, finalice la partida."
+        );
       } else {
         setPlayers([{ name: newPlayerName, scores: [] }, ...players]);
         setNewPlayerName("");
@@ -41,33 +47,24 @@ function Anotador() {
     }
   };
 
-  const handleContinueGame = () => {
+  const handleContinueGame = (losingPlayer) => {
     // Cerrar el modal
     setIsGameOverModalOpen(false);
 
-    // Eliminar el jugador que ha perdido
-    setPlayers((prevPlayers) =>
-      prevPlayers.filter((player) => player.name !== losingPlayer)
-    );
+    // Añadir el jugador a la lista de descalificados
+    setDisqualifiedPlayers((prev) => [...prev, losingPlayer]);
 
-    // Eliminar el puntaje acumulado de ese jugador
-    setTotalScores((prevTotalScores) => {
-      const newScores = { ...prevTotalScores };
-      delete newScores[losingPlayer];
-      return newScores;
-    });
-
-    // Limpiar el jugador perdedor
-    setLosingPlayer(null);
+    setIsPlay(true);
   };
 
   const handleEndGame = () => {
-    // Puedes reiniciar el juego, redirigir a otra página, etc.
-    setPlayers([]); // O reiniciar el estado de jugadores
+    setPlayers([]);
     setTotalScores({});
     setRoundScores([]);
+    setIsPlay(false);
     setIsGameOverModalOpen(false);
     setLosingPlayer(null);
+    setDisqualifiedPlayers([]);
   };
 
   const handleInputChange = (e, index, playerName) => {
@@ -115,23 +112,32 @@ function Anotador() {
     }
 
     // Si todas las validaciones pasaron, ahora sí actualizamos los puntajes
-    const newPlayers = [...players];
-
-    for (let index = 0; index < roundScores.length; index++) {
-      const playerName = players[index].name;
+    const newPlayers = players.map((player, index) => {
+      const playerName = player.name;
       const roundScore = Number(roundScores[index]?.[playerName] || 0);
 
-      // Añadir el puntaje al jugador
-      newPlayers[index].scores.push(roundScore);
-      setTotalScores((prev) => ({
-        ...prev,
-        [playerName]: (prev[playerName] || 0) + roundScore,
-      }));
-    }
+      return {
+        ...player,
+        // Crear una copia del array de puntajes antes de agregar el nuevo puntaje
+        scores: [...player.scores, roundScore],
+      };
+    });
+
+    // Actualizar el estado de totalScores
+    setTotalScores((prev) => {
+      const newTotalScores = { ...prev };
+      newPlayers.forEach((player, index) => {
+        const playerName = player.name;
+        const roundScore = Number(roundScores[index]?.[playerName] || 0);
+        newTotalScores[playerName] =
+          (newTotalScores[playerName] || 0) + roundScore;
+      });
+      return newTotalScores;
+    });
 
     // Actualizar el estado de jugadores y limpiar los puntajes de la ronda
     setPlayers(newPlayers);
-    setRoundScores([]);
+    setRoundScores([]); // Aquí asegúrate de limpiar correctamente el estado de `roundScores`
   };
 
   const setBritney = (index, playerName) => {
@@ -185,31 +191,37 @@ function Anotador() {
                   </tr>
                 </thead>
                 <tbody>
-                  {players.map((player, index) => (
-                    <tr key={index} className="hover">
-                      <td className=" p-2 text-center">
-                        <p>{player.name}</p>
-                      </td>
-                      <td className="flex justify-end items-center  p-2">
-                        <input
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={(roundScores[index] || {})[player.name] || ""}
-                          onChange={(e) =>
-                            handleInputChange(e, index, player.name)
-                          }
-                          className="input input-bordered w-20"
-                        />
-                        <button
-                          onClick={() => setBritney(index, player.name)}
-                          className="btn btn-warning btn-circle btn-sm ml-2"
-                        >
-                          -10
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {players
+                    .filter(
+                      (player) => !disqualifiedPlayers.includes(player.name)
+                    )
+                    .map((player, index) => (
+                      <tr key={index} className="hover">
+                        <td className=" p-2 text-center">
+                          <p>{player.name}</p>
+                        </td>
+                        <td className="flex justify-end items-center  p-2">
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={
+                              (roundScores[index] || {})[player.name] || ""
+                            }
+                            onChange={(e) =>
+                              handleInputChange(e, index, player.name)
+                            }
+                            className="input input-bordered w-20"
+                          />
+                          <button
+                            onClick={() => setBritney(index, player.name)}
+                            className="btn btn-warning btn-circle btn-sm ml-2"
+                          >
+                            -10
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
@@ -223,11 +235,12 @@ function Anotador() {
                 </h2>
                 <div className="modal-action">
                   <button
-                    onClick={handleContinueGame}
+                    onClick={() => handleContinueGame(losingPlayer)}
                     className="btn btn-success"
                   >
                     Sí
                   </button>
+
                   <button onClick={handleEndGame} className="btn btn-error">
                     No
                   </button>
