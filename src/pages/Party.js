@@ -6,10 +6,12 @@ import {
 } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 
-function Anotador() {
+ function Anotador() {
   const [players, setPlayers] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
   const [disqualifiedPlayers, setDisqualifiedPlayers] = useState([]);
+  const [currentDealerIndex, setCurrentDealerIndex] = useState(0);
+
 
   const [roundScores, setRoundScores] = useState([]);
   const [totalScores, setTotalScores] = useState({});
@@ -34,18 +36,32 @@ function Anotador() {
   }, [totalScores, players, disqualifiedPlayers]);
 
   const addPlayer = () => {
-    if (newPlayerName.trim() !== "") {
+    const trimmedName = newPlayerName.trim(); // Elimina espacios en blanco innecesarios
+    const maxPlayers = 10; // Define un límite máximo de jugadores
+  
+    if (trimmedName !== "" && players.length < maxPlayers && newPlayerName.length <= 12) {
       if (isPlay) {
+        // Aquí podrías usar una mejor notificación, como un modal o snackbar
         alert(
           "Esta Partida ya está en curso, NO se puede añadir un nuevo jugador. Si desea añadir un nuevo jugador, finalice la partida."
         );
       } else {
-        setPlayers([{ name: newPlayerName, scores: [] }, ...players]);
-        setNewPlayerName("");
-        setTotalScores((prev) => ({ ...prev, [newPlayerName]: 0 }));
+        setPlayers((prevPlayers) => [{ name: trimmedName, scores: [] }, ...prevPlayers]);
+        setNewPlayerName(""); // Resetea el campo del nombre
+        setTotalScores((prevScores) => ({ ...prevScores, [trimmedName]: 0 }));
       }
+    } else if (players.length >= maxPlayers) {
+      // Si alcanzas el límite de jugadores
+      alert("Se ha alcanzado el máximo de jugadores permitidos.");
+    } else if (trimmedName == "") {
+      // Si el nombre está vacío o es inválido
+      alert("El nombre del jugador no puede estar vacío.");
+    } else if (newPlayerName.length > 12){
+      alert("El nombre del jugador puede contener como máximo 12 caracteres.")
+
     }
   };
+  
 
   const handleContinueGame = (losingPlayer) => {
     // Cerrar el modal
@@ -65,6 +81,7 @@ function Anotador() {
     setIsGameOverModalOpen(false);
     setLosingPlayer(null);
     setDisqualifiedPlayers([]);
+    setCurrentDealerIndex(0);
   };
 
   const handleInputChange = (e, index, playerName) => {
@@ -137,7 +154,9 @@ function Anotador() {
 
     // Actualizar el estado de jugadores y limpiar los puntajes de la ronda
     setPlayers(newPlayers);
-    setRoundScores([]); // Aquí asegúrate de limpiar correctamente el estado de `roundScores`
+    setRoundScores([]);
+  // Mover al siguiente repartidor
+  setCurrentDealerIndex((prevIndex) => (prevIndex + 1) % players.length);
   };
 
   const setBritney = (index, playerName) => {
@@ -187,7 +206,7 @@ function Anotador() {
                 <thead>
                   <tr>
                     <th className=" p-2 text-center">Jugador</th>
-                    <th className=" p-2 text-center">Puntaje</th>
+                    <th className=" p-2 text-right ">Puntaje</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -201,7 +220,12 @@ function Anotador() {
                           <p>{player.name}</p>
                         </td>
                         <td className="flex justify-end items-center  p-2">
-                          <input
+                        <button
+                            onClick={() => setBritney(index, player.name)}
+                            className="btn btn-warning btn-circle btn-sm mr-2 "
+                          >
+                            -10
+                          </button><input
                             type="number"
                             min="0"
                             max="100"
@@ -213,12 +237,7 @@ function Anotador() {
                             }
                             className="input input-bordered w-20"
                           />
-                          <button
-                            onClick={() => setBritney(index, player.name)}
-                            className="btn btn-warning btn-circle btn-sm ml-2"
-                          >
-                            -10
-                          </button>
+                          
                         </td>
                       </tr>
                     ))}
@@ -255,7 +274,7 @@ function Anotador() {
               <div className="my-4 flex justify-between items-center">
                 <div className="flex justify">
                   <UserGroupIcon className="h-8 w-8" />
-                  <h3 className="text-lg font-semibold mt-1">{`${players.length}`}</h3>
+                  <h3 className="text-lg font-semibold ml-2 mt-1">{`${players.length}`}</h3>
                 </div>
                 <div>
                   <button className="btn btn-primary btn-circle btn-sm mr-4 ">
@@ -273,6 +292,7 @@ function Anotador() {
               <table className="table table-xs w-full">
                 <thead>
                   <tr>
+                  <th className="p-2 text-left">Reparte</th>
                     <th className="p-2 text-center">Jugador</th>
                     <th className="p-2 text-center">Última Ronda</th>
                     <th className="p-2 text-center">Total</th>
@@ -281,6 +301,8 @@ function Anotador() {
                 <tbody>
                   {players.map((player, playerIndex) => (
                     <tr key={playerIndex}>
+                      <td>{currentDealerIndex === playerIndex ? "🟢" : ""}</td>
+                            
                       <td className="p-2 text-center">
                         <button
                           onClick={() => openModal(player)}
