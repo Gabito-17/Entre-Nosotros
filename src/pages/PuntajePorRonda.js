@@ -6,18 +6,17 @@ import {
 } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 
- function Anotador() {
+function Anotador() {
   const [players, setPlayers] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
   const [disqualifiedPlayers, setDisqualifiedPlayers] = useState([]);
   const [currentDealerIndex, setCurrentDealerIndex] = useState(0);
 
-
   const [roundScores, setRoundScores] = useState([]);
   const [totalScores, setTotalScores] = useState({});
 
   const [isGameOverModalOpen, setIsGameOverModalOpen] = useState(false);
-  const [losingPlayer, setLosingPlayer] = useState(null); // Guardar el jugador que ha perdido
+  const [losingPlayer, setLosingPlayer] = useState(null);
 
   const [isPlay, setIsPlay] = useState(false);
 
@@ -38,30 +37,35 @@ import React, { useEffect, useState } from "react";
   const addPlayer = () => {
     const trimmedName = newPlayerName.trim(); // Elimina espacios en blanco innecesarios
     const maxPlayers = 10; // Define un límite máximo de jugadores
-  
-    if (trimmedName !== "" && players.length < maxPlayers && newPlayerName.length <= 12) {
+
+    if (
+      trimmedName !== "" &&
+      players.length < maxPlayers &&
+      newPlayerName.length <= 12
+    ) {
       if (isPlay) {
         // Aquí podrías usar una mejor notificación, como un modal o snackbar
         alert(
           "Esta Partida ya está en curso, NO se puede añadir un nuevo jugador. Si desea añadir un nuevo jugador, finalice la partida."
         );
       } else {
-        setPlayers((prevPlayers) => [{ name: trimmedName, scores: [] }, ...prevPlayers]);
+        setPlayers((prevPlayers) => [
+          { name: trimmedName, scores: [] },
+          ...prevPlayers,
+        ]);
         setNewPlayerName(""); // Resetea el campo del nombre
         setTotalScores((prevScores) => ({ ...prevScores, [trimmedName]: 0 }));
       }
     } else if (players.length >= maxPlayers) {
       // Si alcanzas el límite de jugadores
       alert("Se ha alcanzado el máximo de jugadores permitidos.");
-    } else if (trimmedName == "") {
+    } else if (trimmedName === "") {
       // Si el nombre está vacío o es inválido
       alert("El nombre del jugador no puede estar vacío.");
-    } else if (newPlayerName.length > 12){
-      alert("El nombre del jugador puede contener como máximo 12 caracteres.")
-
+    } else if (newPlayerName.length > 12) {
+      alert("El nombre del jugador puede contener como máximo 12 caracteres.");
     }
   };
-  
 
   const handleContinueGame = (losingPlayer) => {
     // Cerrar el modal
@@ -155,8 +159,8 @@ import React, { useEffect, useState } from "react";
     // Actualizar el estado de jugadores y limpiar los puntajes de la ronda
     setPlayers(newPlayers);
     setRoundScores([]);
-  // Mover al siguiente repartidor
-  setCurrentDealerIndex((prevIndex) => (prevIndex + 1) % players.length);
+    // Mover al siguiente repartidor
+    setCurrentDealerIndex((prevIndex) => (prevIndex + 1) % players.length);
   };
 
   const setBritney = (index, playerName) => {
@@ -198,54 +202,6 @@ import React, { useEffect, useState } from "react";
             </button>
           </div>
 
-          {players.length > 0 && (
-            <div className="mt-6">
-              <h2 className="text-xl mb-4">Ingresar Puntajes</h2>
-
-              <table className="table table-sm w-full">
-                <thead>
-                  <tr>
-                    <th className=" p-2 text-center">Jugador</th>
-                    <th className=" p-2 text-right ">Puntaje</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {players
-                    .filter(
-                      (player) => !disqualifiedPlayers.includes(player.name)
-                    )
-                    .map((player, index) => (
-                      <tr key={index} className="hover">
-                        <td className=" p-2 text-center">
-                          <p>{player.name}</p>
-                        </td>
-                        <td className="flex justify-end items-center  p-2">
-                        <button
-                            onClick={() => setBritney(index, player.name)}
-                            className="btn btn-warning btn-circle btn-sm mr-2 "
-                          >
-                            -10
-                          </button><input
-                            type="number"
-                            min="0"
-                            max="100"
-                            value={
-                              (roundScores[index] || {})[player.name] || ""
-                            }
-                            onChange={(e) =>
-                              handleInputChange(e, index, player.name)
-                            }
-                            className="input input-bordered w-20"
-                          />
-                          
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
           {isGameOverModalOpen && (
             <div className="modal modal-open">
               <div className="modal-box">
@@ -270,7 +226,7 @@ import React, { useEffect, useState } from "react";
 
           {players.length > 0 && (
             <div className="my-6">
-              <h2 className="text-xl ">Historial de Puntajes</h2>
+              <h2 className="text-xl ">Puntajes</h2>
               <div className="my-4 flex justify-between items-center">
                 <div className="flex justify">
                   <UserGroupIcon className="h-8 w-8" />
@@ -292,7 +248,7 @@ import React, { useEffect, useState } from "react";
               <table className="table table-xs w-full">
                 <thead>
                   <tr>
-                  <th className="p-2 text-left">Reparte</th>
+                    <th className="p-2 text-left">Reparte</th>
                     <th className="p-2 text-center">Jugador</th>
                     <th className="p-2 text-center">Última Ronda</th>
                     <th className="p-2 text-center">Total</th>
@@ -302,7 +258,7 @@ import React, { useEffect, useState } from "react";
                   {players.map((player, playerIndex) => (
                     <tr key={playerIndex}>
                       <td>{currentDealerIndex === playerIndex ? "🟢" : ""}</td>
-                            
+
                       <td className="p-2 text-center">
                         <button
                           onClick={() => openModal(player)}
@@ -312,7 +268,24 @@ import React, { useEffect, useState } from "react";
                         </button>
                       </td>
                       <td className="p-2 text-center">
-                        {player.scores[player.scores.length - 1] || 0}
+                        <button
+                          onClick={() => setBritney(playerIndex, player.name)}
+                          className="btn btn-warning btn-circle btn-sm mr-2 "
+                        >
+                          -10
+                        </button>
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={
+                            (roundScores[playerIndex] || {})[player.name] || ""
+                          }
+                          onChange={(e) =>
+                            handleInputChange(e, playerIndex, player.name)
+                          }
+                          className="input input-bordered w-20"
+                        />
                       </td>
                       <td className="p-2 text-center">
                         {totalScores[player.name] || 0}
