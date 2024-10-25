@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import GameOverModal from "./GameOverModal";
 import PlayerInput from "./PlayerInput";
 import PlayerModal from "./PlayerModal";
-import PlayerTable from "./PlayerTable";
+import PlayerTableAndRow from "./PlayerTableAndRow";
 import RoundControls from "./RoundControls";
 
 function Party() {
@@ -10,36 +10,33 @@ function Party() {
   const [newPlayerName, setNewPlayerName] = useState("");
   const [disqualifiedPlayers, setDisqualifiedPlayers] = useState([]);
   const [currentDealerIndex, setCurrentDealerIndex] = useState(0);
-
   const [roundScoresHistory, setRoundScoresHistory] = useState([]);
   const [currentRoundIndex, setCurrentRoundIndex] = useState(0);
   const [roundScores, setRoundScores] = useState([]);
   const [totalScores, setTotalScores] = useState({});
-
   const [isGameOverModalOpen, setIsGameOverModalOpen] = useState(false);
   const [losingPlayer, setLosingPlayer] = useState(null);
   const [isPlay, setIsPlay] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Lógica para verificar si un jugador ha perdido
   useEffect(() => {
-    players
-      .filter((player) => !disqualifiedPlayers.includes(player.name))
-      .forEach((player) => {
-        if (totalScores[player.name] >= 100) {
-          setLosingPlayer(player.name);
-          setIsGameOverModalOpen(true);
-        }
-      });
+    const playerWhoLost = players.find(
+      (player) =>
+        !disqualifiedPlayers.includes(player.name) &&
+        totalScores[player.name] >= 100
+    );
+
+    if (playerWhoLost) {
+      setLosingPlayer(playerWhoLost.name);
+      setIsGameOverModalOpen(true);
+    }
   }, [totalScores, players, disqualifiedPlayers]);
 
-  // Función para añadir jugadores
   const addPlayer = () => {
     const trimmedName = newPlayerName.trim();
     const maxPlayers = 10;
 
-    // Verificar si ya existe un jugador con el mismo nombre
     const playerExists = players.some(
       (player) => player.name.toLowerCase() === trimmedName.toLowerCase()
     );
@@ -85,24 +82,21 @@ function Party() {
 
   const loadRound = () => {
     let hasNegativeTen = false;
-
-    // Inicializa los puntajes de la ronda, asegurando que todos los jugadores tengan un puntaje
     const updatedScores = {};
+
     players.forEach((player) => {
-      updatedScores[player.name] = 0; // Inicializa el puntaje a 0
+      updatedScores[player.name] = 0;
     });
 
-    // Validación: Recorrer primero todos los puntajes y asegurarse de que son válidos
     for (let index = 0; index < roundScores.length; index++) {
       const playerName = players[index].name;
       const roundScore = Number(roundScores[index]?.[playerName] || 0);
 
-      // Validación: Asegurarse de que el valor sea un entero entre 0 y 100, o solo un -10
       if (!Number.isInteger(roundScore) && roundScore !== -10) {
         alert(
           `Número inválido para ${playerName}: debe ser un entero entre 0 y 100 o -10`
         );
-        return; // Salir de la función si el valor no es válido
+        return;
       }
 
       if (roundScore === -10) {
@@ -110,42 +104,36 @@ function Party() {
           alert(
             `Solo un jugador puede tener -10 en una ronda. Error en ${playerName}`
           );
-          return; // Salir de la función si ya hay un -10 registrado
+          return;
         }
-        hasNegativeTen = true; // Marcar que ya se usó el -10
+        hasNegativeTen = true;
       } else if (roundScore < 0 || roundScore > 100) {
         alert(
           `Número inválido para ${playerName}: debe ser entre 0 y 100 o -10`
         );
-        return; // Salir de la función si el número no es válido
+        return;
       }
 
-      // Copia el puntaje válido al objeto de puntajes actualizados
       updatedScores[playerName] = roundScore;
     }
 
-    // Verifica cuántos jugadores tienen -10
-    const playersWithNegativeTen = Object.values(updatedScores).filter(
-      (score) => score === -10
-    );
-
-    if (playersWithNegativeTen.length > 1) {
+    if (
+      Object.values(updatedScores).filter((score) => score === -10).length > 1
+    ) {
       alert(
         "Solo un jugador puede tener -10 en esta ronda. Corrige la entrada."
       );
-      return; // Salir de la función para evitar la carga de la ronda
+      return;
     }
 
     setIsPlay(true);
 
-    // Actualiza el historial de puntajes
     setRoundScoresHistory((prev) => {
       const newHistory = [...prev];
-      newHistory[currentRoundIndex] = updatedScores; // Reemplaza la ronda actual
+      newHistory[currentRoundIndex] = updatedScores;
       return newHistory;
     });
 
-    // Actualiza la totalScores
     setTotalScores((prev) => {
       const newTotalScores = { ...prev };
       Object.keys(updatedScores).forEach((playerName) => {
@@ -155,23 +143,37 @@ function Party() {
       return newTotalScores;
     });
 
-    // Actualiza la lista de jugadores
     const updatedPlayers = players.map((player) => {
       const playerRoundScore = updatedScores[player.name];
       return {
         ...player,
         scores: [
           ...player.scores,
-          playerRoundScore === -10 && playersWithNegativeTen.length === 0
-            ? -10
-            : playerRoundScore,
+          playerRoundScore === -10 && hasNegativeTen ? -10 : playerRoundScore,
         ],
       };
     });
 
     setPlayers(updatedPlayers);
-    setRoundScores([]); // Reinicia los puntajes de la ronda
-    setCurrentDealerIndex((prevIndex) => (prevIndex + 1) % players.length);
+    setRoundScores([]);
+    setCurrentRoundIndex((prev) => prev + 1);
+
+    // Actualizar el dealer para la próxima ronda
+    updateDealer();
+  };
+
+  const updateDealer = () => {
+    let nextDealerIndex = currentDealerIndex;
+
+    // Avanzar al siguiente dealer que no esté descalificado
+    do {
+      nextDealerIndex = (nextDealerIndex + 1) % players.length;
+    } while (
+      disqualifiedPlayers.includes(players[nextDealerIndex]?.name) &&
+      nextDealerIndex !== currentDealerIndex
+    );
+
+    setCurrentDealerIndex(nextDealerIndex);
   };
 
   const openModal = (player) => {
@@ -208,16 +210,15 @@ function Party() {
           {players.length > 0 && (
             <>
               <h2 className="text-xl mt-8 mb-4">Ingresar Puntajes</h2>
-              <PlayerTable
+              <PlayerTableAndRow
                 players={players}
                 roundScores={roundScores}
                 totalScores={totalScores}
                 currentDealerIndex={currentDealerIndex}
                 setRoundScores={setRoundScores}
-                loadRound={loadRound}
                 openModal={openModal}
-                disqualifiedPlayers={disqualifiedPlayers} // Pasa disqualifiedPlayers a PlayerTable
-                currentRoundIndex={currentDealerIndex}
+                disqualifiedPlayers={disqualifiedPlayers}
+                currentRoundIndex={currentRoundIndex}
               />
               <RoundControls
                 loadRound={loadRound}
