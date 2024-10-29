@@ -1,3 +1,4 @@
+import { UserGroupIcon } from "@heroicons/react/24/outline";
 import React from "react";
 
 function PlayerTableAndRow({
@@ -60,10 +61,15 @@ function PlayerTableAndRow({
     <table className="mt-4 table w-full">
       <thead>
         <tr>
-          <th></th>
-          <th>Jugador</th>
+          <th>
+            <div className="flex justify-center items-center">
+              <UserGroupIcon className="h-5 w-5" />
+              <h3 className="text-sm">{`${players.length}`}</h3>
+            </div>
+          </th>
+          <th className="text-center">Jugador</th>
           <th className="text-center">Puntaje Ronda {currentRoundIndex + 1}</th>
-          <th>Total</th>
+          <th className="text-end">Total</th>
         </tr>
       </thead>
       <tbody>
@@ -89,12 +95,12 @@ function PlayerTableAndRow({
                 type="number"
                 value={roundScores[index]?.[player.name] || ""}
                 onChange={(e) => handleScoreChange(index, e.target.value)}
-                className="input input-bordered input-xs"
+                className="input input-bordered input-xs w-12"
                 min="0" // Evita que se ingresen números negativos manualmente
                 disabled={disqualifiedPlayers.includes(player.name)} // Deshabilitar si el jugador está descalificado
               />
             </td>
-            <td className="text-center">{totalScores[player.name] || 0}</td>
+            <td className="text-end">{totalScores[player.name] || 0}</td>
           </tr>
         ))}
       </tbody>

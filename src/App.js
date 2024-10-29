@@ -4,7 +4,7 @@ import NavBar from "./components/NavBar";
 import Party from "./components/Party";
 import LandingPage from "./pages/LandingPage";
 import RulesPage from "./pages/RulesPage";
-import Anotador from "./pages/Anotador";
+import SuggestionsPage from "./pages/SuggestionPage";
 
 const App = () => {
   return (
@@ -14,7 +14,7 @@ const App = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/anotador" element={<Party />} />
         <Route path="/reglas" element={<RulesPage />} />
-        <Route path="/sugerencias" element={<Anotador />} />
+        <Route path="/sugerencias" element={<SuggestionsPage />} />
       </Routes>
     </Router>
   );

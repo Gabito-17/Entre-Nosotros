@@ -17,7 +17,8 @@ const RulesSteps = () => {
         <input type="radio" name="accordion-1" defaultChecked />
         <div className="collapse-title text-xl font-medium">
           <h2 className="card-title">
-            <InformationCircleIcon className="inline-block w-6 h-6 mr-2" /> Preparación
+            <InformationCircleIcon className="inline-block w-6 h-6 mr-2" />{" "}
+            Preparación
           </h2>
         </div>
         <div className="collapse-content">
@@ -37,7 +38,8 @@ const RulesSteps = () => {
         <input type="radio" name="accordion-1" />
         <div className="collapse-title text-xl font-medium">
           <h2 className="card-title">
-            <InformationCircleIcon className="inline-block w-6 h-6 mr-2" /> Primera Ronda
+            <InformationCircleIcon className="inline-block w-6 h-6 mr-2" />{" "}
+            Primera Ronda
           </h2>
         </div>
         <div className="collapse-content">
@@ -64,10 +66,10 @@ const RulesSteps = () => {
             <button className="btn btn-xs btn-warning">8</button>, y{" "}
             <button className="btn btn-xs btn-info">9</button> tienen
             habilidades especiales que permiten modificar el curso del juego. El{" "}
-            <span className="font-bold">7</span> puede cambiar una carta, el{" "}
-            <span className="font-bold">8</span> permite ver una carta oculta y
-            el <span className="font-bold">9</span> puede anular el turno de
-            otro jugador.
+            <span className="font-bold">7</span> te deja ver una de tus cartas,
+            el <span className="font-bold">8</span> permite ver la carta de otro
+            jugador, y el <span className="font-bold">9</span> permite cambiar
+            una carta en la mesa por otra, ya sea tuya o de otro jugador.
           </p>
         </div>
       </div>
@@ -77,14 +79,18 @@ const RulesSteps = () => {
         <input type="radio" name="accordion-1" />
         <div className="collapse-title text-xl font-medium">
           <h2 className="card-title">
-            <InformationCircleIcon className="inline-block w-6 h-6 mr-2" /> Finalización del Juego
+            <InformationCircleIcon className="inline-block w-6 h-6 mr-2" />{" "}
+            Finalización del Juego
           </h2>
         </div>
         <div className="collapse-content">
           <p>
-            El juego termina cuando un jugador canta "<span className="font-bold text-primary">Britney</span>", declarando
+            El juego termina cuando un jugador canta "
+            <span className="font-bold text-primary">Britney</span>", declarando
             que tiene las cartas más bajas, o cuando un jugador se queda sin
-            cartas. Si se canta "<span className="font-bold text-primary">Britney</span>" y es incorrecto, el jugador es penalizado.
+            cartas. Si se canta "
+            <span className="font-bold text-primary">Britney</span>" y es
+            incorrecto, el jugador es penalizado.
           </p>
         </div>
       </div>
@@ -94,14 +100,15 @@ const RulesSteps = () => {
         <input type="radio" name="accordion-1" />
         <div className="collapse-title text-xl font-medium">
           <h2 className="card-title">
-            <ExclamationCircleIcon className="inline-block w-6 h-6 mr-2" /> Penalizaciones
+            <ExclamationCircleIcon className="inline-block w-6 h-6 mr-2" />{" "}
+            Penalizaciones
           </h2>
         </div>
         <div className="collapse-content">
           <p>
             Si un jugador comete un error, como quemar mal una carta o mirar una
-            que no debía, deberá recoger más cartas, lo que aumenta sus
-            probabilidades de perder.
+            que no debía, deberá recoger una carta en forma de penalizacion, lo
+            que aumenta sus probabilidades de perder.
           </p>
         </div>
       </div>

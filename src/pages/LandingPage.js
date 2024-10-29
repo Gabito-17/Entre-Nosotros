@@ -1,6 +1,6 @@
 import React from "react";
+import i5 from "../assets/i5.jpg";
 import Carousel from "../components/Carousel";
-import i5 from "../resources/i5.jpg";
 
 const LandingPage = () => {
   return (

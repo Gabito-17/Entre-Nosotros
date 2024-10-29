@@ -158,22 +158,30 @@ function Party() {
     setRoundScores([]);
     setCurrentRoundIndex((prev) => prev + 1);
 
-    // Actualizar el dealer para la próxima ronda
     updateDealer();
   };
 
   const updateDealer = () => {
-    let nextDealerIndex = currentDealerIndex;
-
-    // Avanzar al siguiente dealer que no esté descalificado
-    do {
-      nextDealerIndex = (nextDealerIndex + 1) % players.length;
-    } while (
-      disqualifiedPlayers.includes(players[nextDealerIndex]?.name) &&
-      nextDealerIndex !== currentDealerIndex
+    const allDisqualified = players.every((player) =>
+      disqualifiedPlayers.includes(player.name)
     );
 
-    setCurrentDealerIndex(nextDealerIndex);
+    if (allDisqualified) {
+      console.warn("Todos los jugadores están descalificados.");
+      return; // Detiene la función si todos están descalificados
+    }
+
+    let nextIndex = currentDealerIndex;
+
+    // Avanza al siguiente dealer válido si no es la primera ronda
+    if (currentRoundIndex !== 0) {
+      do {
+        nextIndex = (nextIndex + 1) % players.length;
+      } while (disqualifiedPlayers.includes(players[nextIndex].name));
+    }
+
+    // Actualiza el dealer al siguiente índice válido
+    setCurrentDealerIndex(nextIndex);
   };
 
   const openModal = (player) => {

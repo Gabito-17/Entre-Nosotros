@@ -1,29 +1,35 @@
 import React, { useState } from "react";
-import i1 from "../resources/i5.jpg";
-import i2 from "../resources/i5.jpg";
-import i3 from "../resources/i5.jpg";
-import i4 from "../resources/i5.jpg";
+import {
+  default as i1,
+  default as i2,
+  default as i3,
+  default as i4,
+} from "../assets/i5.jpg";
 
 const features = [
   {
     image: i1,
     title: "Memoria Estratégica",
-    description: "Los jugadores deben recordar las cartas visibles y las jugadas anteriores para descartar eficientemente.",
+    description:
+      "Los jugadores deben recordar las cartas visibles y las jugadas anteriores para descartar eficientemente.",
   },
   {
     image: i2,
     title: "Habilidades Especiales",
-    description: "Las cartas 7, 8 y 9 tienen habilidades únicas que añaden un elemento estratégico al juego.",
+    description:
+      "Las cartas 7, 8 y 9 tienen habilidades únicas que añaden un elemento estratégico al juego.",
   },
   {
     image: i3,
     title: "Sistema de Penalización",
-    description: "Los jugadores pueden recoger cartas si cometen errores, lo que agrega un nivel de riesgo a cada jugada.",
+    description:
+      "Los jugadores pueden recoger cartas si cometen errores, lo que agrega un nivel de riesgo a cada jugada.",
   },
   {
     image: i4,
     title: "Juego Dinámico",
-    description: "Cada turno trae nuevas decisiones, manteniendo a los jugadores en alerta y comprometidos.",
+    description:
+      "Cada turno trae nuevas decisiones, manteniendo a los jugadores en alerta y comprometidos.",
   },
 ];
 
@@ -35,7 +41,9 @@ const Carousel = () => {
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + features.length) % features.length);
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + features.length) % features.length
+    );
   };
 
   return (
@@ -47,7 +55,9 @@ const Carousel = () => {
         {features.map((feature, index) => (
           <div
             key={index}
-            className={`carousel-item p-4 rounded-lg shadow-lg flex flex-col items-center text-center transition-transform duration-300 ${index === currentIndex ? 'block' : 'hidden'}`}
+            className={`carousel-item p-4 rounded-lg shadow-lg flex flex-col items-center text-center transition-transform duration-300 ${
+              index === currentIndex ? "block" : "hidden"
+            }`}
           >
             <div className="w-full h-32 md:h-40 overflow-hidden rounded-lg mb-4">
               <img
@@ -63,8 +73,12 @@ const Carousel = () => {
       </div>
       {/* Controles del carrusel */}
       <div className="flex justify-between mt-4">
-        <button onClick={handlePrev} className="btn btn-outline btn-primary">Anterior</button>
-        <button onClick={handleNext} className="btn btn-outline btn-primary">Siguiente</button>
+        <button onClick={handlePrev} className="btn btn-outline btn-primary">
+          Anterior
+        </button>
+        <button onClick={handleNext} className="btn btn-outline btn-primary">
+          Siguiente
+        </button>
       </div>
     </div>
   );
