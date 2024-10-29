@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import emailjs from "emailjs-com";
+import React, { useState } from "react";
 
 const SuggestionsPage = () => {
   const [name, setName] = useState("");
@@ -16,7 +16,6 @@ const SuggestionsPage = () => {
       message,
     };
 
-    // Reemplaza estos valores con los tuyos de EmailJS
     emailjs
       .send(
         "service_td0vyah", // Service ID de EmailJS
@@ -26,7 +25,11 @@ const SuggestionsPage = () => {
       )
       .then(
         (response) => {
-          console.log("Correo enviado con éxito", response.status, response.text);
+          console.log(
+            "Correo enviado con éxito",
+            response.status,
+            response.text
+          );
           setSuccess(true);
           setName("");
           setEmail("");

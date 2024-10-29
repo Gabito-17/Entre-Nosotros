@@ -83,16 +83,49 @@ const RulesSteps = () => {
             Finalización del Juego
           </h2>
         </div>
-        <div className="collapse-content">
-          <p>
-            El juego termina cuando un jugador canta "
-            <span className="font-bold text-primary">Britney</span>", declarando
-            que tiene las cartas más bajas, o cuando un jugador se queda sin
-            cartas. Si se canta "
-            <span className="font-bold text-primary">Britney</span>" y es
-            incorrecto, el jugador es penalizado.
-          </p>
-        </div>
+        <div className="collapse w-full max-w-lg mx-auto bg-base-200 shadow-lg rounded-lg">
+  <input type="checkbox" className="peer" />
+  <div className="collapse-title text-lg font-bold text-primary-focus">
+    ¿Cómo finalizar el juego "Britney"?
+  </div>
+  <div className="collapse-content p-4 text-base-content">
+    <div className="space-y-4">
+      <p className="text-lg font-semibold">Existen dos formas de finalizar el juego:</p>
+
+      {/* Forma 1: Quedarse sin cartas */}
+      <div className="bg-base-100 rounded-lg p-3 border-l-4 border-primary">
+        <h3 className="text-md font-bold text-primary">1. Un jugador se queda sin cartas</h3>
+        <p className="text-sm mt-2">
+          Si un jugador se queda sin cartas en su turno, el juego termina de inmediato. 
+        </p>
+        <ul className="list-disc list-inside ml-4 mt-1 text-sm">
+          <li>El jugador que se quedó sin cartas recibe un puntaje de <span className="font-bold">0</span>.</li>
+          <li>Los demás jugadores suman el valor de sus cartas restantes y anotan esa cantidad.</li>
+        </ul>
+      </div>
+
+      {/* Forma 2: Cantar Britney */}
+      <div className="bg-base-100 rounded-lg p-3 border-l-4 border-secondary">
+        <h3 className="text-md font-bold text-secondary">2. Un jugador canta "Britney"</h3>
+        <p className="text-sm mt-2">
+          Un jugador puede cantar <span className="font-bold text-primary">"Britney"</span> en su turno, apostando a tener el valor total de cartas más bajo.
+        </p>
+        <ul className="list-disc list-inside ml-4 mt-1 text-sm">
+          <li>Después de cantar "Britney", se juega una <span className="font-bold">última ronda completa</span>.</li>
+          <li>Cuando el turno vuelve al jugador que cantó, se revelan todas las cartas y se suman sus valores.</li>
+        </ul>
+        <p className="text-sm mt-1">
+          <span className="font-bold">Resultado:</span>
+        </p>
+        <ul className="list-disc list-inside ml-4 text-sm">
+          <li>Si el jugador que cantó "Britney" tiene el menor valor en sus cartas (sin empate), recibe <span className="font-bold">-10 puntos</span>.</li>
+          <li>Si no tiene el menor valor, se le asigna la puntuación del jugador con el valor de cartas más alto.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
       </div>
 
       {/* Penalizaciones */}
