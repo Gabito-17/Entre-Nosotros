@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Modal from "../components/Modal";
+import emailjs from "emailjs-com";
 
 const SuggestionsPage = () => {
   const [name, setName] = useState("");
@@ -9,16 +9,37 @@ const SuggestionsPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí podrías agregar lógica para enviar el mensaje a un backend o un servicio de email
-    setSuccess(true); // Simulando éxito en el envío
-    // Reiniciar el formulario
-    setName("");
-    setEmail("");
-    setMessage("");
+
+    const templateParams = {
+      from_name: name,
+      from_email: email,
+      message,
+    };
+
+    // Reemplaza estos valores con los tuyos de EmailJS
+    emailjs
+      .send(
+        "service_td0vyah", // Service ID de EmailJS
+        "template_4mo125z", // Template ID de EmailJS
+        templateParams,
+        "e7D0znUBtgZTSt2YX" // User ID de EmailJS
+      )
+      .then(
+        (response) => {
+          console.log("Correo enviado con éxito", response.status, response.text);
+          setSuccess(true);
+          setName("");
+          setEmail("");
+          setMessage("");
+        },
+        (error) => {
+          console.log("Error al enviar el correo", error);
+        }
+      );
   };
 
   return (
-    <div className="min-h-screen py-6  px-4">
+    <div className="min-h-screen py-6 px-4">
       <div className="mx-auto text-center">
         <h2 className="text-3xl sm:text-4xl font-bold mb-6">
           Déjanos tu Sugerencia
@@ -78,7 +99,9 @@ const SuggestionsPage = () => {
             ></textarea>
           </div>
 
-          <Modal />
+          <button type="submit" className="btn btn-primary w-full mt-4">
+            Enviar Sugerencia
+          </button>
         </form>
       </div>
     </div>
