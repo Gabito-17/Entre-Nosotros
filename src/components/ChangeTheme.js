@@ -22,6 +22,7 @@ const ThemeToggle = () => {
     }
   }, []);
 
+  
   const toggleTheme = () => {
     const newTheme = isDarkTheme ? "light" : "dark";
     setIsDarkTheme(!isDarkTheme);

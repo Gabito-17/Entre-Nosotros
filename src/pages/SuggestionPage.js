@@ -1,9 +1,9 @@
+import { CheckIcon } from "@heroicons/react/24/outline";
 import emailjs from "emailjs-com";
 import React, { useState } from "react";
 
 const SuggestionsPage = () => {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -12,7 +12,6 @@ const SuggestionsPage = () => {
 
     const templateParams = {
       from_name: name,
-      from_email: email,
       message,
     };
 
@@ -32,13 +31,16 @@ const SuggestionsPage = () => {
           );
           setSuccess(true);
           setName("");
-          setEmail("");
           setMessage("");
         },
         (error) => {
           console.log("Error al enviar el correo", error);
         }
       );
+  };
+
+  const handleCloseModal = () => {
+    setSuccess(false);
   };
 
   return (
@@ -53,7 +55,16 @@ const SuggestionsPage = () => {
         </p>
 
         {success && (
-          <p className="text-green-500 mb-6">¡Gracias por tu sugerencia!</p>
+          <div className="fixed inset-0 flex items-center justify-center bg-opacity-20">
+            <div className="modal-box p-6 rounded-lg shadow-lg text-center">
+              <p className="text-lg font-semibold mb-4">
+                ¡Gracias por tu sugerencia!
+              </p>
+              <button className="btn btn-circle btn-sm btn-primary p-1" onClick={handleCloseModal}>
+                <CheckIcon />
+              </button>
+            </div>
+          </div>
         )}
 
         <form
@@ -69,20 +80,6 @@ const SuggestionsPage = () => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="input input-bordered w-full"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-left mb-2">
-              Correo Electrónico
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="input input-bordered w-full"
               required
             />
