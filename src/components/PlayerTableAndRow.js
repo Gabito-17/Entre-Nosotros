@@ -95,7 +95,7 @@ function PlayerTableAndRow({
                 type="number"
                 value={roundScores[index]?.[player.name] || ""}
                 onChange={(e) => handleScoreChange(index, e.target.value)}
-                className="input input-bordered input-xs w-12"
+                className="input input-bordered input-sm w-16"
                 min="0" // Evita que se ingresen números negativos manualmente
                 disabled={disqualifiedPlayers.includes(player.name)} // Deshabilitar si el jugador está descalificado
               />
