@@ -55,8 +55,9 @@ function Party() {
       );
     } else {
       setPlayers((prevPlayers) => [
-        { name: trimmedName, scores: [] },
         ...prevPlayers,
+        { name: trimmedName, scores: [] },
+        
       ]);
       setNewPlayerName("");
       setTotalScores((prevScores) => ({ ...prevScores, [trimmedName]: 0 }));
@@ -79,6 +80,40 @@ function Party() {
     setDisqualifiedPlayers([]);
     setCurrentDealerIndex(0);
   };
+
+  const handleResetGame = () => {
+    const confirmReset = window.confirm(
+      "¿Estás seguro de que deseas reiniciar la partida? Los puntajes y rondas se perderán."
+    );
+    if (confirmReset) {
+      resetGame();
+    }
+  };
+  
+
+  const resetGame = () => {
+    // Restablece los puntajes totales a 0
+    const resetScores = players.reduce((acc, player) => {
+      acc[player.name] = 0;
+      return acc;
+    }, {});
+  
+    // Restablece los jugadores con puntajes vacíos
+    const resetPlayers = players.map((player) => ({
+      ...player,
+      scores: [],
+    }));
+  
+    setTotalScores(resetScores);
+    setPlayers(resetPlayers);
+    setRoundScores([]);
+    setRoundScoresHistory([]);
+    setCurrentRoundIndex(0);
+    setDisqualifiedPlayers([]);
+    setIsPlay(false);
+    setCurrentDealerIndex(0);
+  };
+  
 
   const loadRound = () => {
     let hasNegativeTen = false;
@@ -205,6 +240,7 @@ function Party() {
             newPlayerName={newPlayerName}
             setNewPlayerName={setNewPlayerName}
             addPlayer={addPlayer}
+            handleResetGame={handleResetGame}
           />
 
           {isGameOverModalOpen && (
