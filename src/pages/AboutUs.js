@@ -6,10 +6,7 @@ const AboutUs = () => {
       {/* Título */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-4">Sobre Nosotros</h1>
-        <p className="text-lg">
-          Conoce el origen de Britney y nuestra pasión por compartir momentos
-          llenos de diversión.
-        </p>
+        
       </div>
 
       {/* Nuestra Historia */}

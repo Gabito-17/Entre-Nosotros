@@ -56,11 +56,10 @@ const LandingPage = () => {
       {/* Llamado a la acción */}
       <section className="py-12 sm:py-16 text-center px-4">
         <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">
-          ¡Empieza a usar Britney hoy!
+          ¡Empieza a jugar Britney hoy!
         </h2>
-        <p className="text-md sm:text-lg mb-6 sm:mb-8">
-          Simplifica la forma en que juegas y mantén todo organizado con
-          Britney.
+        <p className="text-md sm:text-lg mb-6 sm:mb-8"> 
+          Simplifica la forma en que juegas y mantén todo organizado.
         </p>
         <a href="/anotador" className="btn btn-primary btn-lg">
           Utilizar anotador
