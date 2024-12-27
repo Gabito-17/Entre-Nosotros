@@ -1,7 +1,7 @@
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import ChangeTheme from "./ChangeTheme";
-import Title from "./Title";
+import Title from "./Title/Title";
 
 const NavBar = () => {
   const menuItems = [

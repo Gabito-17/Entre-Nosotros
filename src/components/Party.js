@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import GameOverModal from "./GameOverModal";
-import PlayerInput from "./PlayerInput";
-import PlayerModal from "./PlayerModal";
-import PlayerTableAndRow from "./PlayerTableAndRow";
+import PlayerInput from "./Players/PlayerInput";
+import PlayerModal from "./Players/PlayerModal";
+import PlayerTableAndRow from "./Players/PlayerTableAndRow";
 import RoundControls from "./RoundControls";
 
 function Party() {
