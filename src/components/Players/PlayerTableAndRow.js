@@ -61,6 +61,7 @@ function PlayerTableAndRow({
     <table className="mt-4 table w-full">
       <thead>
         <tr>
+        <th className="text-center"></th>
           <th>
             <div className="flex justify-center items-center">
               <UserGroupIcon className="h-5 w-5" />
