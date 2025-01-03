@@ -31,6 +31,7 @@ function Party() {
     disqualifiedPlayers,
     loadRound,
     setDisqualifiedPlayers,
+    resetGame,
   } = useGame(players, currentRoundIndex, setPlayers, setCurrentRoundIndex, setRoundScores, currentDealerIndex, setCurrentDealerIndex, isPlay, setIsPlay );
 
   useEffect(() => {
@@ -69,23 +70,6 @@ function Party() {
     }
   };
 
-  const resetGame = () => {
-    const resetScores = players.reduce((acc, player) => {
-      acc[player.name] = 0;
-      return acc;
-    }, {});
-
-    const resetPlayersList = players.map((player) => ({
-      ...player,
-      scores: [],
-    }));
-
-    setPlayers(resetPlayersList);
-    setRoundScores([]);
-    setCurrentRoundIndex(0);
-    setDisqualifiedPlayers([]);
-    setCurrentDealerIndex(0);
-  };
 
   const openModal = (player) => {
     setSelectedPlayer(player);

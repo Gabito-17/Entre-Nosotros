@@ -118,6 +118,26 @@ const useGame = (
     setCurrentDealerIndex(nextIndex);
   };
 
+  const resetGame = () => {
+    const resetScores = players.reduce((acc, player) => {
+      acc[player.name] = 0;
+      return acc;
+    }, {});
+
+    const resetPlayersList = players.map((player) => ({
+      ...player,
+      scores: [],
+    }));
+
+    setPlayers(resetPlayersList);
+    setRoundScores([]);
+    setCurrentRoundIndex(0);
+    setTotalScores({});
+    setDisqualifiedPlayers([]);
+    setCurrentDealerIndex(0);
+  };
+
+
   return {
     totalScores,
     roundScoresHistory,
@@ -125,6 +145,7 @@ const useGame = (
     isPlay,
     setDisqualifiedPlayers,
     loadRound,
+    resetGame,
   };
 };
 
