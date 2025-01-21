@@ -32,7 +32,17 @@ function Party() {
     loadRound,
     setDisqualifiedPlayers,
     resetGame,
-  } = useGame(players, currentRoundIndex, setPlayers, setCurrentRoundIndex, setRoundScores, currentDealerIndex, setCurrentDealerIndex, isPlay, setIsPlay );
+  } = useGame(
+    players,
+    currentRoundIndex,
+    setPlayers,
+    setCurrentRoundIndex,
+    setRoundScores,
+    currentDealerIndex,
+    setCurrentDealerIndex,
+    isPlay,
+    setIsPlay
+  );
 
   useEffect(() => {
     const playerWhoLost = players.find(
@@ -52,24 +62,15 @@ function Party() {
     setDisqualifiedPlayers((prev) => [...prev, losingPlayer]);
   };
 
-  const handleEndGame = () => {
-    setPlayers([]);
-    setRoundScores([]);
-    setIsGameOverModalOpen(false);
-    setLosingPlayer(null);
-    setDisqualifiedPlayers([]);
-    setCurrentDealerIndex(0);
-  };
-
   const handleResetGame = () => {
     const confirmReset = window.confirm(
       "¿Estás seguro de que deseas reiniciar la partida? Los puntajes y rondas se perderán."
     );
     if (confirmReset) {
       resetGame();
+      setIsPlay(false);
     }
   };
-
 
   const openModal = (player) => {
     setSelectedPlayer(player);
@@ -99,7 +100,7 @@ function Party() {
             <GameOverModal
               losingPlayer={losingPlayer}
               handleContinueGame={handleContinueGame}
-              handleEndGame={handleEndGame}
+              handleEndGame={resetGame} // Usamos resetGame como handleEndGame
             />
           )}
 

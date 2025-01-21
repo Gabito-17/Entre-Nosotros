@@ -9,12 +9,11 @@ const useGame = (
   currentDealerIndex,
   setCurrentDealerIndex,
   isPlay,
-  setIsPlay,
+  setIsPlay
 ) => {
   const [totalScores, setTotalScores] = useState({});
   const [roundScoresHistory, setRoundScoresHistory] = useState([]);
   const [disqualifiedPlayers, setDisqualifiedPlayers] = useState([]);
-  
 
   const loadRound = (roundScores) => {
     let hasNegativeTen = false;
@@ -132,11 +131,10 @@ const useGame = (
     setPlayers(resetPlayersList);
     setRoundScores([]);
     setCurrentRoundIndex(0);
-    setTotalScores({});
+    setTotalScores(resetScores);
     setDisqualifiedPlayers([]);
     setCurrentDealerIndex(0);
   };
-
 
   return {
     totalScores,
