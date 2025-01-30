@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import GameOverModal from "./Modals/GameOverModal";
-import PlayerInput from "./Players/PlayerInput";
-import PlayerModal from "./Players/PlayerModal";
-import PlayerTableAndRow from "./Players/PlayerTableAndRow";
+import GameOverModal from "../Modals/GameOverModal";
+import PlayerInput from "../Players/PlayerInput";
+import PlayerModal from "../Players/PlayerModal";
+import PlayerTableAndRow from "../Players/PlayerTableAndRow";
 import RoundControls from "./RoundControls";
-import usePlayers from "../hooks/usePlayers";
-import useGame from "../hooks/useGame";
+import usePlayers from "../../hooks/usePlayers";
+import useGame from "../../hooks/useGame";
 
 function Party() {
   const [currentDealerIndex, setCurrentDealerIndex] = useState(0);

@@ -4,7 +4,7 @@ import {
   default as i2,
   default as i3,
   default as i4,
-} from "../assets/i5.jpg";
+} from "../assets/images/i5.jpg";
 
 const features = [
   {
