@@ -5,16 +5,16 @@ import Title from "./Title/Title";
 
 const NavBar = () => {
   const menuItems = [
-    { label: "Sobre Nosotros", href: "/nosotros" },
+    { label: "Nosotros", href: "/nosotros" },
     { label: "Anotador", href: "/anotador" },
     { label: "Reglas", href: "/reglas" },
   ];
 
   return (
-    <nav className="navbar w-full max-w-screen-xl mx-auto">
+    <nav className="navbar w-full max-w-screen-xl mx-auto py-4">
       <div className="navbar-start flex items-center">
         <Title />
-        <a className="ml-4 btn btn-ghost btn-sm" href="/sugerencias">
+        <a className="ml-4 btn btn-ghost btn-sm text-pink-500 hover:bg-pink-100 rounded-lg" href="/sugerencias">
           <ChatBubbleBottomCenterTextIcon
             className="h-6 w-6 text-base-content"
             aria-hidden="true"
@@ -23,14 +23,13 @@ const NavBar = () => {
       </div>
 
       <div className="navbar-center flex items-center">
-        {" "}
-        <ChangeTheme />{" "}
+        <ChangeTheme />
       </div>
 
       <div className="navbar-end flex items-center">
         {/* Menú desplegable para dispositivos móviles */}
         <div className="dropdown dropdown-left lg:hidden">
-          <label tabIndex={0} className="btn btn-ghost">
+          <label tabIndex={0} className="btn btn-ghost text-pink-500 hover:bg-pink-100 rounded-lg">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -52,7 +51,7 @@ const NavBar = () => {
           >
             {menuItems.map((item, index) => (
               <li key={index}>
-                <a href={item.href} className="hover:bg-gray-100">
+                <a href={item.href} className="hover:bg-pink-100 text-pink-500 transition-colors">
                   {item.label}
                 </a>
               </li>
@@ -66,7 +65,7 @@ const NavBar = () => {
             <li key={index}>
               <a
                 href={item.href}
-                className="hover:text-base-content transition-colors duration-200 text-base-content"
+                className="text-base-content hover:text-pink-500 transition-colors duration-200"
               >
                 {item.label}
               </a>

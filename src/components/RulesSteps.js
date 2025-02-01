@@ -134,7 +134,7 @@ const RulesSteps = () => {
         </div>
         <div className="collapse-content p-4 text-base-content">
           <p className="text-lg font-semibold">
-            Existen dos formas de finalizar el juego:
+            Existen dos formas de finalizar un set del juego:
           </p>
 
           <div className="bg-base-100 rounded-lg p-3 border-l-4 border-primary mt-4">
@@ -186,6 +186,13 @@ const RulesSteps = () => {
               <li>Si no, recibe la puntuación del jugador con mayor valor.</li>
             </ul>
           </div>
+
+          <p className="ml-2 mt-4 text-md ">
+            La partida finzaliza cuando un jugador consigue la suma de
+            <span className="font-bold"> 100 puntos </span>
+            quedando éste descalificado. Los jugadores restantes pueden optar
+            seguir jugando sin la presencia del reciente eliminado.
+          </p>
         </div>
       </div>
 

@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import {
-  default as i1,
-  default as i2,
-  default as i3,
-  default as i4,
-} from "../assets/images/i5.jpg";
+import i1 from "../assets/images/i1.jpg";
+import i2 from "../assets/images/i2.jpg";
+import i3 from "../assets/images/i3.jpg";
+import i4 from "../assets/images/i4.jpg";
 
 const features = [
   {
@@ -47,36 +45,24 @@ const Carousel = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-center mb-6">
-        Características del Juego
-      </h2>
-      <div className="carousel carousel-center w-full space-x-4">
-        {features.map((feature, index) => (
-          <div
-            key={index}
-            className={`carousel-item p-4 rounded-lg shadow-lg flex flex-col items-center text-center transition-transform duration-300 ${
-              index === currentIndex ? "block" : "hidden"
-            }`}
-          >
-            <div className="w-full h-32 md:h-40 overflow-hidden rounded-lg mb-4">
-              <img
-                src={feature.image}
-                alt={feature.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <h3 className="text-lg font-semibold">{feature.title}</h3>
-            <p className="text-gray-600">{feature.description}</p>
-          </div>
-        ))}
+    <div className="text-white text-center">
+      <h2 className="text-3xl font-bold mb-6">Características del Juego</h2>
+      <div className="relative w-full max-w-xl mx-auto overflow-hidden rounded-lg shadow-lg bg-gray-800 p-6">
+        <div className="w-full h-48 md:h-64 overflow-hidden rounded-lg mb-4">
+          <img
+            src={features[currentIndex].image}
+            alt={features[currentIndex].title}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">{features[currentIndex].title}</h3>
+        <p className="text-gray-300">{features[currentIndex].description}</p>
       </div>
-      {/* Controles del carrusel */}
-      <div className="flex justify-between mt-4">
-        <button onClick={handlePrev} className="btn btn-outline btn-primary">
+      <div className="flex justify-center mt-4 space-x-4">
+        <button onClick={handlePrev} className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition">
           Anterior
         </button>
-        <button onClick={handleNext} className="btn btn-outline btn-primary">
+        <button onClick={handleNext} className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition">
           Siguiente
         </button>
       </div>
