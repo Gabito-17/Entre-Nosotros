@@ -1,4 +1,4 @@
-import { UserGroupIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import React from "react";
 
 function PlayerTableAndRow({
@@ -10,6 +10,7 @@ function PlayerTableAndRow({
   openModal,
   disqualifiedPlayers,
   currentRoundIndex,
+  removePlayer,
 }) {
   // Convertimos disqualifiedPlayers a un Set para búsquedas más eficientes
   const disqualifiedPlayersSet = new Set(disqualifiedPlayers);
@@ -49,7 +50,10 @@ function PlayerTableAndRow({
     if (isNaN(numericValue) || numericValue < 0) return; // Evitar valores inválidos
     setRoundScores((prevScores) => {
       const updatedScores = [...prevScores];
-      updatedScores[index] = { ...updatedScores[index], [players[index].name]: numericValue };
+      updatedScores[index] = {
+        ...updatedScores[index],
+        [players[index].name]: numericValue,
+      };
       return updatedScores;
     });
   };
@@ -62,7 +66,10 @@ function PlayerTableAndRow({
 
     setRoundScores((prevScores) => {
       const updatedScores = [...prevScores];
-      updatedScores[index] = { ...updatedScores[index], [players[index].name]: -10 }; // Asigna -10 directamente
+      updatedScores[index] = {
+        ...updatedScores[index],
+        [players[index].name]: -10,
+      }; // Asigna -10 directamente
       return updatedScores;
     });
   };
@@ -86,10 +93,19 @@ function PlayerTableAndRow({
         {players.map((player, index) => (
           <tr
             key={player.name}
-            className={disqualifiedPlayersSet.has(player.name) ? "opacity-50" : ""}
+            className={
+              disqualifiedPlayersSet.has(player.name) ? "opacity-50" : ""
+            }
           >
             {/* Indica si es el dealer actual */}
-            <td className="text-center">
+            <td className="flex items-center justify-between">
+              <button
+                className="btn btn-circle btn-sm"
+                onClick={() => removePlayer(player.name)}
+              >
+                <TrashIcon className="h-5 w-5" />
+              </button>
+
               {nextValidDealerIndex === index && "🟢"}
             </td>
             {/* Nombre del jugador */}

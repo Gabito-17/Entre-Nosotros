@@ -23,6 +23,7 @@ function Party() {
     setNewPlayerName,
     addPlayer,
     setPlayers,
+    removePlayer,
   } = usePlayers(isPlay);
 
   const {
@@ -84,7 +85,7 @@ function Party() {
 
   return (
     <div className="min-h-screen bg-base-100 py-10">
-      <h1 className="text-4xl font-bold text-center mb-8 text-primary">
+      <h1 className="mt-10 text-4xl font-bold text-center mb-8 text-secondary">
         Anotador
       </h1>
       <div className="flex justify-center items-start">
@@ -116,6 +117,7 @@ function Party() {
                 openModal={openModal}
                 disqualifiedPlayers={disqualifiedPlayers}
                 currentRoundIndex={currentRoundIndex}
+                removePlayer={removePlayer}
               />
               <RoundControls
                 loadRound={() => loadRound(roundScores)}

@@ -7,8 +7,8 @@ import React from "react";
 
 const RulesSteps = () => {
   return (
-    <div className="content max-w-lg mx-auto mt-10">
-      <h1 className="text-4xl font-bold text-center mb-8 text-primary">
+    <div className="mt-20 content max-w-lg mx-auto">
+      <h1 className="text-4xl font-bold text-center mb-8 text-secondary">
         Reglas del Juego
       </h1>
 
@@ -17,7 +17,7 @@ const RulesSteps = () => {
         <input type="radio" name="accordion-1" defaultChecked />
         <div className="collapse-title text-xl font-medium">
           <h2 className="card-title flex items-center gap-2">
-            <InformationCircleIcon className="w-6 h-6 text-primary" />
+            <InformationCircleIcon className="w-6 h-6 text-pink-500" />
             Preparación
           </h2>
         </div>
@@ -56,7 +56,7 @@ const RulesSteps = () => {
         <input type="radio" name="accordion-1" />
         <div className="collapse-title text-xl font-medium">
           <h2 className="card-title flex items-center gap-2">
-            <InformationCircleIcon className="w-6 h-6 text-primary" />
+            <InformationCircleIcon className="w-6 h-6 text-pink-500" />
             Primera Ronda
           </h2>
         </div>
@@ -128,7 +128,7 @@ const RulesSteps = () => {
         <input type="radio" name="accordion-1" />
         <div className="collapse-title text-xl font-medium">
           <h2 className="card-title flex items-center gap-2">
-            <InformationCircleIcon className="w-6 h-6 text-primary" />{" "}
+            <InformationCircleIcon className="w-6 h-6 text-pink-500" />
             Finalización del Juego
           </h2>
         </div>

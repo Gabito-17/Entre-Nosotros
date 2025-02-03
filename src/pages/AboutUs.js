@@ -6,7 +6,7 @@ const AboutUs = () => {
     <div className="min-h-screen bg-base-100 text-base-content">
       <section className="min-h-screen bg-base-100 text-base-content p-8 md:p-16">
         {/* Título */}
-        <div className="text-center mb-12">
+        <div className="mt-8 text-center mb-12">
           <h1 className="text-4xl font-bold mb-4 text-pink-500">Sobre Nosotros</h1>
         </div>
 

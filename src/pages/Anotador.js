@@ -60,6 +60,11 @@ const Anotador = () => {
 
   return (
     <div className="score-tracker">
+      
+      <div className="mt-20 text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4 text-pink-500">Sobre Nosotros</h1>
+        </div>
+
       {step === 1 ? (
         <div>
           <h1>Agregar Jugadores</h1>
