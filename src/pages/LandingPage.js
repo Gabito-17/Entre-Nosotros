@@ -5,7 +5,7 @@ import Footer from "../components/Layout/Footer";
 
 const LandingPage = () => {
   return (
-    <div className="pt-10 min-h-screen bg-base-100 text-base-content">
+    <div className="min-h-screen bg-base-100 text-base-content ">
       {/* Introducción */}
       <Introduction />
 

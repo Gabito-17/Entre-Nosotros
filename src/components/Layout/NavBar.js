@@ -11,7 +11,7 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-base-200 shadow-md z-50">
+    <nav className="fixed top-0 left-0 w-full bg-base-200 shadow-md z-50 h-16 flex items-center">
       <div className="navbar w-full max-w-screen-xl mx-auto py-4">
         <div className="navbar-start flex items-center">
           <Title />
@@ -75,7 +75,7 @@ const NavBar = () => {
               <li key={index}>
                 <a
                   href={item.href}
-                  className="text-base-content hover:text-pink-500 transition-colors duration-200"
+                  className="btn text-base-content hover:text-pink-500 transition-colors duration-200"
                 >
                   {item.label}
                 </a>

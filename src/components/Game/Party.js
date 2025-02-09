@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+import useGame from "../../hooks/useGame";
+import usePlayers from "../../hooks/usePlayers";
 import GameOverModal from "../Modals/GameOverModal";
 import PlayerInput from "../Players/PlayerInput";
 import PlayerModal from "../Players/PlayerModal";
 import PlayerTableAndRow from "../Players/PlayerTableAndRow";
 import RoundControls from "./RoundControls";
-import usePlayers from "../../hooks/usePlayers";
-import useGame from "../../hooks/useGame";
 
 function Party() {
   const [currentDealerIndex, setCurrentDealerIndex] = useState(0);
@@ -84,8 +84,8 @@ function Party() {
   };
 
   return (
-    <div className="min-h-screen bg-base-100 py-10">
-      <h1 className="mt-10 text-4xl font-bold text-center mb-8 text-secondary">
+    <div className="min-h-screen bg-base-100">
+      <h1 className="text-4xl font-bold text-center mb-8 text-secondary">
         Anotador
       </h1>
       <div className="flex justify-center items-start">

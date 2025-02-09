@@ -15,7 +15,6 @@ const Footer = () => {
         {/* Contacto */}
         <div className="flex flex-col items-center md:items-start">
           <h3 className="text-lg font-bold mb-4 text-pink-500">Contacto</h3>
-          
 
           <ul className="space-y-3 text-sm">
             <li className="flex items-center gap-3">
@@ -69,7 +68,7 @@ const Footer = () => {
                   href={`/${link.toLowerCase()}`}
                   className="hover:text-pink-500 transition-colors"
                 >
-                  {link}-
+                  {link}
                 </a>
               </li>
             ))}
@@ -90,12 +89,11 @@ const Footer = () => {
           </div>
         </div>
       </div>
-            
+
       {/* Derechos reservados */}
       <div className="text-center mt-12 border-t border-gray-700 pt-4 text-gray-400 text-sm">
         © {new Date().getFullYear()} All rights reserved
       </div>
-      
     </footer>
   );
 };

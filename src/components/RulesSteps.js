@@ -7,7 +7,7 @@ import React from "react";
 
 const RulesSteps = () => {
   return (
-    <div className="mt-20 content max-w-lg mx-auto">
+    <div className="content max-w-lg mx-auto">
       <h1 className="text-4xl font-bold text-center mb-8 text-secondary">
         Reglas del Juego
       </h1>
@@ -34,7 +34,7 @@ const RulesSteps = () => {
             <h3 className="text-md font-bold text-secondary">Paso 2</h3>
             <p className="text-sm mt-2">
               Cada jugador recibe{" "}
-              <button className="btn btn-xs btn-secondary">4 cartas</button>{" "}
+              <button className="btn btn-xs btn-secondary" >4 cartas</button>{" "}
               boca abajo y puede mirar{" "}
               <button className="btn btn-xs btn-accent">2</button> de ellas al
               inicio del juego.
