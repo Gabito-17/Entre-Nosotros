@@ -125,15 +125,15 @@ const useGame = (
 
     const resetPlayersList = players.map((player) => ({
       ...player,
-      scores: [],
+      scores: [], // Resetear puntajes
     }));
 
-    setPlayers(resetPlayersList);
-    setRoundScores([]);
-    setCurrentRoundIndex(0);
-    setTotalScores(resetScores);
-    setDisqualifiedPlayers([]);
-    setCurrentDealerIndex(0);
+    setPlayers(resetPlayersList); // Resetear jugadores
+    setRoundScores([]); // Resetear los puntajes de la ronda
+    setCurrentRoundIndex(0); // Reiniciar el índice de ronda
+    setTotalScores(resetScores); // Reiniciar puntajes totales
+    setDisqualifiedPlayers([]); // Eliminar jugadores descalificados
+    setCurrentDealerIndex(0); // Resetear el índice del dealer
   };
 
   return {
@@ -144,6 +144,8 @@ const useGame = (
     setDisqualifiedPlayers,
     loadRound,
     resetGame,
+    setTotalScores,
+    setRoundScoresHistory,
   };
 };
 

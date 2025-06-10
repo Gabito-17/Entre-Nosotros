@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useGame from "../../hooks/useGame";
 import usePlayers from "../../hooks/usePlayers";
+import ConfirmationModal from "../Modals/ConfirmationModal";
 import GameOverModal from "../Modals/GameOverModal";
 import PlayerInput from "../Players/PlayerInput";
 import PlayerModal from "../Players/PlayerModal";
@@ -12,8 +13,19 @@ function Party() {
   const [currentRoundIndex, setCurrentRoundIndex] = useState(0);
   const [roundScores, setRoundScores] = useState([]);
   const [isGameOverModalOpen, setIsGameOverModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    title: "",
+    message: "",
+    onConfirm: () => {},
+  });
+
+  const openConfirmationModal = (title, message, onConfirmAction) => {
+    setModalConfig({ title, message, onConfirm: onConfirmAction });
+    setIsConfirmationModalOpen(true);
+  };
   const [losingPlayer, setLosingPlayer] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPlayerModalOpen, setIsPlayerModalOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [isPlay, setIsPlay] = useState(false);
 
@@ -28,7 +40,9 @@ function Party() {
 
   const {
     totalScores,
+    setTotalScores,
     roundScoresHistory,
+    setRoundScoresHistory,
     disqualifiedPlayers,
     loadRound,
     setDisqualifiedPlayers,
@@ -58,28 +72,41 @@ function Party() {
     }
   }, [totalScores, players, disqualifiedPlayers]);
 
+  const handleRemovePlayer = (playerName) => {
+    openConfirmationModal(
+      "Eliminar Jugador",
+      `¿Estás seguro de que quieres eliminar a ${playerName}?`,
+      () => {
+        removePlayer(playerName);
+        setIsConfirmationModalOpen(false);
+      }
+    );
+  };
+
   const handleContinueGame = () => {
     setIsGameOverModalOpen(false);
     setDisqualifiedPlayers((prev) => [...prev, losingPlayer]);
   };
 
   const handleResetGame = () => {
-    const confirmReset = window.confirm(
-      "¿Estás seguro de que deseas reiniciar la partida? Los puntajes y rondas se perderán."
+    openConfirmationModal(
+      "Reiniciar Partida",
+      "¿Estás seguro de que deseas reiniciar la partida? Los puntajes y rondas se perderán.",
+      () => {
+        resetGame();
+        setIsPlay(false);
+        setIsConfirmationModalOpen(false);
+      }
     );
-    if (confirmReset) {
-      resetGame();
-      setIsPlay(false);
-    }
   };
 
   const openModal = (player) => {
     setSelectedPlayer(player);
-    setIsModalOpen(true);
+    setIsPlayerModalOpen(true);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setIsPlayerModalOpen(false);
     setSelectedPlayer(null);
   };
 
@@ -96,7 +123,14 @@ function Party() {
             addPlayer={addPlayer}
             handleResetGame={handleResetGame}
           />
-
+          {isConfirmationModalOpen && (
+            <ConfirmationModal
+              onClose={() => setIsConfirmationModalOpen(false)}
+              onConfirm={modalConfig.onConfirm} // ✅ Ahora sí usa la acción correcta
+              title={modalConfig.title}
+              message={modalConfig.message}
+            />
+          )}
           {isGameOverModalOpen && (
             <GameOverModal
               losingPlayer={losingPlayer}
@@ -117,7 +151,9 @@ function Party() {
                 openModal={openModal}
                 disqualifiedPlayers={disqualifiedPlayers}
                 currentRoundIndex={currentRoundIndex}
-                removePlayer={removePlayer}
+                handleRemovePlayer={(playerName) =>
+                  handleRemovePlayer(playerName)
+                }
               />
               <RoundControls
                 loadRound={() => loadRound(roundScores)}
@@ -126,11 +162,14 @@ function Party() {
                 setRoundScores={setRoundScores}
                 players={players}
                 setCurrentRoundIndex={setCurrentRoundIndex}
+                setTotalScores={setTotalScores}
+                setRoundScoresHistory={setRoundScoresHistory}
+                setPlayers={setPlayers}
               />
             </>
           )}
 
-          {isModalOpen && selectedPlayer && (
+          {isPlayerModalOpen && selectedPlayer && (
             <PlayerModal
               selectedPlayer={selectedPlayer}
               closeModal={closeModal}

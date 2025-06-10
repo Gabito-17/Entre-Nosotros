@@ -1,5 +1,4 @@
 import { TrashIcon, UserGroupIcon } from "@heroicons/react/24/outline";
-import React from "react";
 
 function PlayerTableAndRow({
   players,
@@ -10,7 +9,7 @@ function PlayerTableAndRow({
   openModal,
   disqualifiedPlayers,
   currentRoundIndex,
-  removePlayer,
+  handleRemovePlayer,
 }) {
   // Convertimos disqualifiedPlayers a un Set para búsquedas más eficientes
   const disqualifiedPlayersSet = new Set(disqualifiedPlayers);
@@ -59,11 +58,6 @@ function PlayerTableAndRow({
   };
 
   const handleMinusTen = (index) => {
-    const confirmMinusTen = window.confirm(
-      `¿Estás seguro de asignar -10 puntos a ${players[index].name}?`
-    );
-    if (!confirmMinusTen) return;
-
     setRoundScores((prevScores) => {
       const updatedScores = [...prevScores];
       updatedScores[index] = {
@@ -101,7 +95,7 @@ function PlayerTableAndRow({
             <td className="flex items-center justify-between">
               <button
                 className="btn btn-circle btn-sm"
-                onClick={() => removePlayer(player.name)}
+                onClick={() => handleRemovePlayer(player.name)}
               >
                 <TrashIcon className="h-5 w-5" />
               </button>
