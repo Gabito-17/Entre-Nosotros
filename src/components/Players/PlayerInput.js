@@ -14,7 +14,7 @@ function PlayerInput({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 p-4 bg-base-200 rounded-box">
+    <div className="flex flex-wrap items-center gap-4 p-4 rounded-box">
       <input
         type="text"
         placeholder="Nombre del jugador"
@@ -23,22 +23,23 @@ function PlayerInput({
         onKeyDown={handleKeyDown}
         className="input input-bordered w-full sm:max-w-xs flex-1"
       />
+      <div className="flex flex-wrap items-center gap-2 rounded-box justify-end">
+        <button
+          onClick={handleResetGame}
+          className="btn btn-secondary btn-sm"
+          title="Reiniciar juego"
+        >
+          <ArrowPathIcon className="h-5 w-5" />
+        </button>
 
-      <button
-        onClick={handleResetGame}
-        className="btn btn-secondary btn-sm"
-        title="Reiniciar juego"
-      >
-        <ArrowPathIcon className="h-5 w-5" />
-      </button>
-
-      <button
-        onClick={addPlayer}
-        className="btn btn-primary btn-sm"
-        title="Agregar jugador"
-      >
-        <UserPlusIcon className="h-5 w-5" />
-      </button>
+        <button
+          onClick={addPlayer}
+          className="btn btn-primary btn-sm"
+          title="Agregar jugador"
+        >
+          <UserPlusIcon className="h-5 w-5" />
+        </button>
+      </div>
     </div>
   );
 }

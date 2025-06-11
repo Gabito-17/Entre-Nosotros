@@ -1,9 +1,11 @@
+import { TableCellsIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import RoundControls from "../components/Game/RoundControls";
 import ConfirmationModal from "../components/Modals/ConfirmationModal";
 import GameOverModal from "../components/Modals/GameOverModal";
+import PlayerModal from "../components/Modals/PlayerModal";
+import TotalScoresModal from "../components/Modals/TotalScoresModal";
 import PlayerInput from "../components/Players/PlayerInput";
-import PlayerModal from "../components/Players/PlayerModal";
 import PlayerTableAndRow from "../components/Players/PlayerTableAndRow";
 import useGame from "../hooks/useGame";
 import usePlayers from "../hooks/usePlayers";
@@ -25,6 +27,8 @@ function Annotator() {
     setIsConfirmationModalOpen(true);
   };
   const [losingPlayer, setLosingPlayer] = useState(null);
+  const [isTotalScoresModalOpen, setIsTotalScoresModalOpen] = useState(false);
+
   const [isPlayerModalOpen, setIsPlayerModalOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [isPlay, setIsPlay] = useState(false);
@@ -111,12 +115,12 @@ function Annotator() {
   };
 
   return (
-    <div className="min-h-screen bg-base-100">
+    <div className="min-h-screen">
       <h1 className="text-4xl font-bold text-center mb-8 text-secondary">
         Anotador
       </h1>
-      <div className="flex justify-center items-start">
-        <div className="rounded-lg shadow-lg p-4 max-w-lg w-full bg-base-100">
+      <div className="flex justify-center ">
+        <div className="rounded-lg shadow-lg p-4 max-w-lg w-full ">
           <PlayerInput
             newPlayerName={newPlayerName}
             setNewPlayerName={setNewPlayerName}
@@ -126,7 +130,7 @@ function Annotator() {
           {isConfirmationModalOpen && (
             <ConfirmationModal
               onClose={() => setIsConfirmationModalOpen(false)}
-              onConfirm={modalConfig.onConfirm} // ✅ Ahora sí usa la acción correcta
+              onConfirm={modalConfig.onConfirm}
               title={modalConfig.title}
               message={modalConfig.message}
             />
@@ -141,7 +145,17 @@ function Annotator() {
 
           {players.length > 0 && (
             <>
-              <h2 className="text-xl mt-8 mb-4">Ingresar Puntajes</h2>
+              <div className="flex items-center gap-2 mt-2">
+                <h2 className="text-xl">Ingresar Puntajes</h2>
+                <button
+                  className="btn btn-sm btn-primary"
+                  onClick={() => setIsTotalScoresModalOpen(true)}
+                  disabled={!isPlay}
+                >
+                  <TableCellsIcon className="w-5 h-5" />
+                </button>
+              </div>
+
               <PlayerTableAndRow
                 players={players}
                 roundScores={roundScores}
@@ -175,6 +189,13 @@ function Annotator() {
               closeModal={closeModal}
             />
           )}
+
+          <TotalScoresModal
+            isOpen={isTotalScoresModalOpen}
+            onClose={() => setIsTotalScoresModalOpen(false)}
+            players={players}
+            totalScores={totalScores}
+          />
         </div>
       </div>
     </div>

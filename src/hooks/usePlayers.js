@@ -3,7 +3,6 @@ import { useState } from "react";
 const usePlayers = (isPlay) => {
   const [players, setPlayers] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
-  const [totalScores, setTotalScores] = useState({});
 
   const addPlayer = () => {
     const trimmedName = newPlayerName.trim();
@@ -35,13 +34,11 @@ const usePlayers = (isPlay) => {
         { name: trimmedName, scores: [] },
       ]);
       setNewPlayerName("");
-      setTotalScores((prevScores) => ({ ...prevScores, [trimmedName]: 0 }));
     }
   };
 
   const resetPlayers = () => {
     setPlayers([]);
-    setTotalScores({});
   };
 
   const removePlayer = (playerName) => {
@@ -52,7 +49,6 @@ const usePlayers = (isPlay) => {
     players,
     newPlayerName,
     setNewPlayerName,
-    totalScores,
     addPlayer,
     resetPlayers,
     setPlayers,
