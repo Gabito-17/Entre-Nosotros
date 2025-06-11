@@ -5,7 +5,9 @@ function PlayerModal({ selectedPlayer, closeModal }) {
     <div className="modal modal-open">
       <div className="modal-box">
         <div className="flex justify-between items-center">
-          <h2 className="font-bold text-lg">{selectedPlayer.name} - Historial de Puntajes</h2>
+          <h2 className="font-bold text-lg">
+            {selectedPlayer.name} - Historial de Puntajes
+          </h2>
           <button className="btn btn-sm btn-circle" onClick={closeModal}>
             <XMarkIcon className="h-6 w-6" />
           </button>

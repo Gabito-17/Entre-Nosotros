@@ -11,8 +11,8 @@ function RoundControls({
   players,
   setCurrentRoundIndex,
   setTotalScores,
-  setRoundScoresHistory, // 👈 nuevo prop
-  setPlayers, // <-- RECIBIMOS setPlayers AQUÍ
+  setRoundScoresHistory,
+  setPlayers,
 }) {
   function handleRoundReverse() {
     if (currentRoundIndex === 0) return;
@@ -28,7 +28,6 @@ function RoundControls({
 
     if (!confirmReverse) return;
 
-    // 1. Restar los puntajes del total
     setTotalScores((prevTotals) => {
       const newTotals = { ...prevTotals };
       players.forEach((player) => {
@@ -39,14 +38,12 @@ function RoundControls({
       return newTotals;
     });
 
-    // 2. Eliminar la ronda del historial
     setRoundScoresHistory((prevHistory) => {
       const newHistory = [...prevHistory];
       newHistory.splice(roundToRemoveIndex, 1);
       return newHistory;
     });
 
-    // 3. Eliminar el score de esa ronda del array `scores` de cada jugador
     setPlayers((prevPlayers) =>
       prevPlayers.map((player) => ({
         ...player,
@@ -54,27 +51,31 @@ function RoundControls({
       }))
     );
 
-    // 4. Cargar los puntajes previos en el input para poder editarlos
     setRoundScores(
       players.map((player) => ({
         [player.name]: roundToRemove[player.name] || 0,
       }))
     );
 
-    // 5. Retroceder el índice de ronda
     setCurrentRoundIndex(roundToRemoveIndex);
   }
 
   return (
-    <div className="flex justify-end">
+    <div className="flex justify-end gap-2 mt-4">
       <button
         onClick={handleRoundReverse}
-        className="btn btn-primary btn-circle btn-sm mr-4"
+        className="btn btn-circle btn-sm btn-outline btn-error"
+        title="Corregir ronda anterior"
+        disabled={currentRoundIndex === 0}
       >
-        <ArrowUturnLeftIcon className="w-6 h-6" />
+        <ArrowUturnLeftIcon className="w-5 h-5" />
       </button>
-      <button onClick={loadRound} className="btn btn-accent btn-circle btn-sm">
-        <ArrowUturnRightIcon className="w-6 h-6" />
+      <button
+        onClick={loadRound}
+        className="btn btn-circle btn-sm btn-outline btn-success"
+        title="Cargar siguiente ronda"
+      >
+        <ArrowUturnRightIcon className="w-5 h-5" />
       </button>
     </div>
   );

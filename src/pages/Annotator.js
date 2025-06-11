@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import useGame from "../../hooks/useGame";
-import usePlayers from "../../hooks/usePlayers";
-import ConfirmationModal from "../Modals/ConfirmationModal";
-import GameOverModal from "../Modals/GameOverModal";
-import PlayerInput from "../Players/PlayerInput";
-import PlayerModal from "../Players/PlayerModal";
-import PlayerTableAndRow from "../Players/PlayerTableAndRow";
-import RoundControls from "./RoundControls";
+import RoundControls from "../components/Game/RoundControls";
+import ConfirmationModal from "../components/Modals/ConfirmationModal";
+import GameOverModal from "../components/Modals/GameOverModal";
+import PlayerInput from "../components/Players/PlayerInput";
+import PlayerModal from "../components/Players/PlayerModal";
+import PlayerTableAndRow from "../components/Players/PlayerTableAndRow";
+import useGame from "../hooks/useGame";
+import usePlayers from "../hooks/usePlayers";
 
-function Party() {
+function Annotator() {
   const [currentDealerIndex, setCurrentDealerIndex] = useState(0);
   const [currentRoundIndex, setCurrentRoundIndex] = useState(0);
   const [roundScores, setRoundScores] = useState([]);
@@ -181,4 +181,4 @@ function Party() {
   );
 }
 
-export default Party;
+export default Annotator;
