@@ -14,6 +14,8 @@ const useGame = (
   const [totalScores, setTotalScores] = useState({});
   const [roundScoresHistory, setRoundScoresHistory] = useState([]);
   const [disqualifiedPlayers, setDisqualifiedPlayers] = useState([]);
+  
+  
 
   const loadRound = (roundScores) => {
     let hasNegativeTen = false;
