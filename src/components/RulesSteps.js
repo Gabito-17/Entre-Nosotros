@@ -3,12 +3,11 @@ import {
   InformationCircleIcon,
   StarIcon,
 } from "@heroicons/react/24/outline";
-import React from "react";
 
 const RulesSteps = () => {
   return (
     <div className="content max-w-lg mx-auto">
-      <h1 className="text-4xl font-bold text-center mb-8 text-secondary">
+      <h1 className="text-4xl font-bold text-center mb-8 text-primary">
         Reglas del Juego
       </h1>
 
@@ -17,13 +16,13 @@ const RulesSteps = () => {
         <input type="radio" name="accordion-1" defaultChecked />
         <div className="collapse-title text-xl font-medium">
           <h2 className="card-title flex items-center gap-2">
-            <InformationCircleIcon className="w-6 h-6 text-pink-500" />
+            <InformationCircleIcon className="w-6 h-6 text-primary" />
             Preparación
           </h2>
         </div>
         <div className="collapse-content space-y-4 p-4">
           <div className="bg-base-100 rounded-lg p-3 border-l-4 border-secondary">
-            <h3 className="text-md font-bold text-secondary">Paso 1</h3>
+            <h3 className="text-md font-bold text-primary">Paso 1</h3>
             <p className="text-sm mt-2">
               Barajar todas las cartas antes de comenzar el juego para asegurar
               una distribución aleatoria.
@@ -31,10 +30,10 @@ const RulesSteps = () => {
           </div>
 
           <div className="bg-base-100 rounded-lg p-3 border-l-4 border-secondary">
-            <h3 className="text-md font-bold text-secondary">Paso 2</h3>
+            <h3 className="text-md font-bold text-primary">Paso 2</h3>
             <p className="text-sm mt-2">
               Cada jugador recibe{" "}
-              <button className="btn btn-xs btn-secondary" >4 cartas</button>{" "}
+              <button className="btn btn-xs btn-secondary">4 cartas</button>{" "}
               boca abajo y puede mirar{" "}
               <button className="btn btn-xs btn-accent">2</button> de ellas al
               inicio del juego.
@@ -42,7 +41,7 @@ const RulesSteps = () => {
           </div>
 
           <div className="bg-base-100 rounded-lg p-3 border-l-4 border-secondary">
-            <h3 className="text-md font-bold text-secondary">Paso 3</h3>
+            <h3 className="text-md font-bold text-primary">Paso 3</h3>
             <p className="text-sm mt-2">
               Colocar una carta boca arriba en el centro de la mesa y dejar el
               resto del mazo boca abajo al lado de esta carta.
@@ -56,7 +55,7 @@ const RulesSteps = () => {
         <input type="radio" name="accordion-1" />
         <div className="collapse-title text-xl font-medium">
           <h2 className="card-title flex items-center gap-2">
-            <InformationCircleIcon className="w-6 h-6 text-pink-500" />
+            <InformationCircleIcon className="w-6 h-6 text-primary" />
             Primera Ronda
           </h2>
         </div>
@@ -110,7 +109,7 @@ const RulesSteps = () => {
 
             {/* Quema de cartas */}
             <div className="bg-base-100 rounded-lg p-3 border-l-4 border-secondary mt-4">
-              <h3 className="text-md font-bold text-secondary">
+              <h3 className="text-md font-bold text-primary">
                 Quema de Cartas
               </h3>
               <p className="text-sm mt-2">
@@ -128,7 +127,7 @@ const RulesSteps = () => {
         <input type="radio" name="accordion-1" />
         <div className="collapse-title text-xl font-medium">
           <h2 className="card-title flex items-center gap-2">
-            <InformationCircleIcon className="w-6 h-6 text-pink-500" />
+            <InformationCircleIcon className="w-6 h-6 text-primary" />
             Finalización del Juego
           </h2>
         </div>
@@ -157,7 +156,7 @@ const RulesSteps = () => {
           </div>
 
           <div className="bg-base-100 rounded-lg p-3 border-l-4 border-secondary mt-4">
-            <h3 className="text-md font-bold text-secondary">
+            <h3 className="text-md font-bold text-primary">
               2. Cantar "Britney"
             </h3>
             <p className="text-sm mt-2">
@@ -238,7 +237,7 @@ const RulesSteps = () => {
 
             {/* Notas adicionales */}
             <div className="bg-base-100 rounded-lg p-3 border-l-4 border-secondary mt-4">
-              <h3 className="text-md font-bold text-secondary">Nota</h3>
+              <h3 className="text-md font-bold text-primary">Nota</h3>
               <p className="text-sm mt-2">
                 Los jugadores pueden optar por no usar las habilidades de estas
                 cartas especiales si prefieren mantener sus estrategias.

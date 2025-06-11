@@ -12,7 +12,7 @@ const Introduction = () => {
         />
       </div>
       <div className="lg:w-1/2">
-        <h1 className="text-4xl font-bold mb-6 ">Sobre Nosotros</h1>
+        <h1 className="text-4xl font-bold mb-6 text-primary">Sobre Nosotros</h1>
         <p className="text-lg leading-relaxed mb-6 text-base-content">
           Britney nació como una idea entre amigos que buscaban un juego de
           cartas dinámico y entretenido. Con cuatro creadores detrás, hemos

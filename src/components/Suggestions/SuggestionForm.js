@@ -12,9 +12,14 @@ const SuggestionForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-8 rounded-lg shadow-lg">
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-lg mx-auto p-8 rounded-lg shadow-lg"
+    >
       <div className="mb-4">
-        <label htmlFor="name" className="block text-left mb-2">Nombre</label>
+        <label htmlFor="name" className="block text-left mb-2">
+          Nombre
+        </label>
         <input
           id="name"
           type="text"
@@ -26,7 +31,9 @@ const SuggestionForm = ({ onSubmit }) => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="message" className="block text-left mb-2">Mensaje</label>
+        <label htmlFor="message" className="block text-left mb-2">
+          Mensaje
+        </label>
         <textarea
           id="message"
           value={message}
@@ -37,7 +44,7 @@ const SuggestionForm = ({ onSubmit }) => {
         ></textarea>
       </div>
 
-      <button type="submit" className="btn btn-secondary w-full mt-4">
+      <button type="submit" className="btn btn-primary w-full mt-4">
         Enviar Sugerencia
       </button>
     </form>
