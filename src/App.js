@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Party from "./components//Game/Party";
 import NavBar from "./components/Layout/NavBar";
@@ -10,6 +9,7 @@ import SuggestionsPage from "./pages/SuggestionPage";
 const App = () => {
   return (
     <Router>
+      {" "}
       <NavBar />
       <div className="mt-20">
         <Routes>

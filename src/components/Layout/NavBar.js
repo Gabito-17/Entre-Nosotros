@@ -1,6 +1,5 @@
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
-import React from "react";
-import ChangeTheme from "../ChangeTheme";
+import ThemeSelector from "../ThemeSelector";
 import Title from "./Title/Title";
 
 const NavBar = () => {
@@ -16,7 +15,7 @@ const NavBar = () => {
         <div className="navbar-start flex items-center">
           <Title />
           <a
-            className="ml-4 btn btn-ghost btn-sm hover:bg-pink-500 rounded-lg"
+            className="ml-4 btn btn-ghost btn-sm rounded-lg hover:bg-primary hover:text-primary-content transition-colors"
             href="/sugerencias"
           >
             <ChatBubbleBottomCenterTextIcon
@@ -27,7 +26,7 @@ const NavBar = () => {
         </div>
 
         <div className="navbar-center flex items-center">
-          <ChangeTheme />
+          <ThemeSelector />
         </div>
 
         <div className="navbar-end flex items-center">
@@ -35,7 +34,7 @@ const NavBar = () => {
           <div className="dropdown dropdown-left lg:hidden">
             <label
               tabIndex={0}
-              className="btn btn-ghost text-pink-500 hover:bg-pink-100 rounded-lg"
+              className="btn btn-ghost rounded-lg hover:bg-primary hover:text-primary-content transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +59,7 @@ const NavBar = () => {
                 <li key={index}>
                   <a
                     href={item.href}
-                    className="hover:bg-pink-100 text-pink-500 transition-colors"
+                    className="hover:bg-primary hover:text-primary-content transition-colors rounded"
                   >
                     {item.label}
                   </a>
@@ -75,7 +74,7 @@ const NavBar = () => {
               <li key={index}>
                 <a
                   href={item.href}
-                  className="btn text-base-content hover:text-pink-500 transition-colors duration-200"
+                  className="btn btn-ghost text-base-content hover:bg-primary hover:text-primary-content transition-colors"
                 >
                   {item.label}
                 </a>
