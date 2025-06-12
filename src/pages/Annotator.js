@@ -11,9 +11,6 @@ import useGame from "../hooks/useGame";
 import usePlayers from "../hooks/usePlayers";
 
 function Annotator() {
-  const [currentDealerIndex, setCurrentDealerIndex] = useState(0);
-  const [currentRoundIndex, setCurrentRoundIndex] = useState(0);
-  const [roundScores, setRoundScores] = useState([]);
   const [isGameOverModalOpen, setIsGameOverModalOpen] = useState(false);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState({
@@ -31,7 +28,53 @@ function Annotator() {
 
   const [isPlayerModalOpen, setIsPlayerModalOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const [isPlay, setIsPlay] = useState(false);
+
+  const [currentDealerIndex, setCurrentDealerIndex] = useState(() => {
+    const saved = localStorage.getItem("currentDealerIndex");
+    return saved ? JSON.parse(saved) : 0;
+  });
+
+  const [currentRoundIndex, setCurrentRoundIndex] = useState(() => {
+    const saved = localStorage.getItem("currentRoundIndex");
+    return saved ? JSON.parse(saved) : 0;
+  });
+
+  const [roundScores, setRoundScores] = useState(() => {
+    const saved = localStorage.getItem("roundScores");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [isPlay, setIsPlay] = useState(() => {
+    const saved = localStorage.getItem("isPlay");
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      "currentDealerIndex",
+      JSON.stringify(currentDealerIndex)
+    );
+  }, [currentDealerIndex]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "currentRoundIndex",
+      JSON.stringify(currentRoundIndex)
+    );
+  }, [currentRoundIndex]);
+
+  useEffect(() => {
+    localStorage.setItem("roundScores", JSON.stringify(roundScores));
+  }, [roundScores]);
+
+  useEffect(() => {
+    localStorage.setItem("isPlay", JSON.stringify(isPlay));
+  }, [isPlay]);
+
+  // El resto igual
+  useEffect(() => {
+    setIsPlay(isPlay);
+  }, [isPlay]);
 
   const {
     players,

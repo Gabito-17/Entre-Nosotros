@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useGame = (
   players,
@@ -11,11 +11,56 @@ const useGame = (
   isPlay,
   setIsPlay
 ) => {
-  const [totalScores, setTotalScores] = useState({});
-  const [roundScoresHistory, setRoundScoresHistory] = useState([]);
-  const [disqualifiedPlayers, setDisqualifiedPlayers] = useState([]);
-  
-  
+  const [totalScores, setTotalScores] = useState(() => {
+    const saved = localStorage.getItem("totalScores");
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  const [roundScoresHistory, setRoundScoresHistory] = useState(() => {
+    const saved = localStorage.getItem("roundScoresHistory");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [disqualifiedPlayers, setDisqualifiedPlayers] = useState(() => {
+    const saved = localStorage.getItem("disqualifiedPlayers");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Para isPlay es booleano
+  const [localIsPlay, setLocalIsPlay] = useState(() => {
+    const saved = localStorage.getItem("isPlay");
+    return saved ? JSON.parse(saved) : false;
+  });
+  // Guardamos localIsPlay en isPlay y viceversa para mantener coherencia
+  useEffect(() => {
+    setIsPlay(localIsPlay);
+  }, [localIsPlay]);
+
+  useEffect(() => {
+    setLocalIsPlay(isPlay);
+  }, [isPlay]);
+
+  useEffect(() => {
+    localStorage.setItem("totalScores", JSON.stringify(totalScores));
+  }, [totalScores]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "roundScoresHistory",
+      JSON.stringify(roundScoresHistory)
+    );
+  }, [roundScoresHistory]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "disqualifiedPlayers",
+      JSON.stringify(disqualifiedPlayers)
+    );
+  }, [disqualifiedPlayers]);
+
+  useEffect(() => {
+    localStorage.setItem("isPlay", JSON.stringify(localIsPlay));
+  }, [localIsPlay]);
 
   const loadRound = (roundScores) => {
     let hasNegativeTen = false;
@@ -136,6 +181,10 @@ const useGame = (
     setTotalScores(resetScores); // Reiniciar puntajes totales
     setDisqualifiedPlayers([]); // Eliminar jugadores descalificados
     setCurrentDealerIndex(0); // Resetear el índice del dealer
+    localStorage.removeItem("totalScores");
+    localStorage.removeItem("roundScoresHistory");
+    localStorage.removeItem("disqualifiedPlayers");
+    localStorage.removeItem("isPlay");
   };
 
   return {

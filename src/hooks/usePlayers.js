@@ -1,8 +1,27 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react"; 
 
 const usePlayers = (isPlay) => {
-  const [players, setPlayers] = useState([]);
+  // Load players from localStorage on initial render
+  const [players, setPlayers] = useState(() => {
+    try {
+      const savedPlayers = localStorage.getItem("britneyGamePlayers");
+      return savedPlayers ? JSON.parse(savedPlayers) : [];
+    } catch (error) {
+      console.error("Error loading players from localStorage:", error);
+      return [];
+    }
+  });
   const [newPlayerName, setNewPlayerName] = useState("");
+
+  // Save players to localStorage whenever the players state changes
+  useEffect(() => {
+    try {
+      localStorage.setItem("britneyGamePlayers", JSON.stringify(players));
+    } catch (error) {
+      console.error("Error saving players to localStorage:", error);
+    }
+  }, [players]); // Dependency array includes players
 
   const addPlayer = () => {
     const trimmedName = newPlayerName.trim();
@@ -16,7 +35,8 @@ const usePlayers = (isPlay) => {
       alert("El nombre del jugador no puede estar vacío.");
     } else if (/\d/.test(trimmedName)) {
       alert("El nombre del jugador no puede contener números.");
-    } else if (!/^\p{L}+$/u.test(trimmedName)) {
+    } else if (!/^[\p{L}\s]+$/u.test(trimmedName)) {
+      // Allow spaces in names
       alert("El nombre del jugador no puede contener caracteres especiales.");
     } else if (trimmedName.length > 12) {
       alert("El nombre del jugador puede contener como máximo 12 caracteres.");
