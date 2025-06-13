@@ -70,11 +70,6 @@ function Annotator() {
     localStorage.setItem("isPlay", JSON.stringify(isPlay));
   }, [isPlay]);
 
-  // El resto igual
-  useEffect(() => {
-    setIsPlay(isPlay);
-  }, [isPlay]);
-
   const {
     players,
     newPlayerName,
@@ -93,6 +88,7 @@ function Annotator() {
     loadRound,
     setDisqualifiedPlayers,
     resetGame,
+    endGame,
   } = useGame(
     players,
     currentRoundIndex,
@@ -146,6 +142,14 @@ function Annotator() {
     );
   };
 
+  const handleEndGame = () => {
+    setIsGameOverModalOpen(false);
+    setDisqualifiedPlayers((prev) => [...prev, losingPlayer]);
+    setIsPlay(false);
+    endGame();
+    setIsTotalScoresModalOpen(true);
+  };
+
   const openModal = (player) => {
     setSelectedPlayer(player);
     setIsPlayerModalOpen(true);
@@ -181,7 +185,7 @@ function Annotator() {
             <GameOverModal
               losingPlayer={losingPlayer}
               handleContinueGame={handleContinueGame}
-              handleEndGame={resetGame}
+              handleEndGame={handleEndGame}
             />
           )}
 
@@ -234,7 +238,10 @@ function Annotator() {
 
           <TotalScoresModal
             isOpen={isTotalScoresModalOpen}
-            onClose={() => setIsTotalScoresModalOpen(false)}
+            onClose={() => {
+              setIsTotalScoresModalOpen(false);
+              resetGame();
+            }}
             players={players}
             totalScores={totalScores}
           />

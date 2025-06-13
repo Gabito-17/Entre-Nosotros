@@ -48,15 +48,6 @@ const useGame = (
     );
   }, [disqualifiedPlayers]);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("isPlay");
-    if (saved !== null) setIsPlay(JSON.parse(saved));
-  }, [setIsPlay]);
-
-  useEffect(() => {
-    localStorage.setItem("isPlay", JSON.stringify(isPlay));
-  }, [isPlay]);
-
   const loadRound = (roundScores) => {
     let hasNegativeTen = false;
     const updatedScores = {};
@@ -159,6 +150,10 @@ const useGame = (
     setCurrentDealerIndex(nextIndex);
   };
 
+  const endGame = () => {
+    setIsPlay(false);
+  };
+
   const resetGame = () => {
     const resetScores = players.reduce((acc, player) => {
       acc[player.name] = 0;
@@ -190,6 +185,7 @@ const useGame = (
     setDisqualifiedPlayers,
     loadRound,
     resetGame,
+    endGame,
     setTotalScores,
     setRoundScoresHistory,
   };
