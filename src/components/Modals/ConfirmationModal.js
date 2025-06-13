@@ -8,7 +8,13 @@ const ConfirmationModal = ({ onClose, onConfirm, title, message }) => {
           <button className="btn btn-outline btn-secondary" onClick={onClose}>
             Cancelar
           </button>
-          <button className="btn btn-error text-white" onClick={onConfirm}>
+          <button
+            className="btn btn-error text-white"
+            onClick={async () => {
+              await onConfirm?.();
+              onClose();
+            }}
+          >
             Confirmar
           </button>
         </div>

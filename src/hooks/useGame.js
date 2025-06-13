@@ -26,18 +26,8 @@ const useGame = (
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Para isPlay es booleano
-  const [localIsPlay, setLocalIsPlay] = useState(() => {
-    const saved = localStorage.getItem("isPlay");
-    return saved ? JSON.parse(saved) : false;
-  });
-  // Guardamos localIsPlay en isPlay y viceversa para mantener coherencia
   useEffect(() => {
-    setIsPlay(localIsPlay);
-  }, [localIsPlay]);
-
-  useEffect(() => {
-    setLocalIsPlay(isPlay);
+    localStorage.setItem("isPlay", JSON.stringify(isPlay));
   }, [isPlay]);
 
   useEffect(() => {
@@ -59,8 +49,13 @@ const useGame = (
   }, [disqualifiedPlayers]);
 
   useEffect(() => {
-    localStorage.setItem("isPlay", JSON.stringify(localIsPlay));
-  }, [localIsPlay]);
+    const saved = localStorage.getItem("isPlay");
+    if (saved !== null) setIsPlay(JSON.parse(saved));
+  }, [setIsPlay]);
+
+  useEffect(() => {
+    localStorage.setItem("isPlay", JSON.stringify(isPlay));
+  }, [isPlay]);
 
   const loadRound = (roundScores) => {
     let hasNegativeTen = false;

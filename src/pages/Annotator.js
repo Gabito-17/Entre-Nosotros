@@ -16,9 +16,8 @@ function Annotator() {
   const [modalConfig, setModalConfig] = useState({
     title: "",
     message: "",
-    onConfirm: () => {},
+    onConfirm: null,
   });
-
   const openConfirmationModal = (title, message, onConfirmAction) => {
     setModalConfig({ title, message, onConfirm: onConfirmAction });
     setIsConfirmationModalOpen(true);
@@ -182,7 +181,7 @@ function Annotator() {
             <GameOverModal
               losingPlayer={losingPlayer}
               handleContinueGame={handleContinueGame}
-              handleEndGame={resetGame} // Usamos resetGame como handleEndGame
+              handleEndGame={resetGame}
             />
           )}
 
