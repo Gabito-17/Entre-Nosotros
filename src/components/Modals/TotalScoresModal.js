@@ -3,7 +3,7 @@ const TotalScoresModal = ({ isOpen, onClose, players, totalScores }) => {
 
   // Ordenar jugadores por puntaje descendente
   const sortedPlayers = [...players].sort(
-    (a, b) => totalScores[b.name] - totalScores[a.name]
+    (b, a) => totalScores[b.name] - totalScores[a.name]
   );
 
   const topScore = totalScores[sortedPlayers[0].name];
