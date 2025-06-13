@@ -240,7 +240,7 @@ function Annotator() {
             isOpen={isTotalScoresModalOpen}
             onClose={() => {
               setIsTotalScoresModalOpen(false);
-              resetGame();
+              endGame();
             }}
             players={players}
             totalScores={totalScores}
