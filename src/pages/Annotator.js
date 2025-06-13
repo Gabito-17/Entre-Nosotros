@@ -145,7 +145,6 @@ function Annotator() {
   const handleEndGame = () => {
     setIsGameOverModalOpen(false);
     setDisqualifiedPlayers((prev) => [...prev, losingPlayer]);
-    setIsPlay(false);
     endGame();
     setIsTotalScoresModalOpen(true);
   };
@@ -196,7 +195,6 @@ function Annotator() {
                 <button
                   className="btn btn-sm btn-primary"
                   onClick={() => setIsTotalScoresModalOpen(true)}
-                  disabled={!isPlay}
                 >
                   <TableCellsIcon className="w-5 h-5" />
                 </button>

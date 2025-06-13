@@ -1,6 +1,4 @@
-// src/hooks/useGame.js
-import { useState } from "react";
-import { useLocalStorageSync } from "./useLocalStorageSync";
+import { useLocalStorageState } from "./useLocalStorageState";
 
 const useGame = (
   players,
@@ -13,26 +11,18 @@ const useGame = (
   isPlay,
   setIsPlay
 ) => {
-  const [totalScores, setTotalScores] = useState(() => {
-    const saved = localStorage.getItem("totalScores");
-    return saved ? JSON.parse(saved) : {};
-  });
+  const [totalScores, setTotalScores] = useLocalStorageState("totalScores", {});
+  const [roundScoresHistory, setRoundScoresHistory] = useLocalStorageState(
+    "roundScoresHistory",
+    []
+  );
+  const [disqualifiedPlayers, setDisqualifiedPlayers] = useLocalStorageState(
+    "disqualifiedPlayers",
+    []
+  );
 
-  const [roundScoresHistory, setRoundScoresHistory] = useState(() => {
-    const saved = localStorage.getItem("roundScoresHistory");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [disqualifiedPlayers, setDisqualifiedPlayers] = useState(() => {
-    const saved = localStorage.getItem("disqualifiedPlayers");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // 🔁 Sincronización con localStorage usando hook reutilizable
-  useLocalStorageSync("isPlay", isPlay);
-  useLocalStorageSync("totalScores", totalScores);
-  useLocalStorageSync("roundScoresHistory", roundScoresHistory);
-  useLocalStorageSync("disqualifiedPlayers", disqualifiedPlayers);
+  // También sincronizamos `isPlay`
+  useLocalStorageState("isPlay", isPlay); // no usamos el setter, solo forzamos sincronización
 
   const loadRound = (roundScores) => {
     let hasNegativeTen = false;
@@ -157,6 +147,8 @@ const useGame = (
     setTotalScores(resetScores);
     setDisqualifiedPlayers([]);
     setCurrentDealerIndex(0);
+
+    // Limpiar localStorage
     localStorage.removeItem("totalScores");
     localStorage.removeItem("roundScoresHistory");
     localStorage.removeItem("disqualifiedPlayers");
