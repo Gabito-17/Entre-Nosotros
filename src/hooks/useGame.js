@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+// src/hooks/useGame.js
+import { useState } from "react";
+import { useLocalStorageSync } from "./useLocalStorageSync";
 
 const useGame = (
   players,
@@ -26,27 +28,11 @@ const useGame = (
     return saved ? JSON.parse(saved) : [];
   });
 
-  useEffect(() => {
-    localStorage.setItem("isPlay", JSON.stringify(isPlay));
-  }, [isPlay]);
-
-  useEffect(() => {
-    localStorage.setItem("totalScores", JSON.stringify(totalScores));
-  }, [totalScores]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "roundScoresHistory",
-      JSON.stringify(roundScoresHistory)
-    );
-  }, [roundScoresHistory]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "disqualifiedPlayers",
-      JSON.stringify(disqualifiedPlayers)
-    );
-  }, [disqualifiedPlayers]);
+  // 🔁 Sincronización con localStorage usando hook reutilizable
+  useLocalStorageSync("isPlay", isPlay);
+  useLocalStorageSync("totalScores", totalScores);
+  useLocalStorageSync("roundScoresHistory", roundScoresHistory);
+  useLocalStorageSync("disqualifiedPlayers", disqualifiedPlayers);
 
   const loadRound = (roundScores) => {
     let hasNegativeTen = false;
@@ -136,7 +122,7 @@ const useGame = (
 
     if (allDisqualified) {
       console.warn("Todos los jugadores están descalificados.");
-      return; // Detiene la función si todos están descalificados
+      return;
     }
 
     let nextIndex = currentDealerIndex;
@@ -162,15 +148,15 @@ const useGame = (
 
     const resetPlayersList = players.map((player) => ({
       ...player,
-      scores: [], // Resetear puntajes
+      scores: [],
     }));
 
-    setPlayers(resetPlayersList); // Resetear jugadores
-    setRoundScores([]); // Resetear los puntajes de la ronda
-    setCurrentRoundIndex(0); // Reiniciar el índice de ronda
-    setTotalScores(resetScores); // Reiniciar puntajes totales
-    setDisqualifiedPlayers([]); // Eliminar jugadores descalificados
-    setCurrentDealerIndex(0); // Resetear el índice del dealer
+    setPlayers(resetPlayersList);
+    setRoundScores([]);
+    setCurrentRoundIndex(0);
+    setTotalScores(resetScores);
+    setDisqualifiedPlayers([]);
+    setCurrentDealerIndex(0);
     localStorage.removeItem("totalScores");
     localStorage.removeItem("roundScoresHistory");
     localStorage.removeItem("disqualifiedPlayers");
