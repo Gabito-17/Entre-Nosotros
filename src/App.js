@@ -1,4 +1,5 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import GameSelector from "./components/GameSelector";
 import NavBar from "./components/Layout/NavBar";
 import AboutUs from "./pages/AboutUs";
 import Annotator from "./pages/Annotator";
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/reglas" element={<RulesPage />} />
           <Route path="/sugerencias" element={<SuggestionsPage />} />
           <Route path="/nosotros" element={<AboutUs />} />
+          <Route path="/selector-partida" element={<GameSelector />} />
         </Routes>
       </div>
     </Router>

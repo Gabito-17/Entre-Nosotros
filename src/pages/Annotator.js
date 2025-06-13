@@ -1,6 +1,7 @@
 import { TableCellsIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import RoundControls from "../components/Game/RoundControls";
+import GameSelector from "../components/GameSelector";
 import ConfirmationModal from "../components/Modals/ConfirmationModal";
 import GameOverModal from "../components/Modals/GameOverModal";
 import PlayerModal from "../components/Modals/PlayerModal";
