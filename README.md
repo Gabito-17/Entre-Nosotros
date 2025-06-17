@@ -1,70 +1,73 @@
-# Getting Started with Create React App
+# Britney - Game Score Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Britney es una aplicación web desarrollada en React que permite registrar partidas de juegos de mesa o cartas, gestionando rondas, puntajes, descalificaciones y jugadores de manera sencilla e intuitiva.
 
-## Available Scripts
+## Características
 
-In the project directory, you can run:
+- Registro de partidas por rondas
+- Cálculo automático de puntajes acumulados
+- Soporte para descalificaciones de jugadores
+- Control de dealer/turno
+- Historial completo de partidas
+- Soporte para múltiples partidas activas
+- Persistencia de datos en el navegador mediante `localStorage`
+- Modales y componentes reutilizables con React y Tailwind CSS
+- Hooks personalizados para encapsular la lógica de juego
+- Validaciones de puntaje mediante Zod
 
-### `npm start`
+## Tecnologías utilizadas
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React (con Hooks y componentes funcionales)
+- Tailwind CSS (para el diseño UI)
+- Heroicons (iconos SVG)
+- Zod (validaciones de datos)
+- localStorage API (persistencia en el navegador)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Estructura del proyecto
 
-### `npm test`
+```
+/src
+  /components     -> Componentes de UI reutilizables (modales, botones, inputs, etc)
+  /hooks          -> Hooks personalizados (useGame, useRound, usePlayers, etc)
+  /types          -> Tipos de datos y estructuras utilizadas
+  /utils          -> Utilidades y funciones auxiliares
+  /storage        -> Encapsulación de acceso a localStorage
+  /pages          -> Entrada principal de la app
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Instalación
 
-### `npm run build`
+1. Clonar el repositorio:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+git clone https://github.com/tu-usuario/britney.git
+cd britney
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Instalar dependencias:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+# o
+pnpm install
+```
 
-### `npm run eject`
+3. Iniciar el servidor de desarrollo:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm run dev
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+La aplicación estará disponible en `http://localhost:3000`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Pendientes / Roadmap
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Agregar soporte para distintos tipos de juego con reglas personalizadas
+- Exportar e importar partidas (JSON)
+- Integración futura con backend para sincronización online
+- Soporte multi-dispositivo
+- Mejora de UX y temas visuales
 
-## Learn More
+## Licencia
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Proyecto educativo y personal. Sin licencia comercial por el momento.
