@@ -1,6 +1,6 @@
 # Britney - Game Score Tracker
 
-Britney es una aplicación web desarrollada en React que permite registrar partidas de juegos de mesa o cartas, gestionando rondas, puntajes, descalificaciones y jugadores de manera sencilla e intuitiva.
+Britney es una aplicación web desarrollada en React que permite registrar partidas del juego Britney, gestionando rondas, puntajes, descalificaciones y jugadores de manera sencilla e intuitiva.
 
 ## Características
 
