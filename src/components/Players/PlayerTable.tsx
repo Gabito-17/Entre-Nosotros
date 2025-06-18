@@ -1,7 +1,8 @@
 "use client";
 
 import {
-  TableCellsIcon,
+  // TableCellsIcon,
+  PlusIcon,
   TrashIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
@@ -51,27 +52,37 @@ export default function PlayerTableAndRow({ openModal }) {
     <div className="overflow-x-auto mt-4">
       <table className="table table-zebra w-full">
         <thead>
-          <tr>
-            <th className="text-center">Dealer</th>
+          <tr className="text-sm font-semibold">
             <th>
-              <div className="flex justify-center items-center gap-2">
-                <UserGroupIcon className="h-5 w-5" />
-                <span className="text-sm font-medium">{players.length}</span>
+              <div className="flex items-center gap-2">
+                <span>Dealer</span>
               </div>
             </th>
-            <th className="text-center">
-              Puntaje Ronda {currentRoundIndex + 1}
+            <th>
+              <div className="flex items-center gap-2">
+                <UserGroupIcon className="h-5 w-5" />
+                <span>{players.length}</span>
+              </div>
             </th>
-            <th className="text-end">
+
+            <th>
+              <span>Puntaje ronda {currentRoundIndex + 1}</span>
+            </th>
+
+            <th>
               <button
-                className="btn btn-primary btn-sm"
+                className="flex items-center gap-2 w-full p-2"
                 onClick={openTotalScoresModal}
               >
-                <TableCellsIcon className="w-5 h-5" />
+                <span>Total</span>
+                <div className="btn btn-primary btn-xs btn-circle">
+                  <PlusIcon className="w-4 h-4" />
+                </div>
               </button>
             </th>
           </tr>
         </thead>
+
         <tbody>
           {players.map((player, index) => {
             const isDisqualified = disqualifiedSet.has(player.name);
@@ -82,28 +93,32 @@ export default function PlayerTableAndRow({ openModal }) {
                 key={player.id}
                 className={isDisqualified ? "opacity-50" : ""}
               >
-                <td className="flex items-center justify-between gap-2">
-                  <button
-                    className="btn btn-circle btn-sm btn-outline btn-error"
-                    onClick={() => removePlayer(player.id)}
-                    title="Eliminar jugador"
-                  >
-                    <TrashIcon className="h-5 w-5" />
-                  </button>
-                  {currentDealerIndex === index && <span>🟢</span>}
+                <td>
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="btn btn-circle btn-sm btn-outline btn-error"
+                      onClick={() => removePlayer(player.id)}
+                      title="Eliminar jugador"
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </button>
+                    {currentDealerIndex === index && <span>🟢</span>}
+                  </div>
                 </td>
 
-                <td className="text-center">
-                  <button
-                    onClick={() => openModal(player)}
-                    className="btn btn-sm btn-outline"
-                  >
-                    {player.name}
-                  </button>
+                <td>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => openModal(player)}
+                      className="btn btn-sm btn-outline"
+                    >
+                      {player.name}
+                    </button>
+                  </div>
                 </td>
 
-                <td className="text-center">
-                  <div className="flex justify-center items-center gap-2">
+                <td>
+                  <div className="flex items-center gap-2">
                     <button
                       className="btn btn-warning btn-circle btn-sm"
                       onClick={() => handleMinusTen(index)}
@@ -125,7 +140,7 @@ export default function PlayerTableAndRow({ openModal }) {
                   </div>
                 </td>
 
-                <td className="text-end font-semibold">
+                <td className="font-semibold text-center w-[80px]">
                   {totalScores[player.name] || 0}
                 </td>
               </tr>
