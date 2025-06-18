@@ -115,7 +115,7 @@ export const useGameSessionStore = create<GameSessionState>((set, get) => ({
     });
   },
 
-  setRoundScore: (playerName, score) => {
+  setRoundScore: (playerName: string, score: number | undefined) => {
     const { roundScoresHistory, currentRoundIndex } = get();
     const updatedHistory = [...roundScoresHistory];
 
@@ -123,10 +123,17 @@ export const useGameSessionStore = create<GameSessionState>((set, get) => ({
       updatedHistory[currentRoundIndex] = {};
     }
 
+    if (score === undefined || score === null) {
+    // eliminar puntaje del jugador para esa ronda
+    const { [playerName]: _, ...rest } = updatedHistory[currentRoundIndex];
+    updatedHistory[currentRoundIndex] = rest;
+  } else {
+    // asignar puntaje normalmente
     updatedHistory[currentRoundIndex] = {
       ...updatedHistory[currentRoundIndex],
       [playerName]: score,
     };
+  }
 
     set({ roundScoresHistory: updatedHistory });
   },

@@ -34,15 +34,15 @@ export default function PlayerTableAndRow({ openModal }) {
   const disqualifiedSet = new Set(disqualifiedPlayers);
   const roundScores = roundScoresHistory[currentRoundIndex] || {};
 
-    const handleScoreChange = (playerName: string, value: string) => {
-      if (value === "") {
-        setRoundScore(playerName, Number(""));
-        return;
-      }
-      const numericValue = Number(value);
-      if (isNaN(numericValue) || numericValue < 0) return;
-      setRoundScore(playerName, numericValue);
-    };
+  const handleScoreChange = (playerName: string, value: string) => {
+    if (value === "") {
+      setRoundScore(playerName, undefined as unknown as number);
+      return;
+    }
+    const numericValue = Number(value);
+    if (isNaN(numericValue) || numericValue < 0) return;
+    setRoundScore(playerName, numericValue);
+  };
 
   const handleMinusTen = (index: number) => {
     assignMinusTen(players[index].name);
