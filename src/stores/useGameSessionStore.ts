@@ -1,8 +1,5 @@
 import { create } from "zustand";
-import {
-  playerNameSchema,
-  scoreOrMinusTenSchema,
-} from "../validation/validation.ts";
+import { playerNameSchema, scoreSchema } from "../validation/validation.ts";
 
 type Player = { id: string; name: string };
 type RoundScore = Record<string, number>;
@@ -151,14 +148,13 @@ export const useGameSessionStore = create<GameSessionState>((set, get) => ({
 
     let minusTenCount = 0;
     for (const player of players) {
-      const score = currentRound[player.name];
+      let score = currentRound[player.name];
 
       if (score === undefined) {
-        alert(`Falta puntaje para ${player.name}`);
-        return;
+        score = 0;
       }
 
-      const result = scoreOrMinusTenSchema.safeParse(score);
+      const result = scoreSchema.safeParse(score);
       if (!result.success) {
         alert(
           `Puntaje inválido para ${player.name}: ${result.error.errors[0].message}`
