@@ -1,7 +1,12 @@
 "use client";
 
-import { TrashIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import {
+  TableCellsIcon,
+  TrashIcon,
+  UserGroupIcon,
+} from "@heroicons/react/24/outline";
 import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
+import { useUiStore } from "../../stores/useUiStore.ts";
 
 export default function PlayerTableAndRow({ openModal }) {
   const players = useGameSessionStore((state) => state.players);
@@ -21,6 +26,9 @@ export default function PlayerTableAndRow({ openModal }) {
   const setRoundScore = useGameSessionStore((state) => state.setRoundScore);
   const assignMinusTen = useGameSessionStore((state) => state.assignMinusTen);
   const removePlayer = useGameSessionStore((state) => state.removePlayer);
+  const openTotalScoresModal = useUiStore(
+    (state) => state.openTotalScoresModal
+  );
 
   const disqualifiedSet = new Set(disqualifiedPlayers);
   const roundScores = roundScoresHistory[currentRoundIndex] || {};
@@ -54,7 +62,14 @@ export default function PlayerTableAndRow({ openModal }) {
             <th className="text-center">
               Puntaje Ronda {currentRoundIndex + 1}
             </th>
-            <th className="text-end">Puntaje Total</th>
+            <th className="text-end">
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={openTotalScoresModal}
+              >
+                <TableCellsIcon className="w-5 h-5" />
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody>

@@ -30,12 +30,14 @@ export default function Game() {
         </h1>
 
         <AddPlayer />
-
         {players.length > 0 && (
-          <div className="mt-4">
-            <PlayerTable openModal={openModal} />
+          <>
+            <div className="mt-2">
+              <PlayerTable openModal={openModal} />
+            </div>
+
             <RoundControls />
-          </div>
+          </>
         )}
 
         <PlayerModal />

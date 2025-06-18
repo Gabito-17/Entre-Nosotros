@@ -71,7 +71,10 @@ export const useGameSessionStore = create<GameSessionState>((set, get) => ({
       return;
     }
 
-    const newPlayer = { id: crypto.randomUUID(), name: trimmedName };
+    const newPlayer = {
+      id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      name: trimmedName,
+    };
     set({
       players: [...players, newPlayer],
       newPlayerName: "",
