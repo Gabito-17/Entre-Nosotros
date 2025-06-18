@@ -1,35 +1,20 @@
+"use client";
+
 import {
   ArrowUturnLeftIcon,
   ArrowUturnRightIcon,
 } from "@heroicons/react/24/outline";
-import useRound from "../../hooks/useRound";
+import { useGameStore } from "../../stores/useGameStore.ts";
 
-function RoundControls({
-  loadRound,
-  roundScoresHistory,
-  currentRoundIndex,
-  setRoundScores,
-  players,
-  setCurrentRoundIndex,
-  setTotalScores,
-  setRoundScoresHistory,
-  setPlayers,
-}) {
-  const { handleRoundReverse } = useRound({
-    players,
-    currentRoundIndex,
-    roundScoresHistory,
-    setCurrentRoundIndex,
-    setRoundScores,
-    setTotalScores,
-    setRoundScoresHistory,
-    setPlayers,
-  });
+export default function RoundControls() {
+  const currentRoundIndex = useGameStore((state) => state.currentRoundIndex);
+  const confirmRound = useGameStore((state) => state.confirmRound);
+  const reverseRound = useGameStore((state) => state.reverseRound);
 
   return (
     <div className="flex justify-end gap-2 mt-4">
       <button
-        onClick={handleRoundReverse}
+        onClick={reverseRound}
         className="btn btn-circle btn-sm btn-outline btn-error"
         title="Corregir ronda anterior"
         disabled={currentRoundIndex === 0}
@@ -37,14 +22,15 @@ function RoundControls({
         <ArrowUturnLeftIcon className="w-5 h-5" />
       </button>
       <button
-        onClick={loadRound}
+        onClick={() => {
+          console.count("Confirmar ronda clickeado");
+          confirmRound();
+        }}
         className="btn btn-circle btn-sm btn-outline btn-success"
-        title="Cargar siguiente ronda"
+        title="Confirmar ronda actual"
       >
         <ArrowUturnRightIcon className="w-5 h-5" />
       </button>
     </div>
   );
 }
-
-export default RoundControls;

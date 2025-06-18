@@ -13,7 +13,7 @@ function PlayerModal({ selectedPlayer, closeModal }) {
           </button>
         </div>
         <ul className="mt-4">
-          {selectedPlayer.scores.map((score, index) => (
+          {(selectedPlayer.scores ?? []).map((score, index) => (
             <li key={index} className="py-1">
               Ronda {index + 1}: {score}
             </li>
