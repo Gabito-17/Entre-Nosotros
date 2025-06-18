@@ -2,13 +2,15 @@
 
 import { ArrowPathIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { ChangeEvent, KeyboardEvent } from "react";
-import { useGameStore } from "../../stores/useGameStore.ts";
+import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
 
 export default function AddPlayer() {
-  const newPlayerName = useGameStore((state) => state.newPlayerName);
-  const setNewPlayerName = useGameStore((state) => state.setNewPlayerName);
-  const addPlayer = useGameStore((state) => state.addPlayer);
-  const handleResetGame = useGameStore((state) => state.handleResetGame);
+  const newPlayerName = useGameSessionStore((state) => state.newPlayerName);
+  const setNewPlayerName = useGameSessionStore(
+    (state) => state.setNewPlayerName
+  );
+  const addPlayer = useGameSessionStore((state) => state.addPlayer);
+  const resetGame = useGameSessionStore((state) => state.resetSession);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -33,7 +35,7 @@ export default function AddPlayer() {
       />
       <div className="flex flex-wrap items-center gap-2 rounded-box justify-end">
         <button
-          onClick={handleResetGame}
+          onClick={resetGame}
           className="btn btn-secondary btn-sm"
           title="Reiniciar juego"
         >

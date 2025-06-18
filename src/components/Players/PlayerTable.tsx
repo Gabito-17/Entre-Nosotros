@@ -1,30 +1,33 @@
 "use client";
 
 import { TrashIcon, UserGroupIcon } from "@heroicons/react/24/outline";
-import { useGameStore } from "../../stores/useGameStore.ts";
+import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
 
 export default function PlayerTableAndRow({ openModal }) {
-  const players = useGameStore((state) => state.players);
-  const currentRoundIndex = useGameStore((state) => state.currentRoundIndex);
-  const roundScoresHistory = useGameStore((state) => state.roundScoresHistory);
-  const totalScores = useGameStore((state) => state.totalScores);
-  const disqualifiedPlayers = useGameStore(
+  const players = useGameSessionStore((state) => state.players);
+  const currentRoundIndex = useGameSessionStore(
+    (state) => state.currentRoundIndex
+  );
+  const roundScoresHistory = useGameSessionStore(
+    (state) => state.roundScoresHistory
+  );
+  const totalScores = useGameSessionStore((state) => state.totalScores);
+  const disqualifiedPlayers = useGameSessionStore(
     (state) => state.disqualifiedPlayers
   );
-  const currentDealerIndex = useGameStore((state) => state.currentDealerIndex);
-  const setRoundScore = useGameStore((state) => state.setRoundScore);
-  const assignMinusTen = useGameStore((state) => state.assignMinusTen);
-  const removePlayer = useGameStore((state) => state.removePlayer);
+  const currentDealerIndex = useGameSessionStore(
+    (state) => state.currentDealerIndex
+  );
+  const setRoundScore = useGameSessionStore((state) => state.setRoundScore);
+  const assignMinusTen = useGameSessionStore((state) => state.assignMinusTen);
+  const removePlayer = useGameSessionStore((state) => state.removePlayer);
 
   const disqualifiedSet = new Set(disqualifiedPlayers);
   const roundScores = roundScoresHistory[currentRoundIndex] || {};
 
-  // Ya no se usa getNextValidDealerIndex, se usa directamente currentDealerIndex
-
-  const handleScoreChange = (playerName, value) => {
+  const handleScoreChange = (playerName: string, value: string) => {
     if (value === "") {
-      // Permitir limpiar input para editar luego
-      setRoundScore(playerName, undefined);
+      setRoundScore(playerName, 0);
       return;
     }
     const numericValue = Number(value);
@@ -32,7 +35,7 @@ export default function PlayerTableAndRow({ openModal }) {
     setRoundScore(playerName, numericValue);
   };
 
-  const handleMinusTen = (index) => {
+  const handleMinusTen = (index: number) => {
     assignMinusTen(players[index].name);
   };
 

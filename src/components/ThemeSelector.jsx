@@ -1,18 +1,12 @@
 import { useEffect, useState } from "react";
 
-const themes = [
-  "dracula",
-  "black",
-  "pastel",
-  "lofi",
-  "business",
-];
+const themes = ["dracula", "black", "pastel", "lofi", "business"];
 
 export default function ThemeSelector() {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dracula");
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
+    const savedTheme = localStorage.getItem("theme") || "dracula";
     setTheme(savedTheme);
     document.documentElement.setAttribute("data-theme", savedTheme);
   }, []);

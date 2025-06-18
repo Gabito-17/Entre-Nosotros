@@ -1,32 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import RoundControls from "../components/Game/RoundControls.jsx";
-import PlayerModal from "../components/Modals/PlayerModal.jsx";
+import RoundControls from "../components/Game/RoundControls";
+import PlayerModal from "../components/Modals/PlayerModal";
+import TotalScoresModal from "../components/Modals/TotalScoresModal";
 import AddPlayer from "../components/Players/AddPlayer.tsx";
 import PlayerTable from "../components/Players/PlayerTable.tsx";
-import { useGameStore } from "../stores/useGameStore.ts";
+
+import { useGameSessionStore } from "../stores/useGameSessionStore.ts";
+import { useUiStore } from "../stores/useUiStore.ts";
 
 export default function Game() {
-  const players = useGameStore((state) => state.players);
-  const roundScoresHistory = useGameStore((state) => state.roundScoresHistory);
-  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const players = useGameSessionStore((state) => state.players);
+  const roundScoresHistory = useGameSessionStore(
+    (state) => state.roundScoresHistory
+  );
 
-  // Esta función construye el array con los puntajes del jugador en todas las rondas
-  const getScoresForPlayer = (playerName) => {
-    return roundScoresHistory.map((round) => round[playerName] ?? 0);
-  };
+  const setSelectedPlayer = useUiStore((state) => state.setSelectedPlayer);
 
-  // Cuando abrimos el modal, le agregamos al jugador el array "scores"
-  const openModal = (player) => {
-    const scores = getScoresForPlayer(player.name);
+  const openModal = (player: { name: string }) => {
+    const scores = roundScoresHistory.map((round) => round[player.name] ?? 0);
     setSelectedPlayer({ ...player, scores });
   };
 
-  const closeModal = () => setSelectedPlayer(null);
-
   return (
-    <div className="min-h-screen flex justify-center items-center">
+    <div className="min-h-screen flex justify-center items-start">
       <div className="rounded-lg shadow-lg p-4 max-w-lg w-full">
         <h1 className="text-4xl font-bold text-center mb-8 text-secondary">
           Anotador
@@ -41,9 +38,8 @@ export default function Game() {
           </div>
         )}
 
-        {selectedPlayer && (
-          <PlayerModal selectedPlayer={selectedPlayer} closeModal={closeModal} />
-        )}
+        <PlayerModal />
+        <TotalScoresModal />
       </div>
     </div>
   );
