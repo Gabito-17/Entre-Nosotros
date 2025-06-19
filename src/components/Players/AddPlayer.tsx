@@ -1,8 +1,9 @@
 "use client";
 
 import { ArrowPathIcon, UserPlusIcon } from "@heroicons/react/24/outline";
-import { ChangeEvent, KeyboardEvent } from "react";
+import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
+import ConfirmationModal from "../Modals/ConfirmationModal.jsx";
 
 export default function AddPlayer() {
   const newPlayerName = useGameSessionStore((state) => state.newPlayerName);
@@ -11,16 +12,47 @@ export default function AddPlayer() {
   );
   const addPlayer = useGameSessionStore((state) => state.addPlayer);
   const resetGame = useGameSessionStore((state) => state.resetSession);
+  const resetScores = useGameSessionStore((state) => state.resetScores);
+  const roundScoresHistory = useGameSessionStore(
+    (state) => state.roundScoresHistory
+  );
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+
+  // Helper: check if game is in progress (at least one round or scores entered)
+  const isGameInProgress = roundScoresHistory.length > 0;
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      addPlayer();
+      handleAddPlayer();
     }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNewPlayerName(e.target.value);
+  };
+
+  const handleAddPlayer = () => {
+    if (isGameInProgress) {
+      setShowConfirm(true);
+    } else {
+      addPlayer();
+    }
+  };
+
+  const handleConfirmAddPlayer = async () => {
+    addPlayer();
+    setShowConfirm(false);
+  };
+
+  const handleResetClick = () => {
+    if (isGameInProgress) {
+      setShowResetConfirm(true);
+    } else {
+      resetGame();
+    }
   };
 
   return (
@@ -35,21 +67,61 @@ export default function AddPlayer() {
       />
       <div className="flex flex-wrap items-center gap-2 rounded-box justify-end">
         <button
-          onClick={resetGame}
+          onClick={handleResetClick}
           className="btn btn-secondary btn-sm"
-          title="Reiniciar juego"
+          title="Reiniciar partida"
         >
           <ArrowPathIcon className="h-5 w-5" />
         </button>
 
         <button
-          onClick={addPlayer}
+          onClick={handleAddPlayer}
           className="btn btn-primary btn-sm"
           title="Agregar jugador"
         >
           <UserPlusIcon className="h-5 w-5" />
         </button>
       </div>
+      {showConfirm && (
+        <ConfirmationModal
+          title="Estas son horas de llegar?"
+          message={`¿Seguro que querés agregar un jugador?`}
+          onClose={() => setShowConfirm(false)}
+          onConfirm={handleConfirmAddPlayer}
+          actions={{}}
+        />
+      )}
+      {showResetConfirm && (
+        <ConfirmationModal
+          title="Baaaah que paso pao?"
+          message="¿Querés reiniciar la partida?"
+          onClose={() => setShowResetConfirm(false)}
+          onConfirm={() => {}}
+          actions={[
+            {
+              label: "Misma banda, cuenta nueva",
+              className: "btn btn-warning",
+              onClick: () => {
+                resetScores();
+                setShowResetConfirm(false);
+              },
+            },
+            {
+              label: "Sí, se va todo a la p...",
+              className: "btn btn-error",
+              onClick: () => {
+                resetGame();
+                setShowResetConfirm(false);
+              },
+            },
+            {
+              label: "Cancelar",
+              className: "btn btn-secondary",
+              onClick: () => setShowResetConfirm(false),
+            },
+          ]}
+        />
+      )}
     </div>
   );
 }

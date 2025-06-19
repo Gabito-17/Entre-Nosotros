@@ -19,7 +19,7 @@ const TotalScoresModal = () => {
   return (
     <div className="modal modal-open">
       <div className="modal-box max-w-md">
-        <h3 className="font-bold text-lg text-center mb-4">Ranking</h3>
+        <h3 className="font-bold text-lg text-center mb-4">Ranking 👑</h3>
         <div className="overflow-x-auto">
           <table className="table table-zebra w-full">
             <thead>

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { playerNameSchema, scoreSchema } from "../validation/validation.ts";
+import { useUiStore } from "./useUiStore.ts";
 
 type Player = { id: string; name: string };
 type RoundScore = Record<string, number>;
@@ -19,11 +20,13 @@ type GameSessionState = {
   addPlayer: () => void;
   removePlayer: (id: string) => void;
   resetSession: () => void;
+  resetScores: () => void;
 
   setRoundScore: (playerName: string, score: number) => void;
   assignMinusTen: (playerName: string) => void;
   confirmRound: () => void;
   reverseRound: () => void;
+  disqualifyPlayer: (playerName: string) => void;
 
   exportSessionState: () => SessionSnapshot;
 };
@@ -115,25 +118,37 @@ export const useGameSessionStore = create<GameSessionState>((set, get) => ({
     });
   },
 
-  setRoundScore: (playerName: string, score: number | undefined) => {
-    const { roundScoresHistory, currentRoundIndex } = get();
+  resetScores: () => {
+    set({
+      totalScores: {},
+      roundScoresHistory: [],
+      currentRoundIndex: 0,
+      disqualifiedPlayers: [],
+      currentDealerIndex: 0,
+    });
+  },
+
+  setRoundScore: (playerName, score) => {
+    const { roundScoresHistory, currentRoundIndex, disqualifiedPlayers } =
+      get();
+
+    if (disqualifiedPlayers.includes(playerName)) {
+      console.warn(
+        `No se puede asignar puntaje a ${playerName} porque está descalificado`
+      );
+      return;
+    }
+
     const updatedHistory = [...roundScoresHistory];
 
     if (!updatedHistory[currentRoundIndex]) {
       updatedHistory[currentRoundIndex] = {};
     }
 
-    if (score === undefined || score === null) {
-    // eliminar puntaje del jugador para esa ronda
-    const { [playerName]: _, ...rest } = updatedHistory[currentRoundIndex];
-    updatedHistory[currentRoundIndex] = rest;
-  } else {
-    // asignar puntaje normalmente
     updatedHistory[currentRoundIndex] = {
       ...updatedHistory[currentRoundIndex],
       [playerName]: score,
     };
-  }
 
     set({ roundScoresHistory: updatedHistory });
   },
@@ -151,15 +166,21 @@ export const useGameSessionStore = create<GameSessionState>((set, get) => ({
       disqualifiedPlayers,
       currentDealerIndex,
     } = get();
-    const currentRound = roundScoresHistory[currentRoundIndex] || {};
 
+    let currentRound = roundScoresHistory[currentRoundIndex] || {};
+
+    // Asegurar que todos los jugadores tengan un puntaje (0 si no hay)
+    players.forEach((player) => {
+      if (currentRound[player.name] === undefined) {
+        currentRound = { ...currentRound, [player.name]: 0 };
+      }
+    });
+
+    // Validar puntajes
     let minusTenCount = 0;
     for (const player of players) {
       let score = currentRound[player.name];
-
-      if (score === undefined) {
-        score = 0;
-      }
+      if (score === undefined) score = 0;
 
       const result = scoreSchema.safeParse(score);
       if (!result.success) {
@@ -178,13 +199,29 @@ export const useGameSessionStore = create<GameSessionState>((set, get) => ({
       }
     }
 
+    // Actualizar totales
     const updatedTotals = { ...totalScores };
     players.forEach((player) => {
       updatedTotals[player.name] =
         (updatedTotals[player.name] || 0) + (currentRound[player.name] || 0);
     });
 
-    const disqualifiedSet = new Set(disqualifiedPlayers);
+    // Descalificar jugadores que alcanzaron 100 o más puntos
+    let updatedDisqualified = [...disqualifiedPlayers];
+    const uiStore = useUiStore.getState(); // obtener estado UI para abrir modal
+    players.forEach((player) => {
+      if (
+        updatedTotals[player.name] >= 100 &&
+        !updatedDisqualified.includes(player.name)
+      ) {
+        updatedDisqualified.push(player.name);
+        // Abrir modal para el jugador descalificado
+        uiStore.openGameOverModal(player.name);
+      }
+    });
+
+    // Actualizar dealer saltando descalificados
+    const disqualifiedSet = new Set(updatedDisqualified);
     let nextDealerIndex = currentDealerIndex;
     const allDisqualified = players.every((p) => disqualifiedSet.has(p.name));
 
@@ -196,11 +233,25 @@ export const useGameSessionStore = create<GameSessionState>((set, get) => ({
       nextDealerIndex = -1;
     }
 
+    // Actualizar historial de rondas
+    const newHistory = [...roundScoresHistory];
+    newHistory[currentRoundIndex] = currentRound;
+
+    // Setear el estado actualizado
     set({
       totalScores: updatedTotals,
       currentRoundIndex: currentRoundIndex + 1,
       currentDealerIndex: nextDealerIndex,
+      roundScoresHistory: newHistory,
+      disqualifiedPlayers: updatedDisqualified,
     });
+  },
+
+  disqualifyPlayer: (playerName) => {
+    const { disqualifiedPlayers } = get();
+    if (!disqualifiedPlayers.includes(playerName)) {
+      set({ disqualifiedPlayers: [...disqualifiedPlayers, playerName] });
+    }
   },
 
   reverseRound: () => {
@@ -211,11 +262,6 @@ export const useGameSessionStore = create<GameSessionState>((set, get) => ({
 
     const roundToRemoveIndex = currentRoundIndex - 1;
     const roundToRemove = roundScoresHistory[roundToRemoveIndex] || {};
-
-    const confirmReverse = window.confirm(
-      `¿Seguro que querés revertir la ronda ${roundToRemoveIndex + 1}?`
-    );
-    if (!confirmReverse) return;
 
     const newTotals = { ...totalScores };
     players.forEach((player) => {

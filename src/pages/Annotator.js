@@ -2,7 +2,7 @@ import { TableCellsIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import RoundControls from "../components/Game/RoundControls";
 import ConfirmationModal from "../components/Modals/ConfirmationModal";
-import GameOverModal from "../components/Modals/GameOverModal";
+import GameOverModal from "../components/Modals/GameOverModal.tsx";
 import PlayerModal from "../components/Modals/PlayerModal";
 import TotalScoresModal from "../components/Modals/TotalScoresModal";
 import PlayerInput from "../components/Players/PlayerInput";

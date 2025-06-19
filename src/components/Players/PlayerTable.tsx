@@ -1,35 +1,25 @@
 "use client";
 
 import {
-  // TableCellsIcon,
   PlusIcon,
   TrashIcon,
   UserGroupIcon,
+  ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
 import { useUiStore } from "../../stores/useUiStore.ts";
 
 export default function PlayerTableAndRow({ openModal }) {
   const players = useGameSessionStore((state) => state.players);
-  const currentRoundIndex = useGameSessionStore(
-    (state) => state.currentRoundIndex
-  );
-  const roundScoresHistory = useGameSessionStore(
-    (state) => state.roundScoresHistory
-  );
+  const currentRoundIndex = useGameSessionStore((state) => state.currentRoundIndex);
+  const roundScoresHistory = useGameSessionStore((state) => state.roundScoresHistory);
   const totalScores = useGameSessionStore((state) => state.totalScores);
-  const disqualifiedPlayers = useGameSessionStore(
-    (state) => state.disqualifiedPlayers
-  );
-  const currentDealerIndex = useGameSessionStore(
-    (state) => state.currentDealerIndex
-  );
+  const disqualifiedPlayers = useGameSessionStore((state) => state.disqualifiedPlayers);
+  const currentDealerIndex = useGameSessionStore((state) => state.currentDealerIndex);
   const setRoundScore = useGameSessionStore((state) => state.setRoundScore);
   const assignMinusTen = useGameSessionStore((state) => state.assignMinusTen);
   const removePlayer = useGameSessionStore((state) => state.removePlayer);
-  const openTotalScoresModal = useUiStore(
-    (state) => state.openTotalScoresModal
-  );
+  const openTotalScoresModal = useUiStore((state) => state.openTotalScoresModal);
 
   const disqualifiedSet = new Set(disqualifiedPlayers);
   const roundScores = roundScoresHistory[currentRoundIndex] || {};
@@ -64,11 +54,9 @@ export default function PlayerTableAndRow({ openModal }) {
                 <span>{players.length}</span>
               </div>
             </th>
-
             <th>
               <span>Puntaje ronda {currentRoundIndex + 1}</span>
             </th>
-
             <th>
               <button
                 className="flex items-center gap-2 w-full p-2"
@@ -89,10 +77,7 @@ export default function PlayerTableAndRow({ openModal }) {
             const score = roundScores[player.name] ?? "";
 
             return (
-              <tr
-                key={player.id}
-                className={isDisqualified ? "opacity-50" : ""}
-              >
+              <tr key={player.id} className={isDisqualified ? "opacity-50" : ""}>
                 <td>
                   <div className="flex items-center gap-2">
                     <button
@@ -108,12 +93,12 @@ export default function PlayerTableAndRow({ openModal }) {
 
                 <td>
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => openModal(player)}
-                      className="btn btn-sm btn-outline"
-                    >
+                    <button onClick={() => openModal(player)} className="btn btn-sm btn-outline">
                       {player.name}
                     </button>
+                    {isDisqualified && (
+                      <ExclamationCircleIcon className="h-5 w-5 text-error" title="Descalificado" />
+                    )}
                   </div>
                 </td>
 
@@ -132,9 +117,7 @@ export default function PlayerTableAndRow({ openModal }) {
                       min="0"
                       className="input input-bordered input-sm w-20"
                       value={score === undefined ? "" : score}
-                      onChange={(e) =>
-                        handleScoreChange(player.name, e.target.value)
-                      }
+                      onChange={(e) => handleScoreChange(player.name, e.target.value)}
                       disabled={isDisqualified}
                     />
                   </div>

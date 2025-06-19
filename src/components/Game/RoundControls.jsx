@@ -4,7 +4,9 @@ import {
   ArrowUturnLeftIcon,
   ArrowUturnRightIcon,
 } from "@heroicons/react/24/outline";
+import { useState } from "react";
 import { useGameSessionStore } from "../../stores/useGameSessionStore.ts"; // O la ruta correspondiente
+import ConfirmationModal from "../Modals/ConfirmationModal.jsx";
 
 export default function RoundControls() {
   const currentRoundIndex = useGameSessionStore(
@@ -13,10 +15,21 @@ export default function RoundControls() {
   const confirmRound = useGameSessionStore((state) => state.confirmRound);
   const reverseRound = useGameSessionStore((state) => state.reverseRound);
 
+  const [showReverseRoundConfirm, setShowReverseRoundConfirm] = useState(false);
+
+  const handleReverseRound = () => {
+    setShowReverseRoundConfirm(true);
+  };
+
+  const handleConfirmReverseRound = () => {
+    reverseRound();
+    setShowReverseRoundConfirm(false);
+  };
+
   return (
     <div className="flex justify-end gap-2 mt-4">
       <button
-        onClick={reverseRound}
+        onClick={handleReverseRound}
         className="btn btn-circle btn-sm btn-outline btn-error"
         title="Revertir ronda anterior"
         disabled={currentRoundIndex === 0}
@@ -33,6 +46,16 @@ export default function RoundControls() {
       >
         <ArrowUturnRightIcon className="w-5 h-5" />
       </button>
+
+      {showReverseRoundConfirm && (
+        <ConfirmationModal
+          title="Vo decí che?"
+          message="¿Seguro que querés regresar a la ronda anterior?"
+          onClose={() => setShowReverseRoundConfirm(false)}
+          onConfirm={handleConfirmReverseRound}
+          actions={null}
+        />
+      )}
     </div>
   );
 }

@@ -1,6 +1,15 @@
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+"use client";
 
-function GameOverModal({ losingPlayer, handleContinueGame, handleEndGame }) {
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { useUiStore } from "../../stores/useUiStore.ts";
+
+export default function GameOverModal({ handleContinueGame, handleEndGame }) {
+  const isOpen = useUiStore((state) => state.isGameOverModalOpen);
+  const losingPlayer = useUiStore((state) => state.losingPlayer);
+  const closeGameOverModal = useUiStore((state) => state.closeGameOverModal);
+
+  if (!isOpen || !losingPlayer) return null;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="modal-box w-full max-w-md">
@@ -13,10 +22,22 @@ function GameOverModal({ losingPlayer, handleContinueGame, handleEndGame }) {
           ha perdido la partida. ¿Qué te gustaría hacer?
         </p>
         <div className="modal-action">
-          <button className="btn btn-error" onClick={handleEndGame}>
+          <button
+            className="btn btn-error"
+            onClick={() => {
+              handleEndGame();
+              closeGameOverModal();
+            }}
+          >
             Terminar Juego
           </button>
-          <button className="btn btn-primary" onClick={handleContinueGame}>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              handleContinueGame();
+              closeGameOverModal();
+            }}
+          >
             Continuar sin {losingPlayer}
           </button>
         </div>
@@ -24,5 +45,3 @@ function GameOverModal({ losingPlayer, handleContinueGame, handleEndGame }) {
     </div>
   );
 }
-
-export default GameOverModal;
