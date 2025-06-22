@@ -1,20 +1,65 @@
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { useRef, useState } from "react";
+import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
 import { useUiStore } from "../../stores/useUiStore.ts";
 
 export default function PlayerModal() {
   const selectedPlayer = useUiStore((state) => state.selectedPlayer);
   const closePlayerModal = useUiStore((state) => state.closePlayerModal);
+  const removePlayer = useGameSessionStore((state) => state.removePlayer);
 
-  if (!selectedPlayer) {
-    // Evitamos renderizar nada si no hay jugador seleccionado
-    return null;
-  }
+  const contadorRef = useRef(0);
+  const [clickCount, setClickCount] = useState(0);
+
+  if (!selectedPlayer) return null;
+
+  const colorClasses = [
+    "btn-error", // después del primer click
+    "btn-error",
+  ];
+
+  const scaleValues = [1, 1.05];
+  const currentColor =
+    colorClasses[Math.min(clickCount, colorClasses.length - 1)];
+  const currentScale =
+    scaleValues[Math.min(clickCount, scaleValues.length - 1)];
+
+  const totalClicks = 3;
+  const isShaking = clickCount === totalClicks - 1;
+
+  const handleRemovePlayer = () => {
+    contadorRef.current += 1;
+    setClickCount((prev) => prev + 1);
+
+    if (contadorRef.current >= totalClicks) {
+      removePlayer(selectedPlayer.id);
+      closePlayerModal();
+      contadorRef.current = 0;
+      setClickCount(0);
+    }
+  };
 
   return (
     <div className="modal modal-open">
       <div className="modal-box">
-        <h3 className="font-bold text-lg mb-4">
-          Detalles de {selectedPlayer.name}
-        </h3>
+        <div className="flex items-center gap-4 mb-4">
+          <h3 className="font-bold text-lg">
+            Detalles de {selectedPlayer.name}
+          </h3>
+          <button
+            className={`btn btn-sm ${
+              clickCount === 0 ? "btn-outline" : ""
+            } ${currentColor} ${isShaking ? "animate-tilt-shake" : ""}`}
+            onClick={handleRemovePlayer}
+            style={{
+              transform: `scale(${currentScale})`,
+              transition: "transform 0.4s ease, background-color 0.4s ease",
+            }}
+          >
+            <TrashIcon className="h-4" />
+            Eliminar Jugador
+          </button>
+        </div>
 
         <p className="mb-2">Partidas jugadas: {selectedPlayer.scores.length}</p>
 
@@ -24,12 +69,8 @@ export default function PlayerModal() {
           <table className="table-auto w-full border-collapse border border-gray-300 mb-4">
             <thead>
               <tr>
-                <th className="border border-gray-300 px-2 py-1 text-left">
-                  Ronda
-                </th>
-                <th className="border border-gray-300 px-2 py-1 text-left">
-                  Puntaje
-                </th>
+                <th className="border border-gray-300 px-2 py-1">Ronda</th>
+                <th className="border border-gray-300 px-2 py-1">Puntaje</th>
               </tr>
             </thead>
             <tbody>
@@ -46,11 +87,35 @@ export default function PlayerModal() {
         )}
 
         <div className="modal-action">
-          <button className="btn" onClick={closePlayerModal}>
+          <button
+            className="btn"
+            onClick={() => {
+              closePlayerModal();
+              setClickCount(0);
+              contadorRef.current = 0;
+            }}
+          >
             Cerrar
           </button>
         </div>
       </div>
+
+      {/* Animación tilt-shake personalizada */}
+      <style>
+        {`
+          .animate-tilt-shake {
+            animation: tilt-shake 0.4s infinite;
+          }
+          @keyframes tilt-shake {
+            0% { transform: scale(1.1) rotate(0deg);}
+            20% { transform: scale(1.1) rotate(-3deg);}
+            40% { transform: scale(1.1) rotate(3deg);}
+            60% { transform: scale(1.1) rotate(-3deg);}
+            80% { transform: scale(1.1) rotate(3deg);}
+            100% { transform: scale(1.1) rotate(0deg);}
+          }
+        `}
+      </style>
     </div>
   );
 }

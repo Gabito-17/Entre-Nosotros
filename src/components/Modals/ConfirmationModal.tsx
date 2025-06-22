@@ -1,4 +1,15 @@
-const ConfirmationModal = ({ onClose, onConfirm, title, message, actions }) => {
+import { useUiStore } from "../../stores/useUiStore.ts";
+
+const ConfirmationModal = () => {
+  const confirmationModal = useUiStore((state) => state.confirmationModal);
+  const closeConfirmationModal = useUiStore(
+    (state) => state.closeConfirmationModal
+  );
+
+  if (!confirmationModal) return null;
+
+  const { title, message, onConfirm, actions } = confirmationModal;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div
@@ -16,14 +27,16 @@ const ConfirmationModal = ({ onClose, onConfirm, title, message, actions }) => {
                   action.className || "btn"
                 }`}
                 style={{
-                  
                   minWidth: 120,
                   margin: 0,
                   paddingLeft: 0,
                   paddingRight: 0,
                   justifyContent: "center",
                 }}
-                onClick={action.onClick}
+                onClick={async () => {
+                  await action.onClick?.();
+                  closeConfirmationModal();
+                }}
               >
                 {action.label}
               </button>
@@ -34,7 +47,7 @@ const ConfirmationModal = ({ onClose, onConfirm, title, message, actions }) => {
                 className="btn btn-error btn-sm w-full text-center"
                 onClick={async () => {
                   await onConfirm?.();
-                  onClose();
+                  closeConfirmationModal();
                 }}
                 style={{
                   minWidth: 120,
@@ -48,7 +61,7 @@ const ConfirmationModal = ({ onClose, onConfirm, title, message, actions }) => {
               </button>
               <button
                 className="btn btn-secondary btn-sm w-full text-center"
-                onClick={onClose}
+                onClick={closeConfirmationModal}
                 style={{
                   minWidth: 120,
                   margin: 0,

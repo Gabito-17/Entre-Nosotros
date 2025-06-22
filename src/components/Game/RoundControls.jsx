@@ -4,9 +4,8 @@ import {
   ArrowUturnLeftIcon,
   ArrowUturnRightIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
-import { useGameSessionStore } from "../../stores/useGameSessionStore.ts"; // O la ruta correspondiente
-import ConfirmationModal from "../Modals/ConfirmationModal.jsx";
+import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
+import { useUiStore } from "../../stores/useUiStore.ts";
 
 export default function RoundControls() {
   const currentRoundIndex = useGameSessionStore(
@@ -15,15 +14,16 @@ export default function RoundControls() {
   const confirmRound = useGameSessionStore((state) => state.confirmRound);
   const reverseRound = useGameSessionStore((state) => state.reverseRound);
 
-  const [showReverseRoundConfirm, setShowReverseRoundConfirm] = useState(false);
+  const openConfirmationModal = useUiStore(
+    (state) => state.openConfirmationModal
+  );
 
   const handleReverseRound = () => {
-    setShowReverseRoundConfirm(true);
-  };
-
-  const handleConfirmReverseRound = () => {
-    reverseRound();
-    setShowReverseRoundConfirm(false);
+    openConfirmationModal({
+      title: "¿Revertir ronda?",
+      message: `¿Seguro que querés revertir la ronda ${currentRoundIndex}?`,
+      onConfirm: () => reverseRound(),
+    });
   };
 
   return (
@@ -38,24 +38,12 @@ export default function RoundControls() {
       </button>
 
       <button
-        onClick={() => {
-          confirmRound();
-        }}
+        onClick={confirmRound}
         className="btn btn-circle btn-sm btn-outline btn-success"
         title="Confirmar ronda actual"
       >
         <ArrowUturnRightIcon className="w-5 h-5" />
       </button>
-
-      {showReverseRoundConfirm && (
-        <ConfirmationModal
-          title="Vo decí che?"
-          message="¿Seguro que querés regresar a la ronda anterior?"
-          onClose={() => setShowReverseRoundConfirm(false)}
-          onConfirm={handleConfirmReverseRound}
-          actions={null}
-        />
-      )}
     </div>
   );
 }

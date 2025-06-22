@@ -1,9 +1,9 @@
 "use client";
 
 import { ArrowPathIcon, UserPlusIcon } from "@heroicons/react/24/outline";
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent } from "react";
 import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
-import ConfirmationModal from "../Modals/ConfirmationModal.jsx";
+import { useUiStore } from "../../stores/useUiStore.ts";
 
 export default function AddPlayer() {
   const newPlayerName = useGameSessionStore((state) => state.newPlayerName);
@@ -17,8 +17,7 @@ export default function AddPlayer() {
     (state) => state.roundScoresHistory
   );
 
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const openConfirmationModal = useUiStore((state) => state.openConfirmationModal);
 
   // Helper: check if game is in progress (at least one round or scores entered)
   const isGameInProgress = roundScoresHistory.length > 0;
@@ -36,20 +35,39 @@ export default function AddPlayer() {
 
   const handleAddPlayer = () => {
     if (isGameInProgress) {
-      setShowConfirm(true);
+      openConfirmationModal({
+        title: "Estas son horas de llegar?",
+        message: "¿Seguro que querés agregar un jugador?",
+        onConfirm: () => addPlayer(),
+      });
     } else {
       addPlayer();
     }
   };
 
-  const handleConfirmAddPlayer = async () => {
-    addPlayer();
-    setShowConfirm(false);
-  };
-
   const handleResetClick = () => {
     if (isGameInProgress) {
-      setShowResetConfirm(true);
+      openConfirmationModal({
+        title: "Baaaah que paso pao?",
+        message: "¿Querés reiniciar la partida?",
+        actions: [
+          {
+            label: "Misma banda, cuenta nueva",
+            className: "btn btn-warning",
+            onClick: () => resetScores(),
+          },
+          {
+            label: "Sí, se va todo a la p...",
+            className: "btn btn-error",
+            onClick: () => resetGame(),
+          },
+          {
+            label: "Cancelar",
+            className: "btn btn-secondary",
+            onClick: () => {},
+          },
+        ],
+      });
     } else {
       resetGame();
     }
@@ -82,46 +100,6 @@ export default function AddPlayer() {
           <UserPlusIcon className="h-5 w-5" />
         </button>
       </div>
-      {showConfirm && (
-        <ConfirmationModal
-          title="Estas son horas de llegar?"
-          message={`¿Seguro que querés agregar un jugador?`}
-          onClose={() => setShowConfirm(false)}
-          onConfirm={handleConfirmAddPlayer}
-          actions={{}}
-        />
-      )}
-      {showResetConfirm && (
-        <ConfirmationModal
-          title="Baaaah que paso pao?"
-          message="¿Querés reiniciar la partida?"
-          onClose={() => setShowResetConfirm(false)}
-          onConfirm={() => {}}
-          actions={[
-            {
-              label: "Misma banda, cuenta nueva",
-              className: "btn btn-warning",
-              onClick: () => {
-                resetScores();
-                setShowResetConfirm(false);
-              },
-            },
-            {
-              label: "Sí, se va todo a la p...",
-              className: "btn btn-error",
-              onClick: () => {
-                resetGame();
-                setShowResetConfirm(false);
-              },
-            },
-            {
-              label: "Cancelar",
-              className: "btn btn-secondary",
-              onClick: () => setShowResetConfirm(false),
-            },
-          ]}
-        />
-      )}
     </div>
   );
 }
