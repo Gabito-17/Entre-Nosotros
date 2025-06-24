@@ -42,9 +42,9 @@ export default function PlayerModal() {
   return (
     <div className="modal modal-open">
       <div className="modal-box">
-        <div className="flex items-center gap-4 mb-4">
-          <h3 className="font-bold text-lg">
-            Detalles de {selectedPlayer.name}
+        <div className="flex justify-between gap-4 mb-4">
+          <h3 className="text-lg">
+            Puntajes de <text className="font-bold">{selectedPlayer.name}</text>
           </h3>
           <button
             className={`btn btn-sm ${
@@ -60,8 +60,6 @@ export default function PlayerModal() {
             Eliminar Jugador
           </button>
         </div>
-
-        <p className="mb-2">Partidas jugadas: {selectedPlayer.scores.length}</p>
 
         {selectedPlayer.scores.length === 0 ? (
           <p>No hay puntajes registrados.</p>

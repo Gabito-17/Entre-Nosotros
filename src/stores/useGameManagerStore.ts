@@ -18,8 +18,10 @@ type PersistedState = {
 type SavedGame = {
   id: string;
   name: string;
-  state: PersistedState;
+  finishedAt: string; // fecha ISO string
+  state: SessionSnapshot;
 };
+
 
 type GameManagerState = {
   savedGames: Record<string, SavedGame>;

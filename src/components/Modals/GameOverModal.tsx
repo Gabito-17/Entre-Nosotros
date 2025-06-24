@@ -35,7 +35,6 @@ export default function GameOverModal({ handleContinueGame, handleEndGame }) {
             className="btn btn-primary"
             onClick={() => {
               handleContinueGame();
-              closeGameOverModal();
             }}
           >
             Continuar sin {losingPlayer}
