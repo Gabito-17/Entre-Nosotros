@@ -82,7 +82,12 @@ export const useGameSessionStore = create<GameSessionState>()(
       },
 
       removePlayer: (id) => {
-        const { players, totalScores, roundScoresHistory, dealerAbsoluteIndex } = get();
+        const {
+          players,
+          totalScores,
+          roundScoresHistory,
+          dealerAbsoluteIndex,
+        } = get();
         const playerToRemove = players.find((p) => p.id === id);
         if (!playerToRemove) return;
 
@@ -141,9 +146,15 @@ export const useGameSessionStore = create<GameSessionState>()(
       },
 
       setRoundScore: (playerName, score) => {
-        const { roundScoresHistory, currentRoundIndex, getDisqualifiedPlayers } = get();
+        const {
+          roundScoresHistory,
+          currentRoundIndex,
+          getDisqualifiedPlayers,
+        } = get();
         if (getDisqualifiedPlayers().includes(playerName)) {
-          console.warn(`No se puede asignar puntaje a ${playerName} porque está descalificado`);
+          console.warn(
+            `No se puede asignar puntaje a ${playerName} porque está descalificado`
+          );
           return;
         }
 
@@ -164,7 +175,13 @@ export const useGameSessionStore = create<GameSessionState>()(
       },
 
       confirmRound: () => {
-        const { roundScoresHistory, currentRoundIndex, totalScores, players, dealerAbsoluteIndex } = get();
+        const {
+          roundScoresHistory,
+          currentRoundIndex,
+          totalScores,
+          players,
+          dealerAbsoluteIndex,
+        } = get();
 
         let currentRound = roundScoresHistory[currentRoundIndex] || {};
         players.forEach((player) => {
@@ -178,7 +195,9 @@ export const useGameSessionStore = create<GameSessionState>()(
           let score = currentRound[player.name] ?? 0;
           const result = scoreSchema.safeParse(score);
           if (!result.success) {
-            alert(`Puntaje inválido para ${player.name}: ${result.error.errors[0].message}`);
+            alert(
+              `Puntaje inválido para ${player.name}: ${result.error.errors[0].message}`
+            );
             return;
           }
           if (score === -10) {
@@ -192,10 +211,14 @@ export const useGameSessionStore = create<GameSessionState>()(
 
         const updatedTotals = { ...totalScores };
         players.forEach((player) => {
-          updatedTotals[player.name] = (updatedTotals[player.name] || 0) + (currentRound[player.name] || 0);
+          updatedTotals[player.name] =
+            (updatedTotals[player.name] || 0) +
+            (currentRound[player.name] || 0);
         });
 
-        const disqualifiedNow = players.filter((p) => updatedTotals[p.name] >= 100);
+        const disqualifiedNow = players.filter(
+          (p) => updatedTotals[p.name] >= 100
+        );
         const uiStore = useUiStore.getState();
 
         disqualifiedNow.forEach((player) => {
@@ -216,7 +239,13 @@ export const useGameSessionStore = create<GameSessionState>()(
       },
 
       reverseRound: () => {
-        const { currentRoundIndex, roundScoresHistory, totalScores, players, dealerAbsoluteIndex } = get();
+        const {
+          currentRoundIndex,
+          roundScoresHistory,
+          totalScores,
+          players,
+          dealerAbsoluteIndex,
+        } = get();
         if (currentRoundIndex === 0) return;
 
         const roundToRemoveIndex = currentRoundIndex - 1;
@@ -224,7 +253,8 @@ export const useGameSessionStore = create<GameSessionState>()(
         const newTotals = { ...totalScores };
         players.forEach((player) => {
           const scoreToSubtract = roundToRemove[player.name] || 0;
-          newTotals[player.name] = (newTotals[player.name] || 0) - scoreToSubtract;
+          newTotals[player.name] =
+            (newTotals[player.name] || 0) - scoreToSubtract;
         });
 
         const newHistory = [...roundScoresHistory];
@@ -234,7 +264,8 @@ export const useGameSessionStore = create<GameSessionState>()(
           totalScores: newTotals,
           roundScoresHistory: newHistory,
           currentRoundIndex: roundToRemoveIndex,
-          dealerAbsoluteIndex: (dealerAbsoluteIndex - 1 + players.length) % players.length,
+          dealerAbsoluteIndex:
+            (dealerAbsoluteIndex - 1 + players.length) % players.length,
         });
       },
 
@@ -259,8 +290,22 @@ export const useGameSessionStore = create<GameSessionState>()(
       },
 
       exportSessionState: () => {
-        const { players, newPlayerName, currentRoundIndex, roundScoresHistory, totalScores, dealerAbsoluteIndex } = get();
-        return { players, newPlayerName, currentRoundIndex, roundScoresHistory, totalScores, dealerAbsoluteIndex };
+        const {
+          players,
+          newPlayerName,
+          currentRoundIndex,
+          roundScoresHistory,
+          totalScores,
+          dealerAbsoluteIndex,
+        } = get();
+        return {
+          players,
+          newPlayerName,
+          currentRoundIndex,
+          roundScoresHistory,
+          totalScores,
+          dealerAbsoluteIndex,
+        };
       },
     }),
     {

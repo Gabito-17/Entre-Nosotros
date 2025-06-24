@@ -17,7 +17,9 @@ export default function AddPlayer() {
     (state) => state.roundScoresHistory
   );
 
-  const openConfirmationModal = useUiStore((state) => state.openConfirmationModal);
+  const openConfirmationModal = useUiStore(
+    (state) => state.openConfirmationModal
+  );
 
   // Helper: check if game is in progress (at least one round or scores entered)
   const isGameInProgress = roundScoresHistory.length > 0;
@@ -69,7 +71,22 @@ export default function AddPlayer() {
         ],
       });
     } else {
-      resetGame();
+      openConfirmationModal({
+        title: "Baaaah que paso pao?",
+        message: "¿Querés eliminar a todos los jugadores actuales?",
+        actions: [
+          {
+            label: "Eliminar Jugadores",
+            className: "btn btn-error",
+            onClick: () => resetGame(),
+          },
+          {
+            label: "Cancelar",
+            className: "btn btn-secondary",
+            onClick: () => {},
+          },
+        ],
+      });
     }
   };
 
