@@ -6,7 +6,7 @@ import GameOverModal from "../components/Modals/GameOverModal.tsx";
 import PlayerModal from "../components/Modals/PlayerModal";
 import TotalScoresModal from "../components/Modals/TotalScoresModal";
 import AddPlayer from "../components/Players/AddPlayer.tsx";
-import PlayerTable from "../components/Players/PlayerTable.tsx";
+import PlayerTable from "../components/Players/PlayerTableAndRow.tsx";
 import Toaster from "../components/Toaster.tsx";
 import { useGameSessionStore } from "../stores/useGameSessionStore.ts";
 import { useUiStore } from "../stores/useUiStore.ts";

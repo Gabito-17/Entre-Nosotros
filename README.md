@@ -1,4 +1,3 @@
-
 # 🃏 Britney - Game Score Tracker
 
 **Britney** es una aplicación web desarrollada con **React** para llevar el registro de partidas de juegos de mesa o cartas. Gestiona fácilmente jugadores, rondas, puntajes, descalificaciones y dealer. Todo desde una interfaz simple, rápida y persistente.
@@ -10,13 +9,13 @@
 - ✅ Registro dinámico de partidas por rondas
 - ✅ Cálculo automático de puntajes acumulados
 - ✅ Sistema de descalificación automática (por superar un umbral)
-- ✅ Control rotativo del *dealer*
+- ✅ Control rotativo del _dealer_
 - ✅ Historial de rondas jugadas
 - ✅ Persistencia automática con `localStorage`
 - ✅ Interfaz moderna con **DaisyUI**
 - ✅ Modales reutilizables y componentes visuales desacoplados
 - ✅ Validaciones robustas de puntajes usando **Zod**
-- ✅ Notificaciones tipo *toast* con `zustand` y DaisyUI
+- ✅ Notificaciones tipo _toast_ con `zustand` y DaisyUI
 
 ---
 
@@ -55,12 +54,12 @@ Se agregó un sistema de notificaciones visuales usando `zustand` y componentes 
 
 ```
 /src
+  /assets        → imagenes y assets necesarios.
   /components        → Componentes reutilizables (modales, botones, etc.)
-  /hooks             → Hooks personalizados (useGame, useRound, etc.)
+  /pages             → Página principal
   /stores            → Estados globales con Zustand
   /validation        → Esquemas de validación con Zod
-  /types             → Tipos de datos globales
-  /pages             → Página principal
+
 ```
 
 ---
