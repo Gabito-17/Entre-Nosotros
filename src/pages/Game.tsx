@@ -7,6 +7,7 @@ import PlayerModal from "../components/Modals/PlayerModal";
 import TotalScoresModal from "../components/Modals/TotalScoresModal";
 import AddPlayer from "../components/Players/AddPlayer.tsx";
 import PlayerTable from "../components/Players/PlayerTable.tsx";
+import Toaster from "../components/Toaster.tsx";
 import { useGameSessionStore } from "../stores/useGameSessionStore.ts";
 import { useUiStore } from "../stores/useUiStore.ts";
 
@@ -54,6 +55,7 @@ export default function Game() {
           handleEndGame={handleEndGame}
         />
         <ConfirmationModal /> {/* AQUI LO RENDERIZAMOS SIEMPRE */}
+        <Toaster/>
       </div>
     </div>
   );

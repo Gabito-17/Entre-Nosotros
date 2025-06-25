@@ -2,6 +2,12 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { playerNameSchema, scoreSchema } from "../validation/validation.ts";
 import { useUiStore } from "./useUiStore.ts";
+import { useUiNotificationStore } from "./useUiNotificationStore.ts";
+
+// TIP UTIL: atajo para mostrar notificaciones
+const notify = (message: string, type: "info" | "success" | "error" | "warning" = "info") => {
+  useUiNotificationStore.getState().addNotification(message, type);
+};
 
 type Player = { id: string; name: string };
 type RoundScore = Record<string, number>;
@@ -58,7 +64,7 @@ export const useGameSessionStore = create<GameSessionState>()(
 
         const result = playerNameSchema.safeParse(trimmedName);
         if (!result.success) {
-          alert(result.error.errors[0].message);
+          notify(result.error.errors[0].message, "error");
           return;
         }
 
@@ -66,7 +72,7 @@ export const useGameSessionStore = create<GameSessionState>()(
           (player) => player.name.toLowerCase() === trimmedName.toLowerCase()
         );
         if (exists) {
-          alert("El jugador ya existe");
+          notify("El jugador ya existe", "warning");
           return;
         }
 
@@ -132,7 +138,6 @@ export const useGameSessionStore = create<GameSessionState>()(
           useUiStore.getState().popDisqualificationQueue();
         }, 0);
 
-        // También limpiamos la persistencia:
         localStorage.removeItem("game-session-storage");
       },
 
@@ -152,9 +157,7 @@ export const useGameSessionStore = create<GameSessionState>()(
           getDisqualifiedPlayers,
         } = get();
         if (getDisqualifiedPlayers().includes(playerName)) {
-          console.warn(
-            `No se puede asignar puntaje a ${playerName} porque está descalificado`
-          );
+          notify(`No se puede asignar puntaje a ${playerName} porque está descalificado`, "warning");
           return;
         }
 
@@ -195,15 +198,16 @@ export const useGameSessionStore = create<GameSessionState>()(
           let score = currentRound[player.name] ?? 0;
           const result = scoreSchema.safeParse(score);
           if (!result.success) {
-            alert(
-              `Puntaje inválido para ${player.name}: ${result.error.errors[0].message}`
+            notify(
+              `Puntaje inválido para ${player.name}: ${result.error.errors[0].message}`,
+              "error"
             );
             return;
           }
           if (score === -10) {
             minusTenCount++;
             if (minusTenCount > 1) {
-              alert("Solo se puede asignar -10 puntos a un jugador por ronda");
+              notify("Solo se puede asignar -10 puntos a un jugador por ronda", "error");
               return;
             }
           }
