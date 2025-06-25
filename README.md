@@ -1,41 +1,82 @@
-# Britney - Game Score Tracker
 
-Britney es una aplicación web desarrollada en React que permite registrar partidas del juego Britney, gestionando rondas, puntajes, descalificaciones y jugadores de manera sencilla e intuitiva.
+# 🃏 Britney - Game Score Tracker
 
-## Características
+**Britney** es una aplicación web desarrollada con **React** para llevar el registro de partidas de juegos de mesa o cartas. Gestiona fácilmente jugadores, rondas, puntajes, descalificaciones y dealer. Todo desde una interfaz simple, rápida y persistente.
 
-- Registro de partidas por rondas
-- Cálculo automático de puntajes acumulados
-- Soporte para descalificaciones de jugadores
-- Control de dealer/turno
-- Historial completo de partidas
-- Soporte para múltiples partidas activas
-- Persistencia de datos en el navegador mediante `localStorage`
-- Modales y componentes reutilizables con React y Tailwind CSS
-- Hooks personalizados para encapsular la lógica de juego
-- Validaciones de puntaje mediante Zod
+---
 
-## Tecnologías utilizadas
+## 🚀 Características
 
-- React (con Hooks y componentes funcionales)
-- Tailwind CSS (para el diseño UI)
-- Heroicons (iconos SVG)
-- Zod (validaciones de datos)
-- localStorage API (persistencia en el navegador)
+- ✅ Registro dinámico de partidas por rondas
+- ✅ Cálculo automático de puntajes acumulados
+- ✅ Sistema de descalificación automática (por superar un umbral)
+- ✅ Control rotativo del _dealer_
+- ✅ Historial de rondas jugadas
+- ✅ Persistencia automática con `localStorage`
+- ✅ Interfaz moderna con **DaisyUI**
+- ✅ Modales reutilizables y componentes visuales desacoplados
+- ✅ Validaciones robustas de puntajes usando **Zod**
+- ✅ Notificaciones tipo _toast_ con `zustand` y DaisyUI
 
-## Estructura del proyecto
+---
+
+## 🧠 Mejoras recientes
+
+### 📦 Zustand como gestor de estado
+
+Se implementó Zustand para manejar:
+
+- La sesión de juego (`useGameSessionStore`)
+- El estado general de UI (`useUiStore`)
+- Las notificaciones visuales (`useUiNotificationStore`)
+
+Esto mejora la organización y escalabilidad del código.
+
+### 🔔 Sistema de notificaciones tipo Toast
+
+Se agregó un sistema de notificaciones visuales usando `zustand` y componentes de **DaisyUI**. Estas notificaciones:
+
+- Aparecen automáticamente al validar errores o acciones importantes
+- Se auto-cierran a los 4 segundos
+- Son totalmente personalizables por tipo (`success`, `error`, `info`, `warning`)
+
+### 🔧 Correcciones y mejoras generales
+
+- Validaciones de nombres y puntajes con Zod
+- Prevención de nombres duplicados
+- Lógica de `-10` limitada a un jugador por ronda
+- Dealer ignora a jugadores descalificados
+- Refactor para separar hooks, stores y lógica de negocio
+- Estilos UI mejorados con DaisyUI y Heroicons
+
+---
+
+## 🧱 Estructura del proyecto
 
 ```
 /src
-  /components     -> Componentes de UI reutilizables (modales, botones, inputs, etc)
-  /hooks          -> Hooks personalizados (useGame, useRound, usePlayers, etc)
-  /types          -> Tipos de datos y estructuras utilizadas
-  /utils          -> Utilidades y funciones auxiliares
-  /storage        -> Encapsulación de acceso a localStorage
-  /pages          -> Entrada principal de la app
+  /assets        → imagenes y assets necesarios.
+  /components        → Componentes reutilizables (modales, botones, etc.)
+  /pages             → Página principal
+  /stores            → Estados globales con Zustand
+  /validation        → Esquemas de validación con Zod
+
 ```
 
-## Instalación
+---
+
+## ⚙️ Tecnologías utilizadas
+
+- React (con Hooks y JSX)
+- Zustand (estado global)
+- Tailwind CSS + DaisyUI (estilo UI)
+- Heroicons (iconografía SVG)
+- Zod (validaciones de esquema)
+- localStorage API (persistencia del juego)
+
+---
+
+## 🧪 Instalación
 
 1. Clonar el repositorio:
 
@@ -55,19 +96,29 @@ pnpm install
 3. Iniciar el servidor de desarrollo:
 
 ```bash
-npm run dev
+npm run start
 ```
 
-La aplicación estará disponible en `http://localhost:3000`
+La aplicación estará disponible en:  
+📍 http://localhost:3000
 
-## Pendientes / Roadmap
+---
 
-- Agregar soporte para distintos tipos de juego con reglas personalizadas
-- Exportar e importar partidas (JSON)
-- Integración futura con backend para sincronización online
-- Soporte multi-dispositivo
-- Mejora de UX y temas visuales
+## 🔮 Roadmap / Próximas mejoras
 
-## Licencia
+- 🎲 Soporte para diferentes tipos de juegos
+- 💾 Exportación e importación de partidas (JSON)
+- ☁️ Sincronización online con backend
+- 📱 Mejora de la experiencia en móviles
+- 🎨 Temas visuales personalizables
+- 🧪 Tests unitarios para lógica y componentes
 
-Proyecto educativo y personal. Sin licencia comercial por el momento.
+---
+
+## 📄 Licencia
+
+Proyecto educativo y personal.  
+Actualmente sin licencia comercial.  
+Desarrollado con 💙 para ayudarte a disfrutar tus partidas sin perder el hilo.
+
+---

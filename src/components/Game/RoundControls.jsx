@@ -1,50 +1,49 @@
+"use client";
+
 import {
   ArrowUturnLeftIcon,
   ArrowUturnRightIcon,
 } from "@heroicons/react/24/outline";
-import useRound from "../../hooks/useRound";
+import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
+import { useUiStore } from "../../stores/useUiStore.ts";
 
-function RoundControls({
-  loadRound,
-  roundScoresHistory,
-  currentRoundIndex,
-  setRoundScores,
-  players,
-  setCurrentRoundIndex,
-  setTotalScores,
-  setRoundScoresHistory,
-  setPlayers,
-}) {
-  const { handleRoundReverse } = useRound({
-    players,
-    currentRoundIndex,
-    roundScoresHistory,
-    setCurrentRoundIndex,
-    setRoundScores,
-    setTotalScores,
-    setRoundScoresHistory,
-    setPlayers,
-  });
+export default function RoundControls() {
+  const currentRoundIndex = useGameSessionStore(
+    (state) => state.currentRoundIndex
+  );
+  const confirmRound = useGameSessionStore((state) => state.confirmRound);
+  const reverseRound = useGameSessionStore((state) => state.reverseRound);
+
+  const openConfirmationModal = useUiStore(
+    (state) => state.openConfirmationModal
+  );
+
+  const handleReverseRound = () => {
+    openConfirmationModal({
+      title: "¿Revertir ronda?",
+      message: `¿Seguro que querés revertir la ronda ${currentRoundIndex}?`,
+      onConfirm: () => reverseRound(),
+    });
+  };
 
   return (
     <div className="flex justify-end gap-2 mt-4">
       <button
-        onClick={handleRoundReverse}
+        onClick={handleReverseRound}
         className="btn btn-circle btn-sm btn-outline btn-error"
-        title="Corregir ronda anterior"
+        title="Revertir ronda anterior"
         disabled={currentRoundIndex === 0}
       >
         <ArrowUturnLeftIcon className="w-5 h-5" />
       </button>
+
       <button
-        onClick={loadRound}
+        onClick={confirmRound}
         className="btn btn-circle btn-sm btn-outline btn-success"
-        title="Cargar siguiente ronda"
+        title="Confirmar ronda actual"
       >
         <ArrowUturnRightIcon className="w-5 h-5" />
       </button>
     </div>
   );
 }
-
-export default RoundControls;
