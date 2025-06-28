@@ -1,25 +1,25 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import NavBar from "./components/Layout/NavBar";
+import Layout from "./components/Layout/Layout.tsx";
 import AboutUs from "./pages/AboutUs";
-import Game from "./pages/Game.tsx";
+import Game from "./pages/AnotattorBritneyPage.tsx";
+import AnotadorTrucoPage from "./pages/AnotattorTrucoPage.tsx";
 import LandingPage from "./pages/LandingPage";
-import RulesPage from "./pages/RulesPage";
+import RulesPage from "./pages/RulesBritneyPage.js";
 import SuggestionsPage from "./pages/SuggestionPage";
 
 const App = () => {
   return (
     <Router>
-      {" "}
-      <NavBar />
-      <div className="mt-20">
+      <Layout>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/reglas" element={<RulesPage />} />
           <Route path="/sugerencias" element={<SuggestionsPage />} />
           <Route path="/nosotros" element={<AboutUs />} />
           <Route path="/anotador" element={<Game />} />
+          <Route path="/anotador-truco" element={<AnotadorTrucoPage />} />
         </Routes>
-      </div>
+      </Layout>
     </Router>
   );
 };

@@ -4,15 +4,15 @@ import {
   ArrowUturnLeftIcon,
   ArrowUturnRightIcon,
 } from "@heroicons/react/24/outline";
-import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
+import { useGameBritneyStore } from "../../stores/useGameBritneyStore.ts";
 import { useUiStore } from "../../stores/useUiStore.ts";
 
 export default function RoundControls() {
-  const currentRoundIndex = useGameSessionStore(
+  const currentRoundIndex = useGameBritneyStore(
     (state) => state.currentRoundIndex
   );
-  const confirmRound = useGameSessionStore((state) => state.confirmRound);
-  const reverseRound = useGameSessionStore((state) => state.reverseRound);
+  const confirmRound = useGameBritneyStore((state) => state.confirmRound);
+  const reverseRound = useGameBritneyStore((state) => state.reverseRound);
 
   const openConfirmationModal = useUiStore(
     (state) => state.openConfirmationModal

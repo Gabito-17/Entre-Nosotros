@@ -21,7 +21,7 @@ const SuggestionsPage = () => {
   };
 
   return (
-    <div className="min-h-screen py-6 px-4">
+    <div className="py-6 px-4">
       <div className="mx-auto text-center">
         <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-primary">
           Déjanos una Sugerencia

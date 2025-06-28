@@ -1,12 +1,12 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useRef, useState } from "react";
-import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
+import { useGameBritneyStore } from "../../stores/useGameBritneyStore.ts";
 import { useUiStore } from "../../stores/useUiStore.ts";
 
 export default function PlayerModal() {
   const selectedPlayer = useUiStore((state) => state.selectedPlayer);
   const closePlayerModal = useUiStore((state) => state.closePlayerModal);
-  const removePlayer = useGameSessionStore((state) => state.removePlayer);
+  const removePlayer = useGameBritneyStore((state) => state.removePlayer);
 
   const contadorRef = useRef(0);
   const [clickCount, setClickCount] = useState(0);

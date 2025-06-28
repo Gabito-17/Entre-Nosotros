@@ -6,7 +6,7 @@ import Footer from "../components/Layout/Footer";
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen bg-base-100 text-base-content">
+    <div className="bg-base-100 text-base-content">
       {/* Introducción */}
       <Introduction />
 

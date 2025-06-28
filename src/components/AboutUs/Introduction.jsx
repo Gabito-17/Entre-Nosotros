@@ -1,12 +1,10 @@
-import i3 from "../../assets/images/i7.jpg";
-
 const Introduction = () => {
   return (
     <section className="py-16 text-center lg:text-left lg:flex lg:space-x-12 px-6 container mx-auto">
       {" "}
       <div className="lg:w-1/2 mt-8 lg:mt-0">
         <img
-          src={i3}
+          src={"/assets/images/i3.webp"}
           alt="No carga :'("
           className="rounded-lg shadow-lg w-full"
         />

@@ -1,26 +1,26 @@
 "use client";
 
 import { PlusIcon, UserGroupIcon } from "@heroicons/react/24/outline";
-import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
+import { useGameBritneyStore } from "../../stores/useGameBritneyStore.ts";
 import { useUiStore } from "../../stores/useUiStore.ts";
 
 export default function PlayerTableAndRow({ openModal }) {
-  const players = useGameSessionStore((state) => state.players);
-  const currentRoundIndex = useGameSessionStore(
+  const players = useGameBritneyStore((state) => state.players);
+  const currentRoundIndex = useGameBritneyStore(
     (state) => state.currentRoundIndex
   );
-  const roundScoresHistory = useGameSessionStore(
+  const roundScoresHistory = useGameBritneyStore(
     (state) => state.roundScoresHistory
   );
-  const totalScores = useGameSessionStore((state) => state.totalScores);
-  const getDisqualifiedPlayers = useGameSessionStore(
+  const totalScores = useGameBritneyStore((state) => state.totalScores);
+  const getDisqualifiedPlayers = useGameBritneyStore(
     (state) => state.getDisqualifiedPlayers
   );
-  const getCurrentDealer = useGameSessionStore(
+  const getCurrentDealer = useGameBritneyStore(
     (state) => state.getCurrentDealer
   );
-  const setRoundScore = useGameSessionStore((state) => state.setRoundScore);
-  const assignMinusTen = useGameSessionStore((state) => state.assignMinusTen);
+  const setRoundScore = useGameBritneyStore((state) => state.setRoundScore);
+  const assignMinusTen = useGameBritneyStore((state) => state.assignMinusTen);
   const openTotalScoresModal = useUiStore(
     (state) => state.openTotalScoresModal
   );

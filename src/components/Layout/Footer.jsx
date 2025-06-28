@@ -23,12 +23,12 @@ const Footer = () => {
             <li className="flex items-center gap-2">
               <EnvelopeIcon className="w-5 h-5 text-secondary" />
               <a href="mailto:jabba@huttdelivery.pizza" className="link-hover">
-                jabba@huttdelivery.pizza
+                juangabrielpavon@gmail.com
               </a>
             </li>
             <li className="flex items-center gap-2">
               <MapPinIcon className="w-5 h-5 text-secondary" />
-              <span>Mos Eisley Cantina, Tatooine 🚀🍻</span>
+              <span>Misiones, Argentina 🚀</span>
             </li>
           </ul>
         </div>
@@ -59,6 +59,7 @@ const Footer = () => {
             {[
               { name: "Inicio", href: "/" },
               { name: "Nosotros", href: "/nosotros" },
+              { name: "Sugerencias", href: "/sugerencias" },
               { name: "Anotador", href: "/anotador" },
               { name: "Reglas", href: "/reglas" },
             ].map((link, index) => (

@@ -19,8 +19,9 @@ export default function ThemeSelector() {
   };
 
   return (
-    <div className="p-4">
+    <div>
       <select
+        id="tema"
         value={theme}
         onChange={handleChange}
         className="select select-bordered"

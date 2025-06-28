@@ -1,5 +1,3 @@
-import i5 from "../assets/images/i5.jpg"; // Asegúrate de tener la imagen correctamente importada
-
 const Introduction = () => {
   return (
     <section className="py-16 px-6 container mx-auto text-center lg:text-left lg:flex lg:items-center lg:gap-12">
@@ -23,9 +21,11 @@ const Introduction = () => {
       </div>
       <div className="lg:w-1/2 mt-8 lg:mt-0">
         <img
-          src={i5}
+          src="/assets/images/i5.webp"
           alt="Britney preview"
           className="rounded-box shadow-xl w-full"
+          loading="eager"
+          fetchpriority="high"
         />
       </div>
     </section>

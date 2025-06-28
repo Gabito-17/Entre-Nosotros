@@ -2,18 +2,18 @@
 
 import { ArrowPathIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { ChangeEvent, KeyboardEvent } from "react";
-import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
+import { useGameBritneyStore } from "../../stores/useGameBritneyStore.ts";
 import { useUiStore } from "../../stores/useUiStore.ts";
 
 export default function AddPlayer() {
-  const newPlayerName = useGameSessionStore((state) => state.newPlayerName);
-  const setNewPlayerName = useGameSessionStore(
+  const newPlayerName = useGameBritneyStore((state) => state.newPlayerName);
+  const setNewPlayerName = useGameBritneyStore(
     (state) => state.setNewPlayerName
   );
-  const addPlayer = useGameSessionStore((state) => state.addPlayer);
-  const resetGame = useGameSessionStore((state) => state.resetSession);
-  const resetScores = useGameSessionStore((state) => state.resetScores);
-  const roundScoresHistory = useGameSessionStore(
+  const addPlayer = useGameBritneyStore((state) => state.addPlayer);
+  const resetGame = useGameBritneyStore((state) => state.resetSession);
+  const resetScores = useGameBritneyStore((state) => state.resetScores);
+  const roundScoresHistory = useGameBritneyStore(
     (state) => state.roundScoresHistory
   );
 

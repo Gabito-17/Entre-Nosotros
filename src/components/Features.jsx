@@ -4,35 +4,32 @@ import {
   LightBulbIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import i1 from "../assets/images/i1.jpg";
-import i2 from "../assets/images/i2.jpg";
-import i3 from "../assets/images/i3.jpg";
-import i4 from "../assets/images/i4.jpg";
+
 
 const features = [
   {
-    image: i1,
+    image: "/assets/images/i1.webp",
     title: "Memoria Estratégica",
     description:
       "Los jugadores deben recordar las cartas visibles y las jugadas anteriores para descartar eficientemente.",
     icon: <CogIcon className="w-8 h-8 " />,
   },
   {
-    image: i2,
+    image: "/assets/images/i2.webp",
     title: "Habilidades Especiales",
     description:
       "Las cartas 7, 8 y 9 tienen habilidades únicas que añaden un elemento estratégico al juego.",
     icon: <LightBulbIcon className="w-8 h-8 " />,
   },
   {
-    image: i3,
+    image: "/assets/images/i3.webp",
     title: "Sistema de Penalización",
     description:
       "Los jugadores pueden recoger cartas si cometen errores, lo que agrega un nivel de riesgo a cada jugada.",
     icon: <HeartIcon className="w-8 h-8" />,
   },
   {
-    image: i4,
+    image: "/assets/images/i4.webp",
     title: "Juego Dinámico",
     description:
       "Cada turno trae nuevas decisiones, manteniendo a los jugadores en alerta y comprometidos.",

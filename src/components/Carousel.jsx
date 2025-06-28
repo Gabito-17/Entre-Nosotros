@@ -1,30 +1,26 @@
 import { useState } from "react";
-import i1 from "../assets/images/i1.jpg";
-import i2 from "../assets/images/i2.jpg";
-import i3 from "../assets/images/i3.jpg";
-import i4 from "../assets/images/i4.jpg";
 
 const features = [
   {
-    image: i1,
+    image: "/assets/images/i1.webp",
     title: "Memoria Estratégica",
     description:
       "Los jugadores deben recordar las cartas visibles y las jugadas anteriores para descartar eficientemente.",
   },
   {
-    image: i2,
+    image: "/assets/images/i2.webp",
     title: "Habilidades Especiales",
     description:
       "Las cartas 7, 8 y 9 tienen habilidades únicas que añaden un elemento estratégico al juego.",
   },
   {
-    image: i3,
+    image: "/assets/images/i3.webp",
     title: "Sistema de Penalización",
     description:
       "Los jugadores pueden recoger cartas si cometen errores, lo que agrega un nivel de riesgo a cada jugada.",
   },
   {
-    image: i4,
+    image: "/assets/images/i4.webp",
     title: "Juego Dinámico",
     description:
       "Cada turno trae nuevas decisiones, manteniendo a los jugadores en alerta y comprometidos.",
@@ -52,6 +48,7 @@ const Carousel = () => {
           <img
             src={features[currentIndex].image}
             alt={features[currentIndex].title}
+            loading="lazy"
             className="w-full h-full object-cover"
           />
         </div>

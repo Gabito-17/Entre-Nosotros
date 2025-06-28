@@ -4,7 +4,7 @@ import Footer from "../components/Layout/Footer";
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-base-100 text-base-content">
+    <div className="bg-base-100 text-base-content">
       <Introduction />
       <section className="py-16 bg-base-200">
         <Features />

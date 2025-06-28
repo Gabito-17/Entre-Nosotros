@@ -1,12 +1,12 @@
-import { useGameSessionStore } from "../../stores/useGameSessionStore.ts";
+import { useGameBritneyStore } from "../../stores/useGameBritneyStore.ts";
 import { useUiStore } from "../../stores/useUiStore.ts";
 
 const TotalScoresModal = () => {
   const isOpen = useUiStore((state) => state.isTotalScoresModalOpen);
   const closeModal = useUiStore((state) => state.closeTotalScoresModal);
 
-  const players = useGameSessionStore((state) => state.players);
-  const totalScores = useGameSessionStore((state) => state.totalScores);
+  const players = useGameBritneyStore((state) => state.players);
+  const totalScores = useGameBritneyStore((state) => state.totalScores);
 
   if (!isOpen) return null;
 
