@@ -2,9 +2,10 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import ThemeSelector from "../ThemeSelector";
 
 const menuItems = [
-  { label: "Nosotros", href: "/nosotros" },
-  { label: "Anotador", href: "/anotador" },
-  { label: "Reglas", href: "/reglas" },
+  { label: "Nosotros Britney", href: "/britney/nosotros" },
+  { label: "Anotador Britney", href: "/britney/anotador" },
+  { label: "Reglas Britney", href: "/britney/reglas" },
+  { label: "Anotador Truco", href: "/truco/anotador" },
 ];
 
 export default function Drawer() {
@@ -48,7 +49,7 @@ export default function Drawer() {
               ¡Ayudanos a mantener la app!
             </span>
             <a
-              href="https://cafecito.app/truqito"
+              href="https://cafecito.app/pavongabriel"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Invitame un café en cafecito.app"
