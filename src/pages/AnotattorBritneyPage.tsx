@@ -2,7 +2,7 @@
 
 import RoundControls from "../components/Game/RoundControls.jsx";
 import ConfirmationModal from "../components/Modals/ConfirmationModal.tsx";
-import GameOverModal from "../components/Modals/GameOverModal.tsx";
+import GameOverModal from "../components/Modals/GameOverBritneyModal.tsx";
 import PlayerModal from "../components/Modals/PlayerModal.jsx";
 import TotalScoresModal from "../components/Modals/TotalScoresModal.jsx";
 import AddPlayer from "../components/Players/AddPlayer.tsx";

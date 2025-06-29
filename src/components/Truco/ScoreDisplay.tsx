@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useGameTrucoStore } from "../../stores/useGameTrucoStore.ts";
-import FosforosDisplay from "./FosforosDisplay.tsx";
 import PorotosDisplay from "./CoffeeDisplay.tsx";
+import FosforosDisplay from "./FosforosDisplay.tsx";
 
 interface ScoreDisplayProps {
   score: number;
@@ -57,7 +57,12 @@ export function ScoreDisplay({ score, color }: ScoreDisplayProps) {
           className="flex justify-center w-full"
           style={{ width: groupSize, height: groupSize }}
         >
-          <svg width={groupSize} height={groupSize} viewBox="0 0 45 45" className={color}>
+          <svg
+            width={groupSize}
+            height={groupSize}
+            viewBox="0 0 45 45"
+            className={color}
+          >
             {[9, 18, 27, 36].map((x, idx) => (
               <line
                 key={idx}
@@ -92,7 +97,12 @@ export function ScoreDisplay({ score, color }: ScoreDisplayProps) {
           className="flex justify-center w-full"
           style={{ width: groupSize, height: groupSize }}
         >
-          <svg width={groupSize} height={groupSize} viewBox="0 0 45 45" className={color}>
+          <svg
+            width={groupSize}
+            height={groupSize}
+            viewBox="0 0 45 45"
+            className={color}
+          >
             {Array.from({ length: remaining }).map((_, i) => (
               <line
                 key={i}
@@ -114,20 +124,16 @@ export function ScoreDisplay({ score, color }: ScoreDisplayProps) {
     const emptyRows = totalGroups - groups - (remaining > 0 ? 1 : 0);
     for (let i = 0; i < emptyRows; i++) {
       elements.push(
-        <div key={`empty-${i}`} className="w-full" style={{ width: groupSize, height: groupSize }} />
+        <div
+          key={`empty-${i}`}
+          className="w-full"
+          style={{ width: groupSize, height: groupSize }}
+        />
       );
     }
 
-    return (
-      <div className="flex flex-col items-center w-full h-full justify-center">
-        {elements}
-      </div>
-    );
+    return <div>{elements}</div>;
   };
 
-  return (
-    <div className="w-full h-full flex items-center justify-center" key={score}>
-      {renderScore()}
-    </div>
-  );
+  return <div key={score}>{renderScore()}</div>;
 }

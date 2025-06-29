@@ -1,15 +1,49 @@
+import { useState } from "react";
 import { ArrowPathIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useGameTrucoStore } from "../../stores/useGameTrucoStore.ts";
+import { useUiNotificationStore } from "../../stores/useUiNotificationStore.ts";
+import { useUiStore } from "../../stores/useUiStore.ts";
 
 const ConfigurationBar = () => {
-  const { maxScore, pointStyle, toggleMaxScore, setPointStyle } =
-    useGameTrucoStore();
+  const {
+    maxScore,
+    pointStyle,
+    toggleMaxScore,
+    setPointStyle,
+    resetScores,
+    score1,
+    score2,
+    winner,
+  } = useGameTrucoStore();
 
-  const resetGame = () => {
-    localStorage.removeItem("truco-puntajes");
+  const addNotification = useUiNotificationStore((s) => s.addNotification);
+
+  const openConfirmationModal = useUiStore((s) => s.openConfirmationModal);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleResetClick = () => {
+    openConfirmationModal({
+      title: "¿Reiniciar partida?",
+      message: "Esto reiniciará los puntajes de ambos equipos. ¿Estás seguro?",
+      onConfirm: () => resetScores(),
+    });
   };
 
-  // SVG compacto para "lines" en botón (más pequeño que el del score)
+  const handleToggleMaxScore = () => {
+    const partidaEnCurso = (score1 > 0 || score2 > 0) && !winner;
+
+    if (partidaEnCurso) {
+      addNotification(
+        "La partida está en curso. No se puede cambiar el puntaje máximo.",
+        "error"
+      );
+      return;
+    }
+
+    toggleMaxScore();
+  };
+
   const LinesIcon = ({ isActive }: { isActive: boolean }) => (
     <svg
       width={35}
@@ -42,92 +76,65 @@ const ConfigurationBar = () => {
     </svg>
   );
 
+  const handleSelectStyle = (style: "fosforo" | "lines" | "cafe") => {
+    setPointStyle(style);
+    setDropdownOpen(false);
+  };
+
   return (
     <nav className="bg-base-200 flex items-center shadow-sm">
       <div className="grid grid-cols-3 w-full">
         {/* Izquierda */}
-        <div className="dropdown dropdown-bottom dropdown-center justify-center">
-          <div
+        <div className={`dropdown dropdown-bottom dropdown-center ${dropdownOpen ? "dropdown-open" : ""}`}>
+          {/* Checkbox oculto controlado */}
+          <input
+            type="checkbox"
+            id="dropdown-toggle"
+            className="hidden"
+            checked={dropdownOpen}
+            onChange={() => setDropdownOpen(!dropdownOpen)}
+          />
+          <label
+            htmlFor="dropdown-toggle"
             tabIndex={0}
-            role="button"
-            className="btn btn-sm btn-outline w-full"
+            className="btn btn-sm btn-outline w-full cursor-pointer flex items-center justify-center gap-1"
           >
             Puntero <PencilSquareIcon className="h-5 w-5" />
-          </div>
+          </label>
+
           <ul
             tabIndex={0}
-            className="dropdown-content menu w-full bg-base-100 rounded-box z-1 p-2 shadow-sm"
+            className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full max-w-xs"
           >
             {["fosforo", "lines", "cafe"].map((style) => (
-              <li className="flex justify-around gap-2 p-2">
-                <span
-                  key={style}
-                  onClick={() =>
-                      setPointStyle(style as "fosforo" | "lines" | "cafe")
-                    }
-                    className={`rounded border-2 flex gap-1 btn ${
-                      pointStyle === style
-                        ? "border-primary"
-                        : "border-transparent"
-                    }`}
+              <li key={style} className="flex justify-around gap-2 p-2">
+                <button
+                  type="button"
+                  onClick={() => handleSelectStyle(style as "fosforo" | "lines" | "cafe")}
+                  className={`rounded border-2 flex gap-1 btn ${
+                    pointStyle === style ? "border-primary" : "border-transparent"
+                  }`}
                 >
                   {style === "lines" ? (
-                      <LinesIcon isActive={pointStyle === "lines"} />
-                    ) : (
-                      <img
-                        src={`/assets/truco/${style}.svg`}
-                        alt={style}
-                        className="w-10 h-10 object-contain"
-                      />
-                    )}
-                </span>
+                    <LinesIcon isActive={pointStyle === "lines"} />
+                  ) : (
+                    <img
+                      src={`/assets/truco/${style}.svg`}
+                      alt={style}
+                      className="w-10 h-10 object-contain"
+                    />
+                  )}
+                </button>
               </li>
             ))}
           </ul>
         </div>
-        {/* <div className="flex-1">
-          <div className="dropdown w-full">
-            <button tabIndex={0} className="btn btn-sm btn-outline btn-primary w-full">
-              Icono de Puntos
-            </button>
-            <ul
-              tabIndex={0}
-              className="menu dropdown-content mt-1 p-1 shadow bg-base-200 w-full max-w-[90vw] sm:max-w-xs"
-            >
-              <li className="flex justify-around gap-2 p-2">
-                {["fosforo", "lines", "poroto"].map((style) => (
-                  <button
-                    key={style}
-                    onClick={() =>
-                      setPointStyle(style as "fosforo" | "lines" | "poroto")
-                    }
-                    className={`rounded border-2 ${
-                      pointStyle === style
-                        ? "border-primary"
-                        : "border-transparent"
-                    }`}
-                  >
-                    {style === "lines" ? (
-                      <LinesIcon isActive={pointStyle === "lines"} />
-                    ) : (
-                      <img
-                        src={`/assets/truco/${style}.png`}
-                        alt={style}
-                        className="w-10 h-10 object-contain"
-                      />
-                    )}
-                  </button>
-                ))}
-              </li>
-            </ul>
-          </div>
-        </div> */}
 
         {/* Centro */}
         <div className="justify-center">
           <button
-            onClick={toggleMaxScore}
-            className="btn btn-sm btn-outline  btn-primary w-full"
+            onClick={handleToggleMaxScore}
+            className="btn btn-sm btn-outline btn-primary w-full"
           >
             A {maxScore}
           </button>
@@ -135,11 +142,12 @@ const ConfigurationBar = () => {
 
         {/* Derecha */}
         <div className="justify-center">
-          <div className="btn btn-sm btn-square btn-outline w-full">
-            <button onClick={resetGame}>
-              <ArrowPathIcon className="h-5 w-5" />
-            </button>
-          </div>
+          <button
+            onClick={handleResetClick}
+            className="btn btn-sm btn-square btn-outline w-full"
+          >
+            <ArrowPathIcon className="h-5 w-5" />
+          </button>
         </div>
       </div>
     </nav>
