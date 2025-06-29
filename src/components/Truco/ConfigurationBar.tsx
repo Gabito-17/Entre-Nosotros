@@ -1,4 +1,4 @@
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useGameTrucoStore } from "../../stores/useGameTrucoStore.ts";
 
 const ConfigurationBar = () => {
@@ -44,9 +44,48 @@ const ConfigurationBar = () => {
 
   return (
     <nav className="bg-base-200 flex items-center shadow-sm">
-      <div className="flex w-full mx-auto justify-between">
+      <div className="grid grid-cols-3 w-full">
         {/* Izquierda */}
-        <div className="flex-1">
+        <div className="dropdown dropdown-bottom dropdown-center justify-center">
+          <div
+            tabIndex={0}
+            role="button"
+            className="btn btn-sm btn-outline w-full"
+          >
+            Puntero <PencilSquareIcon className="h-5 w-5" />
+          </div>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu w-full bg-base-100 rounded-box z-1 p-2 shadow-sm"
+          >
+            {["fosforo", "lines", "cafe"].map((style) => (
+              <li className="flex justify-around gap-2 p-2">
+                <span
+                  key={style}
+                  onClick={() =>
+                      setPointStyle(style as "fosforo" | "lines" | "cafe")
+                    }
+                    className={`rounded border-2 flex gap-1 btn ${
+                      pointStyle === style
+                        ? "border-primary"
+                        : "border-transparent"
+                    }`}
+                >
+                  {style === "lines" ? (
+                      <LinesIcon isActive={pointStyle === "lines"} />
+                    ) : (
+                      <img
+                        src={`/assets/truco/${style}.svg`}
+                        alt={style}
+                        className="w-10 h-10 object-contain"
+                      />
+                    )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* <div className="flex-1">
           <div className="dropdown w-full">
             <button tabIndex={0} className="btn btn-sm btn-outline btn-primary w-full">
               Icono de Puntos
@@ -82,10 +121,10 @@ const ConfigurationBar = () => {
               </li>
             </ul>
           </div>
-        </div>
+        </div> */}
 
         {/* Centro */}
-        <div className="flex-1">
+        <div className="justify-center">
           <button
             onClick={toggleMaxScore}
             className="btn btn-sm btn-outline  btn-primary w-full"
@@ -95,7 +134,7 @@ const ConfigurationBar = () => {
         </div>
 
         {/* Derecha */}
-        <div className="flex-1">
+        <div className="justify-center">
           <div className="btn btn-sm btn-square btn-outline w-full">
             <button onClick={resetGame}>
               <ArrowPathIcon className="h-5 w-5" />

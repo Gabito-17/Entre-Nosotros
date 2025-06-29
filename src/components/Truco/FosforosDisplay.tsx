@@ -62,8 +62,7 @@ export default function FosforosDisplay({ count }: FosforosDisplayProps) {
 
   return (
     <div
-      className="flex flex-col items-center"
-      style={{ minHeight: totalGroups * (squareSize + 8) }}
+      className="flex flex-col items-center"      
     >
       {Array.from({ length: fullGroups }).map((_, i) =>
         renderMontanita(`full-${i}`, 5)
@@ -75,7 +74,7 @@ export default function FosforosDisplay({ count }: FosforosDisplayProps) {
         <div
           key={`empty-${i}`}
           style={{ width: squareSize, height: squareSize }}
-          className="mb-2"
+          
         />
       ))}
     </div>

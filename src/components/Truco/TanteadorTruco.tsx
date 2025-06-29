@@ -42,9 +42,11 @@ export default function TanteadorTruco() {
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-base-200 dark:bg-base-900 overflow-hidden pt-16">
-      <ConfigurationBar />
+      <div className="relative z-50">
+        <ConfigurationBar />
+      </div>
       {/* Paneles lado a lado */}
-      <div className="flex flex-row flex-1 h-full divide-x divide-neutral overflow-hidden">
+      <div className="flex flex-row flex-1 divide-x divide-neutral overflow-hidden">
         <PanelEquipo
           nombre="NOSOTROS"
           puntaje={puntajes.nosotros}

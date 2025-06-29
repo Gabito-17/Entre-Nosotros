@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type PointStyle = "fosforo" | "lines" | "poroto";
+type PointStyle = "fosforo" | "lines" | "cafe";
 
 interface GameTrucoState {
   maxScore: number;

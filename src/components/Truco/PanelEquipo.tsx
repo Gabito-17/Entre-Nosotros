@@ -8,6 +8,23 @@ interface PanelEquipoProps {
   onChange: (delta: number) => void;
 }
 
+function ScreenTouchZonesEquipo({ onChange }: { onChange: (delta: number) => void }) {
+  return (
+    <div className="absolute inset-0 z-30 grid grid-rows-2 w-full h-full">
+      {/* Zona superior: +1 */}
+      <button
+        className="w-full h-full bg-transparent pointer-events-auto"
+        onClick={() => onChange(-1)}
+      />
+      {/* Zona inferior: -1 */}
+      <button
+        className="w-full h-full bg-transparent pointer-events-auto"
+        onClick={() => onChange(+1)}
+      />
+    </div>
+  );
+}
+
 export default function PanelEquipo({
   nombre,
   puntaje,
@@ -25,33 +42,15 @@ export default function PanelEquipo({
         {nombre}
       </div>
 
-      {/* Zona central con scroll si es necesario */}
-      <div className="overflow-y-auto w-full flex justify-center items-center">
+      {/* Zona central: ScoreDisplay y zona táctil */}
+      <div className="relative w-full flex justify-center min-h-0">
         <ScoreDisplay score={puntaje} color={color} />
+        {<ScreenTouchZonesEquipo onChange={onChange} />}
       </div>
-
-      {/* Puntaje numérico */}
-      <div
-        className={`text-5xl font-extrabold select-none text-center ${color} drop-shadow-lg`}
-      >
+      {/* Puntaje grande, por encima de la zona táctil */}
+      <span className={`text-6xl select-none ${color} drop-shadow-lg z-30 my-8 text-center w-full`}>
         {puntaje}
-      </div>
-
-      {/* Botones siempre abajo */}
-      <div className="flex gap-4 justify-center">
-        <button
-          onClick={() => onChange(-1)}
-          className="btn btn-circle btn-primary text-2xl hover:btn-secondary"
-        >
-          –
-        </button>
-        <button
-          onClick={() => onChange(1)}
-          className="btn btn-circle btn-primary text-2xl hover:btn-secondary"
-        >
-          +
-        </button>
-      </div>
+      </span>
     </div>
   );
 }

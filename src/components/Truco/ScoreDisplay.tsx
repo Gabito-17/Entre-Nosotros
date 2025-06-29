@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useGameTrucoStore } from "../../stores/useGameTrucoStore.ts";
 import FosforosDisplay from "./FosforosDisplay.tsx";
-import PorotosDisplay from "./PorotoDisplay.tsx";
+import PorotosDisplay from "./CoffeeDisplay.tsx";
 
 interface ScoreDisplayProps {
   score: number;
@@ -23,13 +23,13 @@ export function ScoreDisplay({ score, color }: ScoreDisplayProps) {
       return <FosforosDisplay count={displayedScore} />;
     }
 
-    if (pointStyle === "poroto") {
+    if (pointStyle === "cafe") {
       return <PorotosDisplay count={displayedScore} />;
     }
 
     if (pointStyle !== "lines") {
       return (
-        <div className="flex flex-wrap justify-center gap-1 animate-fade-in">
+        <div className="flex justify-center animate-fade-in">
           {Array.from({ length: displayedScore }).map((_, i) => (
             <img
               key={i}
@@ -42,16 +42,23 @@ export function ScoreDisplay({ score, color }: ScoreDisplayProps) {
       );
     }
 
-    // Estilo "lines" (SVG clásico)
+    // Estilo "lines" (SVG clásico) - ocupar todo el alto del contenedor
     const groups = Math.floor(displayedScore / 5);
     const remaining = displayedScore % 5;
+    const totalGroups = 6; // Para 30 puntos, 6 filas
+    const groupSize = 80;
     const elements: JSX.Element[] = [];
 
+    // Grupos completos
     for (let i = 0; i < groups; i++) {
       elements.push(
-        <div key={`group-${i}`} className="relative ">
-          <svg width="35" height="45" viewBox="0 0 35 45" className={color}>
-            {[6, 13, 20, 27].map((x, idx) => (
+        <div
+          key={`group-${i}`}
+          className="flex justify-center w-full"
+          style={{ width: groupSize, height: groupSize }}
+        >
+          <svg width={groupSize} height={groupSize} viewBox="0 0 45 45" className={color}>
+            {[9, 18, 27, 36].map((x, idx) => (
               <line
                 key={idx}
                 x1={x}
@@ -64,10 +71,10 @@ export function ScoreDisplay({ score, color }: ScoreDisplayProps) {
               />
             ))}
             <line
-              x1="3"
-              y1="32"
-              x2="30"
-              y2="13"
+              x1="5"
+              y1="40"
+              x2="40"
+              y2="10"
               stroke="currentColor"
               strokeWidth="2.5"
               strokeLinecap="round"
@@ -77,16 +84,21 @@ export function ScoreDisplay({ score, color }: ScoreDisplayProps) {
       );
     }
 
+    // Grupo parcial
     if (remaining > 0) {
       elements.push(
-        <div key="remaining" className="relative ">
-          <svg width="35" height="45" viewBox="0 0 35 45" className={color}>
+        <div
+          key="remaining"
+          className="flex justify-center w-full"
+          style={{ width: groupSize, height: groupSize }}
+        >
+          <svg width={groupSize} height={groupSize} viewBox="0 0 45 45" className={color}>
             {Array.from({ length: remaining }).map((_, i) => (
               <line
                 key={i}
-                x1={6 + i * 7}
+                x1={9 + i * 9}
                 y1="8"
-                x2={6 + i * 7}
+                x2={9 + i * 9}
                 y2="37"
                 stroke="currentColor"
                 strokeWidth="2.5"
@@ -98,12 +110,24 @@ export function ScoreDisplay({ score, color }: ScoreDisplayProps) {
       );
     }
 
-    return elements.length > 0 ? (
-      elements
-    ) : (
-      <div className="text-2xl opacity-30">-</div>
+    // Relleno para que siempre haya 6 filas
+    const emptyRows = totalGroups - groups - (remaining > 0 ? 1 : 0);
+    for (let i = 0; i < emptyRows; i++) {
+      elements.push(
+        <div key={`empty-${i}`} className="w-full" style={{ width: groupSize, height: groupSize }} />
+      );
+    }
+
+    return (
+      <div className="flex flex-col items-center w-full h-full justify-center">
+        {elements}
+      </div>
     );
   };
 
-  return <div key={score}>{renderScore()}</div>;
+  return (
+    <div className="w-full h-full flex items-center justify-center" key={score}>
+      {renderScore()}
+    </div>
+  );
 }
