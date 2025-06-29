@@ -34,17 +34,16 @@ export default function Game() {
   };
 
   return (
-    <div className="flex justify-center items-start">
+    <div className="flex justify-center">
       <div className="rounded-lg shadow-lg p-4 max-w-lg w-full">
-        <h1 className="text-4xl font-bold text-center mb-8 text-secondary">
-          Anotador
+        <h1 className="text-4xl font-bold text-center mb-8 text-secondary mt-24">
+          Britney
         </h1>
         <AddPlayer />
         {players.length > 0 && (
           <>
-            <div className="mt-2">
-              <PlayerTable openModal={openModal} />
-            </div>
+            <PlayerTable openModal={openModal} />
+
             <RoundControls />
           </>
         )}
@@ -54,7 +53,7 @@ export default function Game() {
           handleContinueGame={handleContinueGame}
           handleEndGame={handleEndGame}
         />
-        <ConfirmationModal /> {/* AQUI LO RENDERIZAMOS SIEMPRE */}
+        <ConfirmationModal />
         <Toaster />
       </div>
     </div>
