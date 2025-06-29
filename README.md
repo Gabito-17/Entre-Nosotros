@@ -1,12 +1,12 @@
-
 # 🃏 Britney - Game Score Tracker
 
-**Britney** es una aplicación web desarrollada con **React** para llevar el registro de partidas de juegos de mesa o cartas. Gestiona fácilmente jugadores, rondas, puntajes, descalificaciones y dealer. Todo desde una interfaz simple, rápida y persistente.
+**Britney** es una aplicación web desarrollada con **React** para llevar el registro de partidas de juegos de mesa o cartas. Gestiona fácilmente jugadores, rondas, puntajes, descalificaciones y dealer, ahora con soporte para **múltiples juegos** como partidas personalizadas y **Truco argentino**. Todo desde una interfaz simple, rápida y persistente.
 
 ---
 
 ## 🚀 Características
 
+- ✅ Soporte para Truco y Britney
 - ✅ Registro dinámico de partidas por rondas
 - ✅ Cálculo automático de puntajes acumulados
 - ✅ Sistema de descalificación automática (por superar un umbral)
@@ -22,11 +22,20 @@
 
 ## 🧠 Mejoras recientes
 
+### 🎮 Soporte para el juego Truco Argentino
+
+Se agregó un nuevo anotador de **Truco**, con características específicas:
+
+- Puntaje máximo configurable (15, 30)
+- Estilos visuales clásicos, como por ejemplo representación de fósforos
+- Manejo de equipos, nombres personalizados y rotación de mano
+
 ### 📦 Zustand como gestor de estado
 
 Se implementó Zustand para manejar:
 
 - La sesión de juego (`useGameSessionStore`)
+- La configuración del juego actual (`useGameTruco`)
 - El estado general de UI (`useUiStore`)
 - Las notificaciones visuales (`useUiNotificationStore`)
 
@@ -55,12 +64,14 @@ Se agregó un sistema de notificaciones visuales usando `zustand` y componentes 
 
 ```
 /src
-  /assets        → imagenes y assets necesarios.
-  /components        → Componentes reutilizables (modales, botones, etc.)
-  /pages             → Página principal
-  /stores            → Estados globales con Zustand
-  /validation        → Esquemas de validación con Zod
-
+  /public         → Imágenes y recursos gráficos
+  /components     → Componentes reutilizables (modales, botones, layout)
+  /games          → Componentes específicos por tipo de juego
+  /hooks          → Lógica reutilizable con React Hooks
+  /pages          → Páginas principales (anotador, home, configuración)
+  /stores         → Estados globales con Zustand
+  /validation     → Esquemas de validación con Zod
+  /utils          → Funciones auxiliares comunes
 ```
 
 ---
@@ -106,12 +117,9 @@ La aplicación estará disponible en:
 
 ## 🔮 Roadmap / Próximas mejoras
 
-- 🎲 Soporte para diferentes tipos de juegos
-- 💾 Exportación e importación de partidas (JSON)
-- ☁️ Sincronización online con backend
+- 🧩 Agregar nuevos tipos de juegos compatibles
 - 📱 Mejora de la experiencia en móviles
 - 🎨 Temas visuales personalizables
-- 🧪 Tests unitarios para lógica y componentes
 
 ---
 
@@ -120,5 +128,3 @@ La aplicación estará disponible en:
 Proyecto educativo y personal.  
 Actualmente sin licencia comercial.  
 Desarrollado con 💙 para ayudarte a disfrutar tus partidas sin perder el hilo.
-
----
