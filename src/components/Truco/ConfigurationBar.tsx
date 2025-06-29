@@ -1,7 +1,9 @@
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useGameTrucoStore } from "../../stores/useGameTrucoStore.ts";
 
 const ConfigurationBar = () => {
-  const { maxScore, pointStyle, toggleMaxScore, setPointStyle } = useGameTrucoStore();
+  const { maxScore, pointStyle, toggleMaxScore, setPointStyle } =
+    useGameTrucoStore();
 
   const resetGame = () => {
     localStorage.removeItem("truco-puntajes");
@@ -41,20 +43,17 @@ const ConfigurationBar = () => {
   );
 
   return (
-    <nav className="relative z-50 w-full bg-base-200 flex items-center h-10 px-2 shadow-sm">
-      <div className="flex w-full max-w-screen-xl mx-auto justify-between gap-2">
+    <nav className="bg-base-200 flex items-center shadow-sm">
+      <div className="flex w-full mx-auto justify-between">
         {/* Izquierda */}
         <div className="flex-1">
           <div className="dropdown w-full">
-            <label
-              tabIndex={0}
-              className="btn btn-sm btn-outline normal-case w-full h-8 flex justify-center items-center"
-            >
+            <button tabIndex={0} className="btn btn-sm btn-outline btn-primary w-full">
               Icono de Puntos
-            </label>
+            </button>
             <ul
               tabIndex={0}
-              className="menu dropdown-content mt-1 p-1 shadow bg-base-200 rounded-box w-full max-w-xs"
+              className="menu dropdown-content mt-1 p-1 shadow bg-base-200 w-full max-w-[90vw] sm:max-w-xs"
             >
               <li className="flex justify-around gap-2 p-2">
                 {["fosforo", "lines", "poroto"].map((style) => (
@@ -64,7 +63,9 @@ const ConfigurationBar = () => {
                       setPointStyle(style as "fosforo" | "lines" | "poroto")
                     }
                     className={`rounded border-2 ${
-                      pointStyle === style ? "border-primary" : "border-transparent"
+                      pointStyle === style
+                        ? "border-primary"
+                        : "border-transparent"
                     }`}
                   >
                     {style === "lines" ? (
@@ -85,30 +86,20 @@ const ConfigurationBar = () => {
 
         {/* Centro */}
         <div className="flex-1">
-          <button onClick={toggleMaxScore} className="btn btn-sm btn-outline w-full">
+          <button
+            onClick={toggleMaxScore}
+            className="btn btn-sm btn-outline  btn-primary w-full"
+          >
             A {maxScore}
           </button>
         </div>
 
         {/* Derecha */}
         <div className="flex-1">
-          <div className="dropdown dropdown-end w-full">
-            <label
-              tabIndex={0}
-              className="btn btn-sm btn-outline btn-error normal-case w-full h-8 flex justify-center items-center"
-            >
-              Reiniciar
-            </label>
-            <ul
-              tabIndex={0}
-              className="menu dropdown-content mt-1 p-1 shadow bg-base-200 rounded-box w-full max-w-xs"
-            >
-              <li>
-                <button onClick={resetGame} className="text-error w-full text-center">
-                  Reiniciar partida
-                </button>
-              </li>
-            </ul>
+          <div className="btn btn-sm btn-square btn-outline w-full">
+            <button onClick={resetGame}>
+              <ArrowPathIcon className="h-5 w-5" />
+            </button>
           </div>
         </div>
       </div>

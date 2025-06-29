@@ -1,19 +1,18 @@
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import Title from "./Title/Title";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function NavBar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
-    setIsDrawerOpen(prev => !prev);
+    setIsDrawerOpen((prev) => !prev);
   };
 
   return (
-    <>   
-
+    <>
       {/* Barra de navegación fija */}
-      <nav className="fixed top-0 left-0 w-full bg-base-200 shadow-md z-50 h-16 flex items-center">
+      <nav className="fixed top-0 left-0 w-full h-16 bg-base-200 shadow-md z-50 flex items-center px-4">
         <div className="navbar w-full max-w-screen-xl mx-auto px-4">
           <div className="navbar-start">
             <Title />

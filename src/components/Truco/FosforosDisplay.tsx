@@ -22,17 +22,14 @@ export default function FosforosDisplay({ count }: FosforosDisplayProps) {
   const montanitaPositions = [
     { top: 20, left: -5, rotate: "0deg" },
     { top: 20, left: 45, rotate: "180deg" },
-    { top: 45, left: 20, rotate: "-90deg" },
     { top: -5, left: 20, rotate: "90deg" },
+    { top: 45, left: 20, rotate: "-90deg" },
+
     { top: 20, left: 20, rotate: "45deg" },
   ];
 
   const fullGroups = Math.floor(count / 5);
   const remaining = count % 5;
-
-  const fosforoClass = `absolute object-contain ${
-    show ? "opacity-100" : "opacity-0"
-  }`;
 
   const renderMontanita = (keyPrefix: string, fosforosCount: number) => (
     <div
@@ -45,7 +42,6 @@ export default function FosforosDisplay({ count }: FosforosDisplayProps) {
           key={i}
           src={fosforoImg}
           alt={`fosforo ${i}`}
-          className={fosforoClass}
           style={{
             width: fosforoSize,
             height: fosforoSize,
@@ -66,7 +62,7 @@ export default function FosforosDisplay({ count }: FosforosDisplayProps) {
 
   return (
     <div
-      className="flex flex-col items-center space-y-2"
+      className="flex flex-col items-center"
       style={{ minHeight: totalGroups * (squareSize + 8) }}
     >
       {Array.from({ length: fullGroups }).map((_, i) =>
