@@ -35,8 +35,13 @@ export default function PlayerTableAndRow({ openModal }) {
       setRoundScore(playerName, undefined as unknown as number);
       return;
     }
+
     const numericValue = Number(value);
-    if (isNaN(numericValue) || numericValue < 0) return;
+    if (isNaN(numericValue)) return;
+
+    // ✅ Permití poner 0 o más, y también sobrescribir un -10
+    if (numericValue < 0 && roundScores[playerName] !== -10) return;
+
     setRoundScore(playerName, numericValue);
   };
 
