@@ -1,8 +1,8 @@
 "use client";
 
 import { PlusIcon, UserGroupIcon } from "@heroicons/react/24/outline";
-import { useGameBritneyStore } from "../../stores/useGameBritneyStore.ts";
-import { useUiStore } from "../../stores/useUiStore.ts";
+import { useGameBritneyStore } from "../../../stores/useGameBritneyStore.ts";
+import { useUiStore } from "../../../stores/useUiStore.ts";
 
 export default function PlayerTableAndRow({ openModal }) {
   const players = useGameBritneyStore((state) => state.players);

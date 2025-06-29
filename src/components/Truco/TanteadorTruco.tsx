@@ -22,7 +22,7 @@ export default function TanteadorTruco() {
   }, [winner]);
 
  return (
-    <div className="flex flex-col h-[100dvh] bg-base-200 pt-16 overflow-hidden">
+    <div className="flex flex-col pt-16 h-[100dvh] bg-base-200 overflow-hidden">
       {/* La barra de configuración */}
       <div className="relative z-50">
         <ConfigurationBar />

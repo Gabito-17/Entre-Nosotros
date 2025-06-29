@@ -6,9 +6,9 @@ import {
 
 const RulesSteps = () => {
   return (
-    <div className="content max-w-lg mx-auto">
+    <div className="content max-w-lg mx-auto  pt-24">
       <h1 className="text-4xl font-bold text-center mb-8 text-primary">
-        Reglas del Juego
+        Reglas de Britney
       </h1>
 
       {/* Preparación */}

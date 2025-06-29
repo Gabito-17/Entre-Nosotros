@@ -39,7 +39,7 @@ const SuggestionForm = ({ onSubmit }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className="textarea textarea-bordered w-full"
-          rows="4"
+          rows={4}
           required
         ></textarea>
       </div>

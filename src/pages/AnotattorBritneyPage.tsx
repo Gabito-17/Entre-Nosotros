@@ -1,12 +1,12 @@
 "use client";
 
-import RoundControls from "../components/Game/RoundControls.jsx";
+import RoundControls from "../components/Britney/Game/RoundControls.jsx";
 import ConfirmationModal from "../components/Modals/ConfirmationModal.tsx";
 import GameOverModal from "../components/Modals/GameOverBritneyModal.tsx";
 import PlayerModal from "../components/Modals/PlayerModal.jsx";
 import TotalScoresModal from "../components/Modals/TotalScoresModal.jsx";
-import AddPlayer from "../components/Players/AddPlayer.tsx";
-import PlayerTable from "../components/Players/PlayerTableAndRow.tsx";
+import AddPlayer from "../components/Britney/Players/AddPlayer.tsx";
+import PlayerTableAndRow from "../components/Britney/Players/PlayerTableAndRow.tsx";
 import Toaster from "../components/Toaster.tsx";
 import { useGameBritneyStore } from "../stores/useGameBritneyStore.ts";
 import { useUiStore } from "../stores/useUiStore.ts";
@@ -42,7 +42,7 @@ export default function Game() {
         <AddPlayer />
         {players.length > 0 && (
           <>
-            <PlayerTable openModal={openModal} />
+            <PlayerTableAndRow openModal={openModal} />
 
             <RoundControls />
           </>

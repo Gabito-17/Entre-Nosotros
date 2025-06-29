@@ -2,7 +2,7 @@ import Acknowledgements from "../components/AboutUs/Acknowledgements";
 import Introduction from "../components/AboutUs/Introduction";
 import Philosophy from "../components/AboutUs/Philosophy";
 import Features from "../components/Features";
-import Footer from "../components/Layout/Footer";
+import Footer from "../components/Layout/Footer.tsx";
 
 const AboutUs = () => {
   return (

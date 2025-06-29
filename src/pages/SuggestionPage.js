@@ -1,7 +1,7 @@
 import emailjs from "emailjs-com";
 import { useState } from "react";
 import SuccessModal from "../components/Modals/SuccessModal";
-import SuggestionForm from "../components/Suggestions/SuggestionForm";
+import SuggestionForm from "../components/Suggestions/SuggestionForm.tsx";
 
 const SuggestionsPage = () => {
   const [success, setSuccess] = useState(false);

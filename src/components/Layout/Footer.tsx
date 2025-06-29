@@ -6,7 +6,7 @@ import {
   PhoneIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
-import SuggestionForm from "../Suggestions/SuggestionForm";
+import SuggestionForm from "../Suggestions/SuggestionForm.tsx";
 
 const Footer = () => {
   return (

@@ -2,8 +2,8 @@
 
 import { ArrowPathIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { ChangeEvent, KeyboardEvent } from "react";
-import { useGameBritneyStore } from "../../stores/useGameBritneyStore.ts";
-import { useUiStore } from "../../stores/useUiStore.ts";
+import { useGameBritneyStore } from "../../../stores/useGameBritneyStore.ts";
+import { useUiStore } from "../../../stores/useUiStore.ts";
 
 export default function AddPlayer() {
   const newPlayerName = useGameBritneyStore((state) => state.newPlayerName);
