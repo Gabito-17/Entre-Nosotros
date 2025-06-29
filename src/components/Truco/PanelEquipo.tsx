@@ -43,7 +43,7 @@ export default function PanelEquipo({ equipo, nombre }: PanelEquipoProps) {
   };
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex-col">
       {/* Nombre del equipo */}
       <div className="w-full text-center bg-primary uppercase font-bold text-primary-content text-xl shadow-md">
         {nombre}
@@ -65,15 +65,15 @@ export default function PanelEquipo({ equipo, nombre }: PanelEquipoProps) {
       </div>
 
       {/* Botones para sumar/restar puntos */}
-      <div className="w-full flex justify-center gap-4 pb-32">
+      <div className="w-full flex justify-center gap-4 ">
         <button
-          className="btn btn-sm btn-outline btn-error"
+          className="btn btn-md btn-outline btn-error"
           onClick={() => handleChange(-1)}
         >
           -1
         </button>
         <button
-          className="btn btn-sm btn-outline btn-success"
+          className="btn btn-md btn-outline btn-success"
           onClick={() => handleChange(+1)}
         >
           +1

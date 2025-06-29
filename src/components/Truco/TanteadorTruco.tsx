@@ -21,24 +21,24 @@ export default function TanteadorTruco() {
     }
   }, [winner]);
 
-  return (
-    <div className="flex flex-col flex-1 min-h-screen bg-base-200 overflow-hidden pt-16">
+ return (
+    <div className="flex flex-col h-[100dvh] bg-base-200 pt-16 overflow-hidden">
+      {/* La barra de configuración */}
       <div className="relative z-50">
         <ConfigurationBar />
       </div>
-      <div className="flex flex-row flex-1 divide-x divide-neutral overflow-hidden">
+
+      {/* Paneles con scores */}
+      <div className="flex flex-row flex-1 divide-x divide-neutral">
         <PanelEquipo equipo="equipo1" nombre="NOSOTROS" />
         <PanelEquipo equipo="equipo2" nombre="ELLOS" />
       </div>
 
+      {/* Modales */}
       {winner && (
         <GameOverTrucoModal
-          handleEndGame={() => {
-            resetScores();
-          }}
-          handleContinueGame={() => {
-            resetScores();
-          }}
+          handleEndGame={() => resetScores()}
+          handleContinueGame={() => resetScores()}
         />
       )}
 

@@ -14,7 +14,7 @@ export default function Drawer() {
       <label htmlFor="my-drawer" className="drawer-overlay cursor-pointer" />
 
       {/* Contenedor drawer */}
-      <aside className="w-64 bg-base-200 min-h-screen flex flex-col justify-between shadow-lg overflow-y-auto">
+      <aside className="w-64 bg-base-200 min-h-svh flex flex-col justify-between shadow-lg overflow-y-auto">
         {/* Botón cerrar */}
         <div className="flex justify-start p-4">
           <label
