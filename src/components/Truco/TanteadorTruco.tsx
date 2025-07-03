@@ -21,15 +21,15 @@ export default function TanteadorTruco() {
     }
   }, [winner]);
 
- return (
-    <div className="flex flex-col h-[100dvh] bg-base-200 pt-16 overflow-hidden">
+  return (
+    <div>
       {/* La barra de configuración */}
-      <div className="relative z-50">
+      <div className="relative z-40">
         <ConfigurationBar />
       </div>
 
       {/* Paneles con scores */}
-      <div className="flex flex-row flex-1 divide-x divide-neutral">
+      <div className="flex flex-row divide-x divide-neutral p-8">
         <PanelEquipo equipo="equipo1" nombre="NOSOTROS" />
         <PanelEquipo equipo="equipo2" nombre="ELLOS" />
       </div>

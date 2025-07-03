@@ -43,42 +43,33 @@ export default function PanelEquipo({ equipo, nombre }: PanelEquipoProps) {
   };
 
   return (
-    <div className="flex-1 flex-col">
-      {/* Nombre del equipo */}
-      <div className="w-full text-center bg-primary uppercase font-bold text-primary-content text-xl shadow-md">
-        {nombre}
-      </div>
+    <div className="flex-1 overflow-hidden flex flex-col">
+  {/* Nombre */}
+  <div className="w-full text-center bg-primary uppercase font-bold text-primary-content text-xl shadow-md">
+    {nombre}
+  </div>
 
-      {/* Visualización y zona de clics */}
-      <div className="relative w-full flex justify-center flex-1">
-        <ScoreDisplay score={score} color={color} />
-        <ScreenTouchZonesEquipo onChange={handleChange} />
-      </div>
+  {/* ScoreDisplay con límite de altura */}
+  <div className="w-full flex justify-center overflow-y-auto">
+    <ScoreDisplay score={score} color={color} />
+  </div>
 
-      {/* Puntaje numérico centrado */}
-      <div className="w-full flex justify-center">
-        <span
-          className={`text-6xl select-none ${color} drop-shadow-lg z-30 my-4`}
-        >
-          {score}
-        </span>
-      </div>
+  {/* Puntaje grande */}
+  <div className="w-full flex justify-center">
+    <span className={`text-6xl select-none ${color} drop-shadow-lg z-30 my-4`}>
+      {score}
+    </span>
+  </div>
 
-      {/* Botones para sumar/restar puntos */}
-      <div className="w-full flex justify-center gap-4 ">
-        <button
-          className="btn btn-md btn-outline btn-error"
-          onClick={() => handleChange(-1)}
-        >
-          -1
-        </button>
-        <button
-          className="btn btn-md btn-outline btn-success"
-          onClick={() => handleChange(+1)}
-        >
-          +1
-        </button>
-      </div>
-    </div>
+  {/* Botones */}
+  <div className="w-full flex justify-center gap-4 mb-4">
+    <button className="btn btn-md btn-outline btn-error" onClick={() => handleChange(-1)}>
+      -1
+    </button>
+    <button className="btn btn-md btn-outline btn-success" onClick={() => handleChange(+1)}>
+      +1
+    </button>
+  </div>
+</div>
   );
 }

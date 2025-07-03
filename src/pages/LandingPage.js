@@ -1,6 +1,6 @@
 import Features from "../components/Features";
 import Introduction from "../components/Introduction";
-import Footer from "../components/Layout/Footer.tsx";
+import Footer from "../components/Layout/Footer.jsx";
 
 const LandingPage = () => {
   return (

@@ -82,7 +82,7 @@ const ConfigurationBar = () => {
   };
 
   return (
-    <nav className="bg-base-200 flex items-center shadow-sm">
+    <nav className="flex items-center shadow-sm ">
       <div className="grid grid-cols-3 w-full">
         {/* Izquierda */}
         <div className={`dropdown dropdown-bottom dropdown-center ${dropdownOpen ? "dropdown-open" : ""}`}>

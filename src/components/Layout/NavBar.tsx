@@ -1,6 +1,7 @@
 "use client";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
+import ThemeSelector from "../ThemeSelector.tsx";
 import Title from "./Title/Title";
 
 export default function NavBar() {
@@ -19,7 +20,7 @@ export default function NavBar() {
         <div className="navbar-start">
           <Title />
         </div>
-        <div className="navbar-center hidden lg:flex" />
+        <div className="navbar-center hidden lg:flex" /> <ThemeSelector />
         <div className="navbar-end">
           <label
             htmlFor="my-drawer"

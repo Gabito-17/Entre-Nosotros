@@ -1,5 +1,5 @@
-import Footer from "../components/Layout/Footer.tsx";
 import RulesSteps from "../components/Britney/RulesSteps";
+import Footer from "../components/Layout/Footer.jsx";
 
 const RulesPage = () => {
   return (

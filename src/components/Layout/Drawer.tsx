@@ -17,14 +17,15 @@ export default function Drawer() {
       {/* Contenedor drawer */}
       <aside className="w-64 bg-base-200 min-h-svh flex flex-col justify-between shadow-lg overflow-y-auto">
         {/* Botón cerrar */}
-        <div className="flex justify-start p-4">
+        <div className="flex items-center justify-between ">
           <label
             htmlFor="my-drawer"
-            className="btn btn-square btn-ghost"
+            className="btn btn-square btn-ghost "
             aria-label="Cerrar menú"
           >
-            <XMarkIcon className="w-6 h-6" />
+            <XMarkIcon className="h-5 w-5" />
           </label>
+          
         </div>
 
         {/* Menú */}
@@ -42,8 +43,7 @@ export default function Drawer() {
         </ul>
 
         {/* Footer */}
-        <footer className="border-t p-4 space-y-4">
-          <ThemeSelector />
+        <footer className="border-t  w-full pt-16">
           <div className="text-center">
             <span className="text-sm text-base-content/60 block">
               ¡Ayudanos a mantener la app!

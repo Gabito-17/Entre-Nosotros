@@ -7,11 +7,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Checkbox que controla el drawer */}
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
 
-      {/* Contenido principal: NavBar fijo arriba y contenido con padding para no quedar debajo */}
+      {/* Contenido principal */}
       <div className="drawer-content flex flex-col min-h-svh">
         <NavBar />
-        {/* pt-16 para que el contenido no quede oculto debajo del NavBar fijo (h-16) */}
-        <main className="flex-1 ">{children}</main>
+
+        {/* Contenedor centrado con límite de ancho */}
+        <main className="flex-1 pt-16 px-4">
+          <div className="w-full max-w-screen-xl mx-auto">{children}</div>
+        </main>
       </div>
 
       {/* Drawer lateral */}

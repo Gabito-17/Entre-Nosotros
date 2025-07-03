@@ -6,12 +6,11 @@ import {
   PhoneIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
-import SuggestionForm from "../Suggestions/SuggestionForm.tsx";
 
 const Footer = () => {
   return (
-    <footer className="bg-base-200 text-base-content py-12 px-6">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+    <footer className="bg-base-200 text-base-content p-6">
+      <div className="container mx-auto grid grid-cols-1 md:justify-items-center md:grid-cols-3 gap-10">
         {/* Contacto */}
         <div>
           <h3 className="footer-title text-primary">Contacto</h3>
@@ -22,7 +21,11 @@ const Footer = () => {
             </li>
             <li className="flex items-center gap-2">
               <EnvelopeIcon className="w-5 h-5 text-secondary" />
-              <a href="mailto:jabba@huttdelivery.pizza" className="link-hover">
+
+              <a
+                href="mailto:juangabrielpavon@gmail.com"
+                className="link-hover"
+              >
                 juangabrielpavon@gmail.com
               </a>
             </li>
@@ -70,16 +73,6 @@ const Footer = () => {
               </li>
             ))}
           </ul>
-        </div>
-
-        {/* Sugerencias */}
-        <div>
-          <h3 className="footer-title text-primary">Déjanos tu sugerencia</h3>
-          <p className="text-sm mb-4">
-            Ayúdanos a mejorar tu experiencia. Déjanos un comentario o
-            sugerencia.
-          </p>
-          <SuggestionForm />
         </div>
       </div>
 
