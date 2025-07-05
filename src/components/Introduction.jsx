@@ -1,7 +1,16 @@
+import { motion } from "framer-motion";
+import { fadeLeft, fadeRight } from "../lib/Animations.ts";
+
 const Introduction = () => {
   return (
     <section className="py-16 px-6 container mx-auto text-center lg:text-left lg:flex lg:items-center lg:gap-12">
-      <div className="lg:w-1/2">
+      <motion.div
+        className="lg:w-1/2"
+        variants={fadeLeft}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
         <h2 className="text-4xl font-bold mb-6 text-primary">
           Divertite con Britney
         </h2>
@@ -18,8 +27,14 @@ const Introduction = () => {
         <a href="/reglas" className="btn btn-primary">
           Aprender a jugar
         </a>
-      </div>
-      <div className="lg:w-1/2 mt-8 lg:mt-0">
+      </motion.div>
+      <motion.div
+        className="lg:w-1/2 mt-8 lg:mt-0"
+        variants={fadeRight}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
         <img
           src="/assets/images/i5.webp"
           alt="Britney preview"
@@ -27,7 +42,7 @@ const Introduction = () => {
           loading="eager"
           fetchpriority="high"
         />
-      </div>
+      </motion.div>
     </section>
   );
 };

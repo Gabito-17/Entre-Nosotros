@@ -1,15 +1,28 @@
+import { motion } from "framer-motion";
 import Features from "../components/Features";
 import Introduction from "../components/Introduction";
 import Footer from "../components/Layout/Footer.jsx";
+import { fadeUp } from "../lib/Animations.ts";
+import { fadeContainer } from "../lib/Animations.ts";
 
 const LandingPage = () => {
   return (
-    <div className="bg-base-100 text-base-content">
+    <div>
       <Introduction />
-      <section className="py-16 bg-base-200">
+
+      <motion.section
+        className="bg-base-200"
+        variants={fadeUp}
+        transition={{ duration: 0.5 }}
+      >
         <Features />
-      </section>
-      <section className="py-16 text-center">
+      </motion.section>
+
+      <motion.section
+        className="py-16 text-center"
+        variants={fadeUp}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
         <h2 className="text-3xl font-bold mb-4 text-primary">
           ¡Empieza a jugar Britney hoy!
         </h2>
@@ -19,7 +32,8 @@ const LandingPage = () => {
         <a href="/anotador" className="btn btn-primary">
           Utilizar anotador
         </a>
-      </section>
+      </motion.section>
+
       <Footer />
     </div>
   );

@@ -18,7 +18,7 @@ const App = () => {
           <Route path="britney/nosotros" element={<AboutUs />} />
           <Route path="britney/anotador" element={<Game />} />
           <Route path="truco/anotador" element={<AnotadorTrucoPage />} />
-        </Routes>
+        </Routes>   
       </Layout>
     </Router>
   );

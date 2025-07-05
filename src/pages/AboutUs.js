@@ -24,9 +24,9 @@ const AboutUs = () => {
       <section className="py-16 bg-base-200">
         <Acknowledgements />
       </section>
-
       {/* Footer */}
       <Footer />
+
     </div>
   );
 };
