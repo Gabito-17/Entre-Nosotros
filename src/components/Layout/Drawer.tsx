@@ -12,9 +12,7 @@ const sections = [
   },
   {
     title: "Truco",
-    items: [
-      { label: "Anotador ", href: "/truco/anotador" },
-    ],
+    items: [{ label: "Anotador ", href: "/truco/anotador" }],
   },
 ];
 
@@ -25,7 +23,7 @@ export default function Drawer() {
 
       <aside className="w-64 bg-base-200 min-h-svh flex flex-col justify-between shadow-lg overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b">
+        <div className="flex items-center justify-between border-b ">
           <label
             htmlFor="my-drawer"
             className="btn btn-square btn-ghost"
@@ -33,7 +31,9 @@ export default function Drawer() {
           >
             <XMarkIcon className="h-5 w-5" />
           </label>
-          <Title />
+          <div className="pr-2">
+            <Title />
+          </div>
         </div>
 
         {/* Menu */}

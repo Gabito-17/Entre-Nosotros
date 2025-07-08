@@ -50,3 +50,46 @@ export const staggerContainer = {
   },
 };
 
+export const pulse = {
+  initial: { scale: 1 },
+  animate: {
+    scale: [1, 1.1, 1],
+    transition: {
+      duration: 0.4,
+      repeat: Infinity,
+      repeatType: "loop",
+    },
+  },
+};
+
+export const expandFade = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.3, ease: "easeOut" },
+  },
+};
+
+export const scoreChange: Variants = {
+  initial: { scale: 0.8, opacity: 0 },
+  animate: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      type: "spring" as const, // <- clave: "as const"
+      stiffness: 300,
+      damping: 20,
+    },
+  },
+  exit: {
+    scale: 0.8,
+    opacity: 0,
+    transition: {
+      type: "spring" as const, // <- también aquí
+      stiffness: 300,
+      damping: 20,
+    },
+  },
+};
+
