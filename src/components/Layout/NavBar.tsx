@@ -18,9 +18,9 @@ export default function NavBar() {
     <nav className="fixed top-0 left-0 w-full h-16 bg-base-200 shadow-md z-50 flex items-center px-4">
       <div className="navbar w-full max-w-screen-xl mx-auto px-4">
         <div className="navbar-start">
-          <Title />
+          <ThemeSelector />
         </div>
-        <div className="navbar-center hidden lg:flex" /> <ThemeSelector />
+        <div className="navbar-center hidden lg:flex" /> <Title />
         <div className="navbar-end">
           <label
             htmlFor="my-drawer"

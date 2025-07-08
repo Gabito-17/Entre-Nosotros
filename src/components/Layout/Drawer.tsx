@@ -1,49 +1,66 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import ThemeSelector from "../ThemeSelector";
+import Title from "../Layout/Title/Title";
 
-const menuItems = [
-  { label: "Nosotros Britney", href: "/britney/nosotros" },
-  { label: "Anotador Britney", href: "/britney/anotador" },
-  { label: "Reglas Britney", href: "/britney/reglas" },
-  { label: "Anotador Truco", href: "/truco/anotador" },
+const sections = [
+  {
+    title: "Britney",
+    items: [
+      { label: "Nosotros", href: "/britney/nosotros" },
+      { label: "Anotador", href: "/britney/anotador" },
+      { label: "Reglas", href: "/britney/reglas" },
+    ],
+  },
+  {
+    title: "Truco",
+    items: [
+      { label: "Anotador ", href: "/truco/anotador" },
+    ],
+  },
 ];
 
 export default function Drawer() {
   return (
     <>
-      {/* Overlay para cerrar el drawer */}
       <label htmlFor="my-drawer" className="drawer-overlay cursor-pointer" />
 
-      {/* Contenedor drawer */}
       <aside className="w-64 bg-base-200 min-h-svh flex flex-col justify-between shadow-lg overflow-y-auto">
-        {/* Botón cerrar */}
-        <div className="flex items-center justify-between ">
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b">
           <label
             htmlFor="my-drawer"
-            className="btn btn-square btn-ghost "
+            className="btn btn-square btn-ghost"
             aria-label="Cerrar menú"
           >
             <XMarkIcon className="h-5 w-5" />
           </label>
-          
+          <Title />
         </div>
 
-        {/* Menú */}
-        <ul className="menu px-4 flex-grow space-y-2">
-          {menuItems.map(({ label, href }) => (
-            <li key={label}>
-              <a
-                href={href}
-                className="block rounded px-3 py-2 hover:bg-primary hover:text-primary-content transition-colors"
-              >
-                {label}
-              </a>
-            </li>
+        {/* Menu */}
+        <nav className="px-4 py-4 flex-grow space-y-6">
+          {sections.map(({ title, items }) => (
+            <div key={title}>
+              <h3 className="text-xs uppercase text-base-content/50 mb-1 pl-2 tracking-wide">
+                {title}
+              </h3>
+              <ul className="menu space-y-1">
+                {items.map(({ label, href }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      className="block rounded px-3 py-2 hover:bg-primary hover:text-primary-content transition-colors"
+                    >
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </nav>
 
         {/* Footer */}
-        <footer className="border-t  w-full pt-16">
+        <footer className="border-t w-full py-8">
           <div className="text-center">
             <span className="text-sm text-base-content/60 block">
               ¡Ayudanos a mantener la app!

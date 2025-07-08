@@ -3,8 +3,8 @@ import "./Title.css";
 
 const Title = () => {
   return (
-    <a href="/" className="text-gradient font-bold text-large">
-      Britney
+    <a href="/" className="text-gradient font-bold text-large text-center">
+      Entre Nosotros
     </a>
   );
 };

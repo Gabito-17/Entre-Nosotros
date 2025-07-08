@@ -42,7 +42,7 @@ const features = [
 
 const Features = () => {
   return (
-    <div className="py-16 text-base-content">
+    <div className="text-base-content">
       <h2 className="text-3xl font-bold mb-8 text-center text-primary">
         Características del Juego
       </h2>
