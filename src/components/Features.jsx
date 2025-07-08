@@ -1,11 +1,14 @@
+import { motion } from "framer-motion";
 import {
   CogIcon,
   HeartIcon,
   LightBulbIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-
-
+import {
+  fadeItem,
+  fadeContainer,
+} from "../lib/Animations.ts"
 const features = [
   {
     image: "/assets/images/i1.webp",
@@ -39,13 +42,23 @@ const features = [
 
 const Features = () => {
   return (
-    <div className="text-base-content py-12">
+    <div className="py-16 text-base-content">
       <h2 className="text-3xl font-bold mb-8 text-center text-primary">
         Características del Juego
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 container mx-auto px-6">
+
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 container mx-auto px-6"
+        variants={fadeContainer}
+        initial="initial"
+        animate="animate"
+      >
         {features.map((feature, index) => (
-          <div key={index} className="card bg-base-100 shadow-xl">
+          <motion.div
+            key={index}
+            className="card bg-base-100 shadow-xl"
+            variants={fadeItem(index * 0.4)}
+          >
             <figure>
               <img
                 src={feature.image}
@@ -60,9 +73,9 @@ const Features = () => {
               </div>
               <p className="text-sm">{feature.description}</p>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };

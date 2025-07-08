@@ -1,6 +1,5 @@
 import Acknowledgements from "../components/AboutUs/Acknowledgements";
 import Introduction from "../components/AboutUs/Introduction";
-import Philosophy from "../components/AboutUs/Philosophy";
 import Features from "../components/Features";
 import Footer from "../components/Layout/Footer.jsx";
 
@@ -15,13 +14,8 @@ const AboutUs = () => {
         <Features />
       </section>
 
-      {/* Filosofía y Compromiso */}
-      <section className="py-16">
-        <Philosophy />
-      </section>
-
       {/* Agradecimientos */}
-      <section className="py-16 bg-base-200">
+      <section className="py-16 ">
         <Acknowledgements />
       </section>
       {/* Footer */}

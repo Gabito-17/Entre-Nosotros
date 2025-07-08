@@ -2,7 +2,7 @@ const Introduction = () => {
   return (
     <section className="py-16 text-center lg:text-left lg:flex lg:space-x-12 px-6 container mx-auto">
       {" "}
-      <div className="lg:w-1/2 mt-8 lg:mt-0">
+      <div className="lg:w-1/2 lg:mt-0">
         <img
           src={"/assets/images/i3.webp"}
           alt="No carga :'("
@@ -10,7 +10,7 @@ const Introduction = () => {
         />
       </div>
       <div className="lg:w-1/2">
-        <h1 className="text-4xl font-bold mb-6 text-primary">Sobre Nosotros</h1>
+        <h1 className="text-4xl font-bold py-6 text-primary">Sobre Nosotros</h1>
         <p className="text-lg leading-relaxed mb-6 text-base-content">
           Britney nació como una idea entre amigos que buscaban un juego de
           cartas dinámico y entretenido. Con cuatro creadores detrás, hemos
