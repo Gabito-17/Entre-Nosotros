@@ -5,6 +5,7 @@ import { PlusIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { useGameBritneyStore } from "../../../stores/useGameBritneyStore.ts";
 import { useUiStore } from "../../../stores/useUiStore.ts";
 import { fadeItem, fadeUp, staggerContainer } from "../../../lib/Animations.ts";
+import DealerIcon from "../DealerIcon.tsx";
 
 export default function PlayerTableAndRow({ openModal }) {
   const players = useGameBritneyStore((state) => state.players);
@@ -75,33 +76,39 @@ return (
               className={isDisqualified ? "opacity-50 bg-gray-100" : ""}
             >
               <td>
-                <div className="flex items-center gap-2">
-                 <AnimatePresence>
-  {isDealer && (
-    <motion.div
-      layoutId="dealer-indicator"
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0, opacity: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20, duration: 0.3 }}
-      className="w-5 h-5 flex items-center justify-center text-primary"
-      title="Dealer"
+  <div className="flex items-center gap-2 w-full">
+    {/* Reservar espacio del ícono SIEMPRE */}
+    <div className="w-5 h-5 flex items-center justify-center">
+      <AnimatePresence>
+        {isDealer && (
+          <motion.div
+            layoutId="dealer-indicator"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 20,
+              duration: 0.3,
+            }}
+            className="text-primary"
+            title="Dealer"
+          >
+            <DealerIcon className="w-5 h-5" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+
+    <button
+      onClick={() => openModal(player)}
+      className="btn btn-sm btn-outline flex-1 text-left"
     >
-      <img
-        src="/assets/britney/diamond-card.svg"
-        alt="Dealer"
-        className="w-full h-full object-contain"
-      />
-    </motion.div>
-  )}
-</AnimatePresence>
-
-
-                  <button onClick={() => openModal(player)} className="btn btn-sm btn-outline flex-1 text-left">
-                    {player.name}
-                  </button>
-                </div>
-              </td>
+      {player.name}
+    </button>
+  </div>
+</td>
 
               <td>
                 <div className="flex items-center gap-2">
