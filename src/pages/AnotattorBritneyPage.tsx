@@ -1,6 +1,6 @@
 "use client";
 
-import RoundControls from "../components/Britney/Game/RoundControls.jsx";
+import RoundControls from "../components/Britney/Game/RoundControls.tsx";
 import AddPlayer from "../components/Britney/Players/AddPlayer.tsx";
 import PlayerTableAndRow from "../components/Britney/Players/PlayerTableAndRow.tsx";
 import ConfirmationModal from "../components/Modals/ConfirmationModal.tsx";

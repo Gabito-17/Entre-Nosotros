@@ -19,14 +19,16 @@ export default function RoundControls() {
     (state) => state.openConfirmationModal
   );
 
-  // Refs para los sonidos
+  // ✅ Refs para los sonidos (CORREGIDOS)
   const confirmSound = useRef<HTMLAudioElement | null>(null);
   const revertSound = useRef<HTMLAudioElement | null>(null);
 
-  // Cargar los sonidos una vez
+  // ✅ Cargar los sonidos una vez
   useEffect(() => {
-    confirmSound.current = new Audio("/sounds/card-swish.mp3");
-    revertSound.current = new Audio("/sounds/whosh.mp3");
+    confirmSound.current = new Audio(
+      "/assets/sounds/shuffling-playing-cards.wav"
+    );
+    revertSound.current = new Audio("/assets/sounds/whoosh-sound.wav");
   }, []);
 
   const handleConfirmRound = () => {
