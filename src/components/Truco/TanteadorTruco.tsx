@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { motion } from "framer-motion";
+import { fadeLeft, fadeRight, fadeUp } from "../../lib/Animations.ts";
 import { useGameTrucoStore } from "../../stores/useGameTrucoStore.ts";
 import { useUiStore } from "../../stores/useUiStore.ts";
 import ConfirmationModal from "../Modals/ConfirmationModal.tsx";
@@ -24,14 +26,34 @@ export default function TanteadorTruco() {
   return (
     <div>
       {/* La barra de configuración */}
-      <div className="relative z-40">
+      <motion.div
+        className="relative z-40"
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+      >
         <ConfigurationBar />
-      </div>
+      </motion.div>
 
       {/* Paneles con scores */}
-      <div className="flex flex-row divide-x divide-neutral p-8">
-        <PanelEquipo equipo="equipo1" nombre="NOSOTROS" />
-        <PanelEquipo equipo="equipo2" nombre="ELLOS" />
+      <div className="flex flex-row divide-x divide-neutral">
+        <motion.div
+          className="flex-1"
+          variants={fadeLeft}
+          initial="hidden"
+          animate="visible"
+        >
+          <PanelEquipo equipo="equipo1" nombre="NOSOTROS" />
+        </motion.div>
+
+        <motion.div
+          className="flex-1"
+          variants={fadeRight}
+          initial="hidden"
+          animate="visible"
+        >
+          <PanelEquipo equipo="equipo2" nombre="ELLOS" />
+        </motion.div>
       </div>
 
       {/* Modales */}
