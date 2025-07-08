@@ -1,3 +1,4 @@
+import { Variants } from "framer-motion";
 
 export const fadeLeft = {
   hidden: { opacity: 0, x: -50 },
@@ -11,20 +12,24 @@ export const fadeRight = {
 
 
 export const fadeUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
 };
 
-export const fadeItem = (delay = 0) => ({
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  transition: {
-    delay,
-    type: "spring",
-    stiffness: 80,
-    damping: 12,
-  },
-});
+
+export const fadeItem: Variants = {
+  hidden: { opacity: 0, x: -40 },
+  visible: (custom: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: "spring",
+      stiffness: 80,
+      damping: 16,
+      delay: custom,
+    },
+  }),
+};
 
 export const fadeContainer = {
   initial: {},
@@ -37,11 +42,11 @@ export const fadeContainer = {
 };
 
 export const staggerContainer = {
-  initial: {},
-  animate: {
+  hidden: {},
+  visible: {
     transition: {
-      staggerChildren: 1,
-      delayChildren: 1,
+      staggerChildren: 0.15,
     },
   },
 };
+
