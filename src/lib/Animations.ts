@@ -71,25 +71,46 @@ export const expandFade = {
   },
 };
 
-export const scoreChange: Variants = {
-  initial: { scale: 0.8, opacity: 0 },
+
+// Variants separados para sumar y restar
+export const scoreUp = {
+  initial: {
+    scale: 0.9,
+    opacity: 0,
+    x: -15,
+    rotateY: 45,
+  },
   animate: {
     scale: 1,
     opacity: 1,
+    x: 0,
+    rotateY: 0,
     transition: {
-      type: "spring" as const, // <- clave: "as const"
-      stiffness: 300,
-      damping: 20,
+      type: "spring" as const,
+      stiffness: 180,
+      damping: 18,
+      mass: 2,
     },
-  },
-  exit: {
-    scale: 0.8,
+  }
+};
+
+export const scoreDown = {
+  initial: {
+    scale: 0.9,
     opacity: 0,
+    x: 15,
+    rotateY: -45,
+  },
+  animate: {
+    scale: 1,
+    opacity: 1,
+    x: 0,
+    rotateY: 0,
     transition: {
-      type: "spring" as const, // <- también aquí
-      stiffness: 300,
-      damping: 20,
+      type: "spring" as const,
+      stiffness: 180,
+      damping: 18,
+      mass: 2,
     },
   },
 };
-

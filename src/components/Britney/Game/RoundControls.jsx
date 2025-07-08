@@ -4,6 +4,7 @@ import {
   ArrowUturnLeftIcon,
   ArrowUturnRightIcon,
 } from "@heroicons/react/24/outline";
+import { useEffect, useRef } from "react";
 import { useGameBritneyStore } from "../../../stores/useGameBritneyStore.ts";
 import { useUiStore } from "../../../stores/useUiStore.ts";
 
@@ -18,11 +19,29 @@ export default function RoundControls() {
     (state) => state.openConfirmationModal
   );
 
+  // Refs para los sonidos
+  const confirmSound = useRef<HTMLAudioElement | null>(null);
+  const revertSound = useRef<HTMLAudioElement | null>(null);
+
+  // Cargar los sonidos una vez
+  useEffect(() => {
+    confirmSound.current = new Audio("/sounds/card-swish.mp3");
+    revertSound.current = new Audio("/sounds/whosh.mp3");
+  }, []);
+
+  const handleConfirmRound = () => {
+    confirmSound.current?.play();
+    confirmRound();
+  };
+
   const handleReverseRound = () => {
     openConfirmationModal({
       title: "¿Revertir ronda?",
       message: `¿Seguro que querés revertir la ronda ${currentRoundIndex}?`,
-      onConfirm: () => reverseRound(),
+      onConfirm: () => {
+        revertSound.current?.play();
+        reverseRound();
+      },
     });
   };
 
@@ -38,7 +57,7 @@ export default function RoundControls() {
       </button>
 
       <button
-        onClick={confirmRound}
+        onClick={handleConfirmRound}
         className="btn btn-circle btn-sm btn-outline btn-success"
         title="Confirmar ronda actual"
       >
