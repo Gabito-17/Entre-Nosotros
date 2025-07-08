@@ -23,7 +23,7 @@ export default function ThemeSelector() {
   };
 
   return (
-    <div className="dropdown dropdown-end">
+    <div className="dropdown dropdown-start">
       <label tabIndex={0} className="btn btn-square btn-ghost">
         <SwatchIcon className="w-6 h-6 text-primary" />
       </label>

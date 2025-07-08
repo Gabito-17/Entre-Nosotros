@@ -18,7 +18,12 @@ export const fadeUp = {
 export const fadeItem = (delay = 0) => ({
   initial: { opacity: 0, y: 10 },
   animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.5, ease: "easeOut" },
+  transition: {
+    delay,
+    type: "spring",
+    stiffness: 80,
+    damping: 12,
+  },
 });
 
 export const fadeContainer = {
@@ -35,8 +40,8 @@ export const staggerContainer = {
   initial: {},
   animate: {
     transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.2,
+      staggerChildren: 1,
+      delayChildren: 1,
     },
   },
 };

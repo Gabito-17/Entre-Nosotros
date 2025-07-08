@@ -1,9 +1,21 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { ArrowPathIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { ChangeEvent, KeyboardEvent } from "react";
 import { useGameBritneyStore } from "../../../stores/useGameBritneyStore.ts";
 import { useUiStore } from "../../../stores/useUiStore.ts";
+
+const fadeUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.4, ease: "easeOut" },
+};
+
+const buttonHoverTap = {
+  whileHover: { scale: 1.1, boxShadow: "0px 0px 8px rgba(0,0,0,0.15)" },
+  whileTap: { scale: 0.95 },
+};
 
 export default function AddPlayer() {
   const newPlayerName = useGameBritneyStore((state) => state.newPlayerName);
@@ -21,7 +33,6 @@ export default function AddPlayer() {
     (state) => state.openConfirmationModal
   );
 
-  // Helper: check if game is in progress (at least one round or scores entered)
   const isGameInProgress = roundScoresHistory.length > 0;
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -91,32 +102,54 @@ export default function AddPlayer() {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-4 p-4 rounded-box">
-      <input
+    <motion.div
+      className="flex flex-wrap items-center gap-4 p-4 rounded-box"
+      initial="initial"
+      animate="animate"
+      variants={fadeUp}
+    >
+      <motion.input
         type="text"
         placeholder="Nombre del jugador"
         value={newPlayerName}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         className="input input-bordered w-full sm:max-w-xs flex-1"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       />
-      <div className="flex flex-wrap items-center gap-2 rounded-box justify-end">
-        <button
+
+      <motion.div
+        className="flex flex-wrap items-center gap-2 rounded-box justify-end"
+        initial="initial"
+        animate="animate"
+        transition={{ staggerChildren: 0.15 }}
+      >
+        <motion.button
           onClick={handleResetClick}
           className="btn btn-secondary btn-sm"
           title="Reiniciar partida"
+          {...buttonHoverTap}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
         >
           <ArrowPathIcon className="h-5 w-5" />
-        </button>
+        </motion.button>
 
-        <button
+        <motion.button
           onClick={handleAddPlayer}
           className="btn btn-primary btn-sm"
           title="Agregar jugador"
+          {...buttonHoverTap}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
         >
           <UserPlusIcon className="h-5 w-5" />
-        </button>
-      </div>
-    </div>
+        </motion.button>
+      </motion.div>
+    </motion.div>
   );
 }
