@@ -7,7 +7,7 @@ const RulesPage = () => {
       <RulesSteps />
       {/* Llamado a la Acción */}
       <section className="text-center m-12">
-        <a href="/anotador" className="btn btn-primary btn-lg">
+        <a href="/britney/anotador" className="btn btn-primary btn-lg">
           Comienza a Jugar Ahora
         </a>
       </section>

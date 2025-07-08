@@ -29,7 +29,7 @@ const LandingPage = () => {
         <p className="text-lg mb-6">
           Simplifica la forma en que juegas y mantén todo organizado.
         </p>
-        <a href="/anotador" className="btn btn-primary">
+        <a href="/britney/anotador" className="btn btn-primary">
           Utilizar anotador
         </a>
       </motion.section>

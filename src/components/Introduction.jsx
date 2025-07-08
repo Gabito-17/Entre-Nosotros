@@ -24,7 +24,7 @@ const Introduction = () => {
           canta
           <strong> "Britney"</strong> para ganar!
         </p>
-        <a href="/reglas" className="btn btn-primary">
+        <a href="/britney/reglas" className="btn btn-primary">
           Aprender a jugar
         </a>
       </motion.div>
