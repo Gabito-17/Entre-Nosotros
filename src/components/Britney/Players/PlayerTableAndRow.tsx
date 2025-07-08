@@ -95,7 +95,7 @@ export default function PlayerTableAndRow({ openModal }) {
                 variants={fadeItem}
                 initial="hidden"
                 animate="visible"
-                custom={index * 0.1} // <-- aquí pasás el delay dinámico
+                custom={index * 0.1} // <-- aquí el delay dinámico
                 className={isDisqualified ? "opacity-50 bg-gray-100" : ""}
               >
                 <td>
