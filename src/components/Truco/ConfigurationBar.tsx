@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { ArrowPathIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useGameTrucoStore } from "../../stores/useGameTrucoStore.ts";
@@ -17,32 +19,7 @@ const ConfigurationBar = () => {
   } = useGameTrucoStore();
 
   const addNotification = useUiNotificationStore((s) => s.addNotification);
-
   const openConfirmationModal = useUiStore((s) => s.openConfirmationModal);
-
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const handleResetClick = () => {
-    openConfirmationModal({
-      title: "¿Reiniciar partida?",
-      message: "Esto reiniciará los puntajes de ambos equipos. ¿Estás seguro?",
-      onConfirm: () => resetScores(),
-    });
-  };
-
-  const handleToggleMaxScore = () => {
-    const partidaEnCurso = (score1 > 0 || score2 > 0) && !winner;
-
-    if (partidaEnCurso) {
-      addNotification(
-        "La partida está en curso. No se puede cambiar el puntaje máximo.",
-        "error"
-      );
-      return;
-    }
-
-    toggleMaxScore();
-  };
 
   const LinesIcon = ({ isActive }: { isActive: boolean }) => (
     <svg
@@ -76,26 +53,39 @@ const ConfigurationBar = () => {
     </svg>
   );
 
+  const handleResetClick = () => {
+    openConfirmationModal({
+      title: "¿Reiniciar partida?",
+      message: "Esto reiniciará los puntajes de ambos equipos. ¿Estás seguro?",
+      onConfirm: () => resetScores(),
+    });
+  };
+
+  const handleToggleMaxScore = () => {
+    const partidaEnCurso = (score1 > 0 || score2 > 0) && !winner;
+    if (partidaEnCurso) {
+      addNotification(
+        "La partida está en curso. No se puede cambiar el puntaje máximo.",
+        "error"
+      );
+      return;
+    }
+    toggleMaxScore();
+  };
+
   const handleSelectStyle = (style: "fosforo" | "lines" | "cafe") => {
     setPointStyle(style);
-    setDropdownOpen(false);
+
+    // 🔐 Cerrar dropdown (igual que en ThemeSelector)
+    document.activeElement && (document.activeElement as HTMLElement).blur();
   };
 
   return (
-    <nav className="flex items-center shadow-sm ">
+    <nav className="flex items-center shadow-sm">
       <div className="grid grid-cols-3 w-full">
-        {/* Izquierda */}
-        <div className={`dropdown dropdown-bottom dropdown-center ${dropdownOpen ? "dropdown-open" : ""}`}>
-          {/* Checkbox oculto controlado */}
-          <input
-            type="checkbox"
-            id="dropdown-toggle"
-            className="hidden"
-            checked={dropdownOpen}
-            onChange={() => setDropdownOpen(!dropdownOpen)}
-          />
+        {/* Izquierda: Selector de estilo de puntos */}
+        <div className="dropdown dropdown-bottom dropdown-center">
           <label
-            htmlFor="dropdown-toggle"
             tabIndex={0}
             className="btn btn-sm btn-outline w-full cursor-pointer flex items-center justify-center gap-1"
           >
@@ -110,9 +100,13 @@ const ConfigurationBar = () => {
               <li key={style} className="flex justify-around gap-2 p-2">
                 <button
                   type="button"
-                  onClick={() => handleSelectStyle(style as "fosforo" | "lines" | "cafe")}
+                  onClick={() =>
+                    handleSelectStyle(style as "fosforo" | "lines" | "cafe")
+                  }
                   className={`rounded border-2 flex gap-1 btn ${
-                    pointStyle === style ? "border-primary" : "border-transparent"
+                    pointStyle === style
+                      ? "border-primary"
+                      : "border-transparent"
                   }`}
                 >
                   {style === "lines" ? (
@@ -130,7 +124,7 @@ const ConfigurationBar = () => {
           </ul>
         </div>
 
-        {/* Centro */}
+        {/* Centro: Botón para cambiar puntaje máximo */}
         <div className="justify-center">
           <button
             onClick={handleToggleMaxScore}
@@ -140,7 +134,7 @@ const ConfigurationBar = () => {
           </button>
         </div>
 
-        {/* Derecha */}
+        {/* Derecha: Botón de reinicio */}
         <div className="justify-center">
           <button
             onClick={handleResetClick}
