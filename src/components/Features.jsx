@@ -5,10 +5,7 @@ import {
   LightBulbIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import {
-  fadeItem,
-  fadeContainer,
-} from "../lib/Animations.ts"
+import { fadeItem, fadeContainer } from "../lib/Animations.ts";
 const features = [
   {
     image: "/assets/images/i1.webp",
@@ -42,7 +39,7 @@ const features = [
 
 const Features = () => {
   return (
-    <div className="text-base-content">
+    <div className="text-base-content py-8">
       <h2 className="text-3xl font-bold mb-8 text-center text-primary">
         Características del Juego
       </h2>
@@ -57,7 +54,8 @@ const Features = () => {
           <motion.div
             key={index}
             className="card bg-base-100 shadow-xl"
-            variants={fadeItem(index * 0.4)}
+            variants={fadeItem}
+            custom={index * 0.4} // esto inyecta el delay
           >
             <figure>
               <img
