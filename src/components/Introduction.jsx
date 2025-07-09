@@ -3,7 +3,7 @@ import { fadeLeft, fadeRight } from "../lib/Animations.ts";
 
 const Introduction = () => {
   return (
-    <section className="py-16 px-6 container mx-auto text-center lg:text-left lg:flex lg:items-center lg:gap-12">
+    <section className="py-8 px-6 container mx-auto text-center lg:text-left lg:flex lg:items-center lg:gap-12">
       <motion.div
         className="lg:w-1/2"
         variants={fadeLeft}

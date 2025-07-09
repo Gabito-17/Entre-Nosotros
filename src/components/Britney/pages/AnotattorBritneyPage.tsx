@@ -1,15 +1,15 @@
 "use client";
 
-import RoundControls from "../components/Britney/Game/RoundControls.tsx";
-import AddPlayer from "../components/Britney/Players/AddPlayer.tsx";
-import PlayerTableAndRow from "../components/Britney/Players/PlayerTableAndRow.tsx";
-import ConfirmationModal from "../components/Modals/ConfirmationModal.tsx";
-import GameOverModal from "../components/Modals/GameOverBritneyModal.tsx";
-import PlayerModal from "../components/Modals/PlayerModal.jsx";
-import TotalScoresModal from "../components/Modals/TotalScoresModal.jsx";
-import Toaster from "../components/Toaster.tsx";
-import { useGameBritneyStore } from "../stores/useGameBritneyStore.ts";
-import { useUiStore } from "../stores/useUiStore.ts";
+import RoundControls from "../Game/RoundControls.tsx";
+import AddPlayer from "../Players/AddPlayer.tsx";
+import PlayerTableAndRow from "../Players/PlayerTableAndRow.tsx";
+import ConfirmationModal from "../../Modals/ConfirmationModal.tsx";
+import GameOverModal from "../../Modals/GameOverBritneyModal.tsx";
+import PlayerModal from "../../Modals/PlayerModal.jsx";
+import TotalScoresModal from "../../Modals/TotalScoresModal.jsx";
+import Toaster from "../../Toaster.tsx";
+import { useGameBritneyStore } from "../../../stores/useGameBritneyStore.ts";
+import { useUiStore } from "../../../stores/useUiStore.ts";
 
 export default function Game() {
   const players = useGameBritneyStore((state) => state.players);

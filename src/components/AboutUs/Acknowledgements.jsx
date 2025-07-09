@@ -9,7 +9,7 @@ const Acknowledgements = () => {
 
   return (
     <motion.div
-      className="mx-auto text-center py-16 px-6"
+      className="mx-auto text-center py-8 px-6"
       variants={{ initial: {}, animate: { transition: { staggerChildren: 0.3 } } }}
       initial="initial"
       animate="animate"
@@ -30,7 +30,7 @@ const Acknowledgements = () => {
         Muchas Gracias
       </motion.p>
 
-      <div className="relative overflow-hidden w-full max-w-2xl mx-auto bg-base-200 rounded-box shadow-inner p-4">
+      <div className="relative overflow-hidden w-full max-w-2xl mx-auto rounded-box shadow-inner p-4">
         <motion.div
           className="flex gap-8 whitespace-nowrap text-lg font-semibold text-primary"
           animate={{ x: ["0%", "-50%"] }}

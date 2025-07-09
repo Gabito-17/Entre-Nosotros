@@ -1,10 +1,10 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout.tsx";
-import AboutUs from "./pages/AboutUs";
-import Game from "./pages/AnotattorBritneyPage.tsx";
-import AnotadorTrucoPage from "./pages/AnotattorTrucoPage.tsx";
-import LandingPage from "./pages/LandingPage";
-import RulesPage from "./pages/RulesBritneyPage.js";
+import HomePage from "./pages/HomePage.js";
+import Game from "./components/Britney/pages/AnotattorBritneyPage.tsx";
+import AnotadorTrucoPage from "./components/Truco/pages/AnotattorTrucoPage.tsx";
+import BritneyPage from "./components/Britney/pages/BritneyPage.js";
+import RulesPage from "./components/Britney/pages/RulesBritneyPage.js";
 import SuggestionsPage from "./pages/SuggestionPage";
 
 const App = () => {
@@ -12,10 +12,10 @@ const App = () => {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="britney/reglas" element={<RulesPage />} />
           <Route path="/sugerencias" element={<SuggestionsPage />} />
-          <Route path="britney/nosotros" element={<AboutUs />} />
+          <Route path="britney" element={<BritneyPage />} />
           <Route path="britney/anotador" element={<Game />} />
           <Route path="truco/anotador" element={<AnotadorTrucoPage />} />
         </Routes>   

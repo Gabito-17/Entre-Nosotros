@@ -21,7 +21,6 @@ const Footer = () => {
             </li>
             <li className="flex items-center gap-2">
               <EnvelopeIcon className="w-5 h-5 text-secondary" />
-
               <a
                 href="mailto:juangabrielpavon@gmail.com"
                 className="link-hover"
@@ -36,21 +35,21 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Especificaciones */}
+        {/* Información general */}
         <div>
-          <h3 className="footer-title text-primary">Especificaciones</h3>
+          <h3 className="footer-title text-primary">Plataforma</h3>
           <ul className="text-sm space-y-2">
             <li className="flex items-center gap-2">
               <AcademicCapIcon className="w-5 h-5 text-secondary" />
-              <span>Edad: 8+ años</span>
+              <span>Ideal para juegos sociales</span>
             </li>
             <li className="flex items-center gap-2">
               <UserGroupIcon className="w-5 h-5 text-secondary" />
-              <span>Jugadores: 2-8</span>
+              <span>Jugadores: 2-8+</span>
             </li>
             <li className="flex items-center gap-2">
               <ClockIcon className="w-5 h-5 text-secondary" />
-              <span>Duración: 30-45 min</span>
+              <span>Partidas: 10 a 60 min</span>
             </li>
           </ul>
         </div>
@@ -63,8 +62,8 @@ const Footer = () => {
               { name: "Inicio", href: "/" },
               { name: "Nosotros", href: "/nosotros" },
               { name: "Sugerencias", href: "/sugerencias" },
-              { name: "Anotador", href: "/anotador" },
-              { name: "Reglas", href: "/reglas" },
+              { name: "Britney", href: "/britney" },
+              { name: "Truco", href: "/truco" },
             ].map((link, index) => (
               <li key={index}>
                 <a href={link.href} className="link-hover">

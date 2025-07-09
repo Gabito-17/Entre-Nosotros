@@ -5,7 +5,7 @@ const sections = [
   {
     title: "Britney",
     items: [
-      { label: "Nosotros", href: "/britney/nosotros" },
+      { label: "acerca de", href: "/britney" },
       { label: "Anotador", href: "/britney/anotador" },
       { label: "Reglas", href: "/britney/reglas" },
     ],

@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
-import Features from "../components/Features";
-import Introduction from "../components/Introduction";
-import Footer from "../components/Layout/Footer.jsx";
-import { fadeUp } from "../lib/Animations.ts";
-import { fadeContainer } from "../lib/Animations.ts";
+import Features from "../../Features.jsx";
+import Introduction from "../../Introduction.jsx";
+import Footer from "../../Layout/Footer.jsx";
+import { fadeUp } from "../../../lib/Animations.ts";
 
-const LandingPage = () => {
+const BritneyPage = () => {
   return (
     <div>
       <Introduction />
@@ -39,4 +38,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default BritneyPage;
