@@ -21,7 +21,7 @@ export default function TanteadorTruco() {
       const nombre = winner === "equipo1" ? "NOSOTROS" : "ELLOS";
       openGameOverModal(nombre);
     }
-  }, [winner]);
+  }, [winner, openGameOverModal]);
 
   return (
     <div>
@@ -43,7 +43,7 @@ export default function TanteadorTruco() {
           initial="hidden"
           animate="visible"
         >
-          <PanelEquipo equipo="equipo1" nombre="NOSOTROS" />
+          <PanelEquipo equipo="equipo1" />
         </motion.div>
 
         <motion.div
@@ -52,7 +52,7 @@ export default function TanteadorTruco() {
           initial="hidden"
           animate="visible"
         >
-          <PanelEquipo equipo="equipo2" nombre="ELLOS" />
+          <PanelEquipo equipo="equipo2" />
         </motion.div>
       </div>
 
