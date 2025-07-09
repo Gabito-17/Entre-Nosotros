@@ -1,6 +1,6 @@
 {
-  "name": "britney",
-  "version": "0.4.3",
+  "name": "entrenosotros",
+  "version": "1.0",
   "private": true,
   "dependencies": {
     "@heroicons/react": "^2.1.5",
