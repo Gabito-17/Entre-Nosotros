@@ -1,11 +1,11 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout.tsx";
-import HomePage from "./pages/HomePage.js";
+import HomePage from "./pages/HomePage.tsx";
 import Game from "./components/Britney/pages/AnotattorBritneyPage.tsx";
 import AnotadorTrucoPage from "./components/Truco/pages/AnotattorTrucoPage.tsx";
-import BritneyPage from "./components/Britney/pages/BritneyPage.js";
-import RulesPage from "./components/Britney/pages/RulesBritneyPage.js";
-import SuggestionsPage from "./pages/SuggestionPage";
+import BritneyPage from "./components/Britney/pages/BritneyPage.tsx";
+import RulesPage from "./components/Britney/pages/RulesBritneyPage.tsx";
+import SuggestionsPage from "./pages/SuggestionPage.tsx";
 
 const App = () => {
   return (

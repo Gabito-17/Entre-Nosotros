@@ -9,18 +9,19 @@ const Introduction = () => {
         />
       </div>
       <div className="lg:w-1/2">
-        <h1 className="text-4xl font-bold py-6 text-primary">Sobre Nosotros</h1>
+        <h1 className="text-4xl font-bold py-6 text-primary">
+          Jueguen entre ustedes
+        </h1>
         <p className="text-lg leading-relaxed mb-6 text-base-content">
           Esta plataforma nació como un proyecto entre amigos con la idea de
-          crear herramientas digitales para mejorar la experiencia de los juegos
-          de mesa y de cartas. Queremos que jugar sea más simple, divertido y
-          accesible para todos.
+          crear una herramienta digital para mejorar la experiencia de nuestras
+          partidas con juegos de cartas. Queremos lograr que jugar a juegos
+          sociales raros nuestros sea mas sencillo.
         </p>
         <p className="text-lg leading-relaxed text-base-content">
-          Acá vas a encontrar anotadores digitales, reglas personalizadas y
-          utilidades diseñadas para que tus partidas sean más organizadas y
-          memorables, tanto si estás en una reunión familiar como en una
-          competencia entre amigos.
+          Acá vas a encontrar anotadores digitales, reglas de distintos juegos y
+          utilidades diseñadas para que tus partidas sean más organizadas, tanto
+          si estás en una reunión familiar como entre amigos.
         </p>
       </div>
     </section>

@@ -19,7 +19,7 @@ const Acknowledgements = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0, transition: { duration: 0.6 } }}
       >
-        Agradecemos a la valiosa comunidad de los pibes por probar la aplicación y brindar su valiosa retroalimentación... ídolos.
+        Agradezco a la valiosa comunidad de los pibes por probar la aplicación y brindar su valiosa retroalimentación... ídolos.
       </motion.p>
 
       <motion.p
@@ -35,7 +35,7 @@ const Acknowledgements = () => {
           className="flex gap-8 whitespace-nowrap text-lg font-semibold text-primary"
           animate={{ x: ["0%", "-50%"] }}
           transition={{
-            duration: duplicatedNames.length * 1.5, // Ajustás la velocidad acá
+            duration: duplicatedNames.length * 1.5, // Ajusta la velocidad
             ease: "linear",
             repeat: Infinity
           }}
