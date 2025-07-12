@@ -5,14 +5,18 @@ const sections = [
   {
     title: "Britney",
     items: [
-      { label: "acerca de", href: "/britney" },
+      { label: "Acerca de", href: "/britney" },
       { label: "Anotador", href: "/britney/anotador" },
       { label: "Reglas", href: "/britney/reglas" },
     ],
   },
   {
     title: "Truco",
-    items: [{ label: "Anotador ", href: "/truco/anotador" }],
+    items: [
+      { label: "Acerca de", href: "/truco" },
+      { label: "Anotador", href: "/truco/anotador" },
+      { label: "Reglas", href: "/truco/reglas" },
+    ],
   },
 ];
 
@@ -23,7 +27,7 @@ export default function Drawer() {
 
       <aside className="w-64 bg-base-200 min-h-svh flex flex-col justify-between shadow-lg overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between border-b ">
+        <div className="flex items-center justify-between border-b">
           <label
             htmlFor="my-drawer"
             className="btn btn-square btn-ghost"
