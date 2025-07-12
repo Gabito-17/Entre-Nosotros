@@ -3,13 +3,13 @@
 import { SwatchIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 
-const themes = ["dracula", "business", "lofi", "pastel"];
+const themes = ["lofi", "business", "dracula", "pastel"];
 
 export default function ThemeSelector() {
   const [theme, setTheme] = useState("dracula");
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "dracula";
+    const savedTheme = localStorage.getItem("theme") || "lofi";
     setTheme(savedTheme);
     document.documentElement.setAttribute("data-theme", savedTheme);
   }, []);
@@ -33,7 +33,7 @@ export default function ThemeSelector() {
         className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
       >
         {themes.map((t) => (
-          <li key={t}>
+          <li key={t} className="mb-2 last:mb-0">
             <button
               data-theme={t}
               className={`w-full btn justify-start gap-2 ${
