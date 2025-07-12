@@ -14,11 +14,14 @@ const TrucoIntroduction = () => {
           Jugá al Truco Argentino
         </h2>
         <p className="text-lg leading-relaxed mb-6">
-          El <strong>Truco Argentino</strong> es un clásico juego de cartas lleno de
-          <strong> estrategia</strong>, <strong>engaños</strong> y <strong>señas</strong>. Jugado en equipos o individual,
-          pone a prueba tu capacidad para <strong>mentir con convicción</strong>,
-          <strong>interpretar señales</strong> y saber cuándo decir <strong>“¡Quiero retruco!”</strong>.
-          ¡Sumá puntos, ganá manos y convertite en el más vivo de la mesa!
+          El <strong>Truco Argentino</strong> es un clásico juego de cartas
+          lleno de
+          <strong> estrategia</strong>, <strong>engaños</strong> y{" "}
+          <strong>señas</strong>. Jugado en equipos o individual, pone a prueba
+          tu capacidad para <strong>mentir con convicción</strong>,
+          <strong>interpretar señales</strong> y saber cuándo decir{" "}
+          <strong>“¡Quiero retruco!”</strong>. ¡Sumá puntos, ganá manos y
+          convertite en el más vivo de la mesa!
         </p>
         <a href="/truco/reglas" className="btn btn-primary">
           Aprender a jugar
@@ -27,9 +30,9 @@ const TrucoIntroduction = () => {
 
       <motion.div className="lg:w-1/2 mt-8 lg:mt-0" variants={fadeRight}>
         <motion.img
-          src="/assets/svgs/undraw_card-game.svg"
+          src="/assets/truco/as-de-treboles.png"
           alt="Truco Argentino preview"
-          className="rounded-box shadow-xl w-full transition-all duration-300 ease-out"
+          className="rounded-box w-full max-h-72 object-contain transition-all duration-300 ease-out"
           loading="eager"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}

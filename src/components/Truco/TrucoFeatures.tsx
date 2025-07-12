@@ -9,28 +9,28 @@ import { fadeItem, fadeContainer } from "../../lib/Animations.ts";
 
 const features = [
   {
-    image: "/assets/svgs/undraw_team_spirit_re_yl1v.svg",
+    image: "/assets/truco/seis-de-copas.png",
     title: "Juego en Equipo",
     description:
       "Jugá en pareja y desarrollá complicidad con tu compañero usando señas y estrategias compartidas.",
     icon: <UsersIcon className="w-8 h-8" />,
   },
   {
-    image: "/assets/svgs/undraw_voice_interface_eckp.svg",
+    image: "/assets/truco/cinco-de-espadas.png",
     title: "Señas y Mentiras",
     description:
       "El arte del engaño es clave: dominá las señas y mentí con seguridad para llevarte la ronda.",
     icon: <SpeakerWaveIcon className="w-8 h-8" />,
   },
   {
-    image: "/assets/svgs/undraw_mindfulness_scgo.svg",
+    image: "/assets/truco/dos-de-copas.png",
     title: "Atención al Juego",
     description:
       "Prestá atención a cada jugada y anticipá los movimientos del rival para tomar las mejores decisiones.",
     icon: <EyeIcon className="w-8 h-8" />,
   },
   {
-    image: "/assets/svgs/undraw_playing-cards_yoqo.svg",
+    image: "/assets/truco/dos-de-espadas.png",
     title: "Cartas con Jerarquía",
     description:
       "Del ancho de espadas al cuatro de copas: aprendé el orden de las cartas y usalo a tu favor.",
