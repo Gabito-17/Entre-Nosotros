@@ -1,5 +1,7 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import Title from "../Layout/Title/Title";
+import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
+import { useSoundStore } from "../../stores/useSoundStore.ts";
 
 const sections = [
   {
@@ -21,6 +23,8 @@ const sections = [
 ];
 
 export default function Drawer() {
+  const isMuted = useSoundStore((state) => state.isMuted);
+  const toggleMute = useSoundStore((state) => state.toggleMute);
   return (
     <>
       <label htmlFor="my-drawer" className="drawer-overlay cursor-pointer" />
@@ -62,7 +66,26 @@ export default function Drawer() {
             </div>
           ))}
         </nav>
-
+        {/* Mute toggle */}
+        <div className="border-t px-4 py-4">
+          <button
+            onClick={toggleMute}
+            className="flex items-center gap-2 text-sm text-base-content hover:text-primary transition"
+            aria-label={isMuted ? "Activar sonido" : "Desactivar sonido"}
+          >
+            {isMuted ? (
+              <>
+                <SpeakerXMarkIcon className="h-5 w-5" />
+                Sonido desactivado
+              </>
+            ) : (
+              <>
+                <SpeakerWaveIcon className="h-5 w-5" />
+                Sonido activado
+              </>
+            )}
+          </button>
+        </div>
         {/* Footer */}
         <footer className="border-t w-full py-8">
           <div className="text-center">

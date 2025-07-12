@@ -6,6 +6,7 @@ import { ScoreDisplay } from "../displays/ScoreDisplay.tsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { scoreUp, scoreDown } from "../../../lib/Animations.ts";
 import { PencilIcon } from "@heroicons/react/24/outline";
+import { usePlaySound } from "../../../stores/usePlaySound.ts"; // Asegurate que esté bien importado
 
 interface PanelEquipoProps {
   equipo: "equipo1" | "equipo2";
@@ -31,6 +32,8 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const upSound = useRef<HTMLAudioElement | null>(null);
 
+  const playSound = usePlaySound(); // 🎧 Hook para reproducir sonidos si no está muteado
+
   const color = nombre === "NOSOTROS" ? "text-primary" : "text-secondary";
 
   useEffect(() => {
@@ -43,22 +46,21 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
       setIsIncrement(isUp);
       setAnimationKey(score);
 
-      const sound = upSound.current;
-      if (sound) {
-        sound.currentTime = 0;
-        sound.play().catch(() => {});
+      if (upSound.current) {
+        upSound.current.currentTime = 0;
+        playSound(upSound.current); // ✅ Solo se reproduce si no está muteado
       }
 
       prevScoreRef.current = score;
     }
-  }, [score]);
+  }, [score, playSound]);
 
   const handleChange = (delta: number) => {
     addPoint(equipo, delta);
   };
 
   const handleEdit = () => {
-    setTempNombre(nombre); // reset to current in case it was changed elsewhere
+    setTempNombre(nombre);
     setEditing(true);
     setTimeout(() => inputRef.current?.focus(), 50);
   };

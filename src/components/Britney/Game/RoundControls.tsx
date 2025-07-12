@@ -7,6 +7,7 @@ import {
 import { useEffect, useRef } from "react";
 import { useGameBritneyStore } from "../../../stores/useGameBritneyStore.ts";
 import { useUiStore } from "../../../stores/useUiStore.ts";
+import { usePlaySound } from "../../../stores/usePlaySound.ts"; // Ajustá si el path es distinto
 
 export default function RoundControls() {
   const currentRoundIndex = useGameBritneyStore(
@@ -19,11 +20,12 @@ export default function RoundControls() {
     (state) => state.openConfirmationModal
   );
 
-  // ✅ Refs para los sonidos (CORREGIDOS)
+  // Refs para los sonidos
   const confirmSound = useRef<HTMLAudioElement | null>(null);
   const revertSound = useRef<HTMLAudioElement | null>(null);
 
-  // ✅ Cargar los sonidos una vez
+  const playSound = usePlaySound();
+
   useEffect(() => {
     confirmSound.current = new Audio(
       "/assets/sounds/shuffling-playing-cards.wav"
@@ -32,7 +34,7 @@ export default function RoundControls() {
   }, []);
 
   const handleConfirmRound = () => {
-    confirmSound.current?.play();
+    if (confirmSound.current) playSound(confirmSound.current);
     confirmRound();
   };
 
@@ -41,7 +43,7 @@ export default function RoundControls() {
       title: "¿Revertir ronda?",
       message: `¿Seguro que querés revertir la ronda ${currentRoundIndex}?`,
       onConfirm: () => {
-        revertSound.current?.play();
+        if (revertSound.current) playSound(revertSound.current);
         reverseRound();
       },
     });
