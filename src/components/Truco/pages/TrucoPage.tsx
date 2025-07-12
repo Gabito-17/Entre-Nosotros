@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import TrucoIntroduction from "../TrucoIntroduction.jsx"; // Asegurate de que esté bien el path
-import FeaturesTruco from "../TrucoFeatures.js";         // Asegurate de que esté bien el path
+import TrucoIntroduction from "../TrucoIntroduction.tsx"; // Asegurate de que esté bien el path
+import FeaturesTruco from "../TrucoFeatures.tsx";         // Asegurate de que esté bien el path
 import Footer from "../../Layout/Footer.jsx";
 import { fadeUp } from "../../../lib/Animations.ts";
 
