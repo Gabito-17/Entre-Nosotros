@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { fadeLeft, fadeRight } from "../../lib/Animations.ts";
 
-const Introduction = () => {
+const BritneyIntroduction = () => {
   return (
     <motion.section
       className="py-8 px-6 container mx-auto text-center lg:text-left lg:flex lg:items-center lg:gap-12"
@@ -49,4 +49,4 @@ const Introduction = () => {
   );
 };
 
-export default Introduction;
+export default BritneyIntroduction;

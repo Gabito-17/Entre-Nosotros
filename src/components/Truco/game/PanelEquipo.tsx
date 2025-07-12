@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useGameTrucoStore } from "../../stores/useGameTrucoStore.ts";
-import { ScoreDisplay } from "./ScoreDisplay.tsx";
+import { useGameTrucoStore } from "../../../stores/useGameTrucoStore.ts";
+import { ScoreDisplay } from "../displays/ScoreDisplay.tsx";
 import { motion, AnimatePresence } from "framer-motion";
-import { scoreUp, scoreDown } from "../../lib/Animations.ts";
+import { scoreUp, scoreDown } from "../../../lib/Animations.ts";
 import { PencilIcon } from "@heroicons/react/24/outline";
 
 interface PanelEquipoProps {

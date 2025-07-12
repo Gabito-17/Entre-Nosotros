@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { ArrowPathIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
-import { useGameTrucoStore } from "../../stores/useGameTrucoStore.ts";
-import { useUiNotificationStore } from "../../stores/useUiNotificationStore.ts";
-import { useUiStore } from "../../stores/useUiStore.ts";
+import { useGameTrucoStore } from "../../../stores/useGameTrucoStore.ts";
+import { useUiNotificationStore } from "../../../stores/useUiNotificationStore.ts";
+import { useUiStore } from "../../../stores/useUiStore.ts";
 
 const ConfigurationBar = () => {
   const {

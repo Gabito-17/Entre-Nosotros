@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useGameTrucoStore } from "../../stores/useGameTrucoStore.ts";
+import { useGameTrucoStore } from "../../../stores/useGameTrucoStore.ts";
 import PorotosDisplay from "./CoffeeDisplay.tsx";
 import FosforosDisplay from "./FosforosDisplay.tsx";
 

@@ -2,12 +2,12 @@
 
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { fadeLeft, fadeRight, fadeUp } from "../../lib/Animations.ts";
-import { useGameTrucoStore } from "../../stores/useGameTrucoStore.ts";
-import { useUiStore } from "../../stores/useUiStore.ts";
-import ConfirmationModal from "../Modals/ConfirmationModal.tsx";
-import GameOverTrucoModal from "../Modals/GameOverTrucoModal.tsx";
-import Toaster from "../Toaster.tsx";
+import { fadeLeft, fadeRight, fadeUp } from "../../../lib/Animations.ts";
+import { useGameTrucoStore } from "../../../stores/useGameTrucoStore.ts";
+import { useUiStore } from "../../../stores/useUiStore.ts";
+import ConfirmationModal from "../../Modals/ConfirmationModal.tsx";
+import GameOverTrucoModal from "../../Modals/GameOverTrucoModal.tsx";
+import Toaster from "../../Toaster.tsx";
 import ConfigurationBar from "./ConfigurationBar.tsx";
 import PanelEquipo from "./PanelEquipo.tsx";
 

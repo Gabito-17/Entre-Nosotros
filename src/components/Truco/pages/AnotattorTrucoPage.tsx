@@ -1,4 +1,4 @@
-import TanteadorTruco from "../TanteadorTruco.tsx";
+import TanteadorTruco from "../game/TanteadorTruco.tsx";
 
 export default function AnotadorTrucoPage() {
   return (
