@@ -1,4 +1,5 @@
 import { Variants } from "framer-motion";
+import { easeInOut } from "framer-motion";
 
 export const fadeLeft = {
   hidden: { opacity: 0, x: -50 },
@@ -13,8 +14,17 @@ export const fadeRight = {
 
 export const fadeUp = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: easeInOut,
+    },
+  },
 };
+
+
 
 
 export const fadeItem: Variants = {

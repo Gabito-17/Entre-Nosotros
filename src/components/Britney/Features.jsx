@@ -5,7 +5,8 @@ import {
   LightBulbIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import { fadeItem, fadeContainer } from "../lib/Animations.ts";
+import { fadeItem, fadeContainer } from "../../lib/Animations.ts";
+
 const features = [
   {
     image: "/assets/images/i1.webp",
@@ -47,21 +48,23 @@ const Features = () => {
       <motion.div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 container mx-auto px-6"
         variants={fadeContainer}
-        initial="initial"
-        animate="animate"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
       >
         {features.map((feature, index) => (
           <motion.div
             key={index}
             className="card bg-base-100 shadow-xl"
             variants={fadeItem}
-            custom={index * 0.4} // esto inyecta el delay
+            custom={index * 0.15} // Más fluido
           >
-            <figure>
+            <figure className="bg-base-200">
               <img
                 src={feature.image}
                 alt={feature.title}
                 className="h-40 w-full object-cover"
+                loading="lazy"
               />
             </figure>
             <div className="card-body">

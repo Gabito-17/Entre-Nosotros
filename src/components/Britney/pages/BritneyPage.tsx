@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import Features from "../../Features.jsx";
-import Introduction from "../../Introduction.jsx";
+import Features from "../Features.jsx";
+import Introduction from "../Introduction.jsx";
 import Footer from "../../Layout/Footer.jsx";
 import { fadeUp } from "../../../lib/Animations.ts";
 
@@ -12,7 +12,9 @@ const BritneyPage = () => {
       <motion.section
         className="bg-base-200"
         variants={fadeUp}
-        transition={{ duration: 0.5 }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
       >
         <Features />
       </motion.section>
@@ -20,7 +22,9 @@ const BritneyPage = () => {
       <motion.section
         className="py-16 text-center"
         variants={fadeUp}
-        transition={{ duration: 0.5, delay: 0.3 }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
       >
         <h2 className="text-3xl font-bold mb-4 text-primary">
           ¡Empieza a jugar Britney hoy!
