@@ -1,5 +1,5 @@
 
-🃏 Britney - Game Score Tracker (ahora "Entre Nosotros")
+# 🃏 Britney - Game Score Tracker (ahora "Entre Nosotros")
 
 **Entre Nosotros** es una aplicación web desarrollada con **React** para llevar el registro de partidas de juegos de mesa o cartas. Gestiona fácilmente jugadores, rondas, puntajes, descalificaciones y dealer, ahora con soporte para **múltiples juegos** como partidas personalizadas, **Britney** y **Truco argentino**. Todo desde una interfaz simple, rápida y persistente.
 
