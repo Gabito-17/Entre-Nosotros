@@ -1,4 +1,4 @@
-import RulesSteps from "../RulesSteps.jsx";
+import RulesSteps from "../BritneyRulesSteps.jsx";
 import Footer from "../../Layout/Footer.jsx";
 
 const RulesPage = () => {

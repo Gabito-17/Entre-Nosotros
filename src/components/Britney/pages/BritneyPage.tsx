@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import Features from "../Features.jsx";
+import Features from "../BritneyFeatures.jsx";
 import Introduction from "../BritneyIntroduction.jsx";
 import Footer from "../../Layout/Footer.jsx";
 import { fadeUp } from "../../../lib/Animations.ts";
