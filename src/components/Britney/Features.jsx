@@ -9,32 +9,32 @@ import { fadeItem, fadeContainer } from "../../lib/Animations.ts";
 
 const features = [
   {
-    image: "/assets/images/i1.webp",
+    image: "/assets/svgs/undraw_memory-storage_x93l.svg",
     title: "Memoria Estratégica",
     description:
       "Los jugadores deben recordar las cartas visibles y las jugadas anteriores para descartar eficientemente.",
-    icon: <CogIcon className="w-8 h-8 " />,
+    icon: <CogIcon className="w-8 h-8" />,
   },
   {
-    image: "/assets/images/i2.webp",
+    image: "/assets/svgs/undraw_playing-cards_yoqo.svg",
     title: "Habilidades Especiales",
     description:
       "Las cartas 7, 8 y 9 tienen habilidades únicas que añaden un elemento estratégico al juego.",
-    icon: <LightBulbIcon className="w-8 h-8 " />,
+    icon: <LightBulbIcon className="w-8 h-8" />,
   },
   {
-    image: "/assets/images/i3.webp",
+    image: "/assets/svgs/undraw_warning_tl76.svg",
     title: "Sistema de Penalización",
     description:
       "Los jugadores pueden recoger cartas si cometen errores, lo que agrega un nivel de riesgo a cada jugada.",
     icon: <HeartIcon className="w-8 h-8" />,
   },
   {
-    image: "/assets/images/i4.webp",
+    image: "/assets/svgs/undraw_process_7lkc.svg",
     title: "Juego Dinámico",
     description:
       "Cada turno trae nuevas decisiones, manteniendo a los jugadores en alerta y comprometidos.",
-    icon: <UsersIcon className="w-8 h-8 " />,
+    icon: <UsersIcon className="w-8 h-8" />,
   },
 ];
 
@@ -57,20 +57,24 @@ const Features = () => {
             key={index}
             className="card bg-base-100 shadow-xl"
             variants={fadeItem}
-            custom={index * 0.15} // Más fluido
+            custom={index * 0.15}
           >
-            <figure className="bg-base-200">
-              <img
+            <figure className="flex justify-center items-center h-40 bg-base-200">
+              <motion.img
                 src={feature.image}
                 alt={feature.title}
-                className="h-40 w-full object-cover"
+                className="h-full w-auto max-h-36 object-contain"
                 loading="lazy"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               />
             </figure>
+
             <div className="card-body">
               <div className="flex items-center gap-3 mb-2 text-primary">
                 {feature.icon}
-                <h3 className="text-lg font-bold ">{feature.title}</h3>
+                <h3 className="text-lg font-bold">{feature.title}</h3>
               </div>
               <p className="text-sm">{feature.description}</p>
             </div>

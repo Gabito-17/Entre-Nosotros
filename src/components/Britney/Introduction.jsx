@@ -35,7 +35,7 @@ const Introduction = () => {
         variants={fadeRight}
       >
         <motion.img
-          src="/assets/images/i5.webp"
+          src="/assets/svgs/undraw_playing-cards_yoqo.svg"
           alt="Britney preview"
           className="rounded-box shadow-xl w-full transition-all duration-300 ease-out"
           loading="eager"

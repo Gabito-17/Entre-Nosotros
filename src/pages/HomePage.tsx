@@ -2,29 +2,47 @@ import Acknowledgements from "../components/AboutUs/Acknowledgements.jsx";
 import Introduction from "../components/AboutUs/Introduction.jsx";
 import GameList from "../components/GameList.tsx";
 import Footer from "../components/Layout/Footer.jsx";
+import { motion } from "framer-motion";
+import { fadeUp } from "../lib/Animations.ts";
 
-const AboutUs = () => {
+const HomePage = () => {
   return (
     <div className="bg-base-100 text-base-content">
-      {/* Introduccion */}
-      <section className="bg-base-200">
+      {/* Introducción animada */}
+      <motion.section
+        className="bg-base-200"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <Introduction />
-      </section>
+      </motion.section>
 
-      {/* Lista de Juegos */}
-      <section className="bg-base-200">
+      {/* Lista de Juegos animada */}
+      <motion.section
+        className="bg-base-200"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <GameList />
-      </section>
+      </motion.section>
 
       {/* Agradecimientos */}
-      <section>
+      <motion.section
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <Acknowledgements />
-      </section>
+      </motion.section>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
 };
 
-export default AboutUs;
+export default HomePage;

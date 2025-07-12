@@ -38,8 +38,9 @@ const GameList: FC = () => {
       <motion.div
         className="grid grid-cols-1 sm:grid-cols-2 gap-6 container mx-auto px-6"
         variants={fadeContainer}
-        initial="initial"
-        animate="animate"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
       >
         {games.map((game, index) => (
           <motion.a
