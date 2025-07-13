@@ -28,7 +28,7 @@ export default function RoundControls() {
 
   useEffect(() => {
     confirmSound.current = new Audio(
-      "/assets/sounds/shuffling-playing-cards.wav"
+      "/assets/sounds/whoosh_swish_02.wav"
     );
     revertSound.current = new Audio("/assets/sounds/whoosh-sound.wav");
   }, []);
