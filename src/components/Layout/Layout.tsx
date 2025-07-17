@@ -2,6 +2,7 @@ import Drawer from "./Drawer.tsx";
 import NavBar from "./NavBar.tsx";
 import { useEffect } from "react";
 import { useSoundStore } from "../../stores/useSoundStore.ts"; // ajustá el path si es distinto
+import ConfirmationModal from "../Modals/ConfirmationModal.tsx";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const setMuted = useSoundStore((state) => state.setMuted);
@@ -32,6 +33,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="drawer-side z-[60]">
         <Drawer />
       </div>
+      <ConfirmationModal />
     </div>
   );
 }

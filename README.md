@@ -96,3 +96,6 @@ npm run start
 Proyecto educativo y personal.
 Actualmente sin licencia comercial.
 Desarrollado con 💙 para ayudarte a disfrutar tus partidas sin perder el hilo.
+
+
+ADICION DE SUPABASE

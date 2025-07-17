@@ -3,7 +3,6 @@
 import RoundControls from "../Game/RoundControls.tsx";
 import AddPlayer from "../Players/AddPlayer.tsx";
 import PlayerTableAndRow from "../Players/PlayerTableAndRow.tsx";
-import ConfirmationModal from "../../Modals/ConfirmationModal.tsx";
 import GameOverModal from "../../Modals/GameOverBritneyModal.tsx";
 import PlayerModal from "../../Modals/PlayerModal.jsx";
 import TotalScoresModal from "../../Modals/TotalScoresModal.jsx";
@@ -53,7 +52,6 @@ export default function Game() {
           handleContinueGame={handleContinueGame}
           handleEndGame={handleEndGame}
         />
-        <ConfirmationModal />
         <Toaster />
       </div>
     </div>

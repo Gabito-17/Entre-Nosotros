@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { ArrowPathIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useGameTrucoStore } from "../../../stores/useGameTrucoStore.ts";
 import { useUiNotificationStore } from "../../../stores/useUiNotificationStore.ts";

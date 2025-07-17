@@ -1,7 +1,7 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import Title from "../Layout/Title/Title";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
 import { useSoundStore } from "../../stores/useSoundStore.ts";
+import AuthButton from "../AuthButton.tsx";
 
 const sections = [
   {
@@ -12,7 +12,7 @@ const sections = [
       { label: "Reglas", href: "/britney/reglas" },
     ],
   },
-  {
+  { 
     title: "Truco",
     items: [
       { label: "Acerca de", href: "/truco" },
@@ -31,7 +31,7 @@ export default function Drawer() {
 
       <aside className="w-64 bg-base-200 min-h-svh flex flex-col justify-between shadow-lg overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between border-b">
+        <div className="flex items-center justify-between border-b pr-4">
           <label
             htmlFor="my-drawer"
             className="btn btn-square btn-ghost"
@@ -39,9 +39,7 @@ export default function Drawer() {
           >
             <XMarkIcon className="h-5 w-5" />
           </label>
-          <div className="pr-2">
-            <Title />
-          </div>
+
         </div>
 
         {/* Menu */}

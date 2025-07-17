@@ -3,6 +3,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import ThemeSelector from "../ThemeSelector.tsx";
 import Title from "./Title/Title";
+import AuthButton from "../AuthButton.tsx";
 
 export default function NavBar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -22,6 +23,7 @@ export default function NavBar() {
         </div>
         <div className="navbar-center hidden lg:flex" /> <Title />
         <div className="navbar-end">
+          <AuthButton />
           <label
             htmlFor="my-drawer"
             className="btn btn-square btn-ghost"

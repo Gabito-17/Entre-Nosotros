@@ -13,6 +13,7 @@ import AnotattorBritneyPage from "./components/Britney/pages/AnotattorBritneyPag
 import TrucoPage from "./components/Truco/pages/TrucoPage.tsx";
 import RulesTrucoPage from "./components/Truco/pages/TrucoRulesPage.tsx";
 import AnotadorTrucoPage from "./components/Truco/pages/AnotattorTrucoPage.tsx";
+import { UserInfo } from "./components/Users/UserInfo.tsx";
 
 const App = () => {
   return (
@@ -32,6 +33,8 @@ const App = () => {
           <Route path="/truco" element={<TrucoPage />} />
           <Route path="/truco/reglas" element={<RulesTrucoPage />} />
           <Route path="/truco/anotador" element={<AnotadorTrucoPage />} />
+          {/* Usuario routes */}
+          <Route path="/user/info" element={<UserInfo />} />
         </Routes>
       </Layout>
     </Router>

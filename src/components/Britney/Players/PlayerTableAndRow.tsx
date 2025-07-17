@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PlusIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { useGameBritneyStore } from "../../../stores/useGameBritneyStore.ts";
 import { useUiStore } from "../../../stores/useUiStore.ts";
-import { fadeItem, fadeUp, staggerContainer } from "../../../lib/Animations.ts";
+import { fadeItem, staggerContainer } from "../../../lib/Animations.ts";
 import DealerIcon from "../DealerIcon.tsx";
 
 export default function PlayerTableAndRow({ openModal }) {
