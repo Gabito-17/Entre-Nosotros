@@ -6,6 +6,8 @@ import SuggestionsPage from "./pages/SuggestionPage.tsx";
 
 // Mafia
 import RulesMafiaPage from "./components/Mafia/pages/RulesMafiaPage.tsx";
+import MafiaPage from "./components/Mafia/pages/MafiaPage.tsx";
+import MafiaGamePage from "./components/Mafia/pages/MafiaGamePage.tsx";
 
 // Britney
 import BritneyPage from "./components/Britney/pages/BritneyPage.tsx";
@@ -16,8 +18,9 @@ import AnotattorBritneyPage from "./components/Britney/pages/AnotattorBritneyPag
 import TrucoPage from "./components/Truco/pages/TrucoPage.tsx";
 import RulesTrucoPage from "./components/Truco/pages/TrucoRulesPage.tsx";
 import AnotadorTrucoPage from "./components/Truco/pages/AnotattorTrucoPage.tsx";
+
+// User
 import { UserInfo } from "./components/Users/UserInfo.tsx";
-import MafiaPage from "./components/Mafia/pages/MafiaPage.tsx";
 
 const App = () => {
   return (
@@ -39,6 +42,7 @@ const App = () => {
           <Route path="/truco/anotador" element={<AnotadorTrucoPage />} />
           
           {/* Mafia routes */}
+          <Route path="/mafia/game" element={<MafiaGamePage />} />
           <Route path="/mafia/reglas" element={<RulesMafiaPage />} />
           <Route path="/mafia" element={<MafiaPage />} />
 
