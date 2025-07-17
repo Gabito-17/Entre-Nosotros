@@ -6,7 +6,7 @@ import { ScoreDisplay } from "../displays/ScoreDisplay.tsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { scoreUp, scoreDown } from "../../../lib/Animations.ts";
 import { PencilIcon } from "@heroicons/react/24/outline";
-import { usePlaySound } from "../../../stores/usePlaySound.ts"; // Asegurate que esté bien importado
+import { usePlaySound } from "../../../stores/usePlaySound.ts";
 
 interface PanelEquipoProps {
   equipo: "equipo1" | "equipo2";
@@ -32,7 +32,7 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const upSound = useRef<HTMLAudioElement | null>(null);
 
-  const playSound = usePlaySound(); // 🎧 Hook para reproducir sonidos si no está muteado
+  const playSound = usePlaySound();
 
   const color = nombre === "NOSOTROS" ? "text-primary" : "text-secondary";
 
@@ -48,7 +48,7 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
 
       if (upSound.current) {
         upSound.current.currentTime = 0;
-        playSound(upSound.current); // ✅ Solo se reproduce si no está muteado
+        playSound(upSound.current);
       }
 
       prevScoreRef.current = score;
@@ -73,13 +73,14 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
   };
 
   return (
-    <div className="flex-1 overflow-hidden flex flex-col">
-      <div className="w-full bg-primary text-primary-content text-xl shadow-md px-4 py-2 flex items-center justify-between uppercase font-bold">
+    <div className="flex-1 flex flex-col bg-base-100  shadow-lg overflow-hidden max-w-sm mx-auto">
+      {/* Header con nombre y edición */}
+      <div className="bg-primary text-primary-content px-6 py-3 flex items-center justify-between uppercase font-extrabold tracking-wider text-lg">
         {editing ? (
           <input
             ref={inputRef}
             type="text"
-            className="input input-sm text-black w-full mr-2"
+            className="input input-md w-full max-w-xs text-black"
             value={tempNombre}
             onChange={(e) => setTempNombre(e.target.value)}
             onBlur={confirmEdit}
@@ -89,23 +90,54 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
           />
         ) : (
           <>
-            <span>{nombre}</span>
-            <button onClick={handleEdit} className="ml-2">
-              <PencilIcon className="h-5 w-5 text-white hover:text-base-300" />
+            <span className="truncate">{nombre}</span>
+            <button
+              onClick={handleEdit}
+              className="ml-3 p-1 rounded hover:bg-primary-focus transition"
+              aria-label="Editar nombre"
+            >
+              <PencilIcon className="h-5 w-5 text-white" />
             </button>
           </>
         )}
       </div>
 
-      <div className="w-full flex justify-center overflow-y-auto">
+      <div className="relative flex flex-col items-center justify-center p-6 min-h-[200px] w-full">
+        {/* Área "Malas" */}
+        <div className="absolute top-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-none">
+          <span
+            className="font-bold select-none user-select-none text-5xl"
+            style={{ color: "rgba(220, 38, 38, 0.25)" }} // rojo más transparente
+          >
+            Malas
+          </span>
+        </div>
+
+        {/* Área "Buenas" */}
+        <div className="absolute bottom-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-none">
+          <span
+            className="font-bold select-none user-select-none text-5xl"
+            style={{ color: "rgba(34, 197, 94, 0.25)" }} // verde más transparente
+          >
+            Buenas
+          </span>
+        </div>
+        {/* Línea divisoria */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 border-t-2 border-primary opacity-40 rounded w-3/5 pointer-events-none"
+          style={{ filter: "drop-shadow(0 0 3px rgba(0,0,0,0.1))" }}
+        />
+
+        {/* ScoreDisplay */}
         <ScoreDisplay score={score} color={color} />
       </div>
 
-      <div className="w-full flex justify-center">
+      {/* Número grande con animación */}
+      <div className="flex justify-center my-2 px-4 select-none">
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
             key={animationKey}
-            className={`text-6xl select-none ${color} drop-shadow-lg z-30 my-4`}
+            className={`text-7xl font-extrabold ${color} drop-shadow-lg`}
             variants={isIncrement ? scoreUp : scoreDown}
             initial="initial"
             animate="animate"
@@ -116,16 +148,19 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
         </AnimatePresence>
       </div>
 
-      <div className="w-full flex justify-center gap-4 mb-4">
+      {/* Botones */}
+      <div className="flex justify-center gap-6 mb-6 px-4">
         <button
-          className="btn btn-md btn-outline btn-secondary"
+          className="btn btn-md btn-outline btn-secondary w-20"
           onClick={() => handleChange(-1)}
+          aria-label="Restar punto"
         >
-          -
+          −
         </button>
         <button
-          className="btn btn-md btn-outline btn-primary"
-          onClick={() => handleChange(+1)}
+          className="btn btn-md btn-outline btn-primary w-20"
+          onClick={() => handleChange(1)}
+          aria-label="Sumar punto"
         >
           +
         </button>
