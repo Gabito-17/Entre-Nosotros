@@ -9,28 +9,28 @@ import { fadeItem, fadeContainer } from "../../lib/Animations.ts";
 
 const features = [
   {
-    image: "/assets/svgs/undraw_night_calls_re_4q21.svg",
+    image: "/assets/mafia/day-night.svg",
     title: "Fases de Día y Noche",
     description:
       "Durante la noche, los mafiosos atacan en secreto. Durante el día, los jugadores debaten y votan para expulsar sospechosos.",
     icon: <EyeSlashIcon className="w-8 h-8" />,
   },
   {
-    image: "/assets/svgs/undraw_team_spirit_re_yl1v.svg",
+    image: "/assets/mafia/team-players.svg",
     title: "Juego en Equipo",
     description:
       "Cada bando tiene su objetivo. Civiles y roles especiales deben cooperar para descubrir a los mafiosos.",
     icon: <UserGroupIcon className="w-8 h-8" />,
   },
   {
-    image: "/assets/svgs/undraw_doctor_kw5l.svg",
+    image: "/assets/mafia/secret-role.svg",
     title: "Roles Especiales",
     description:
       "El doctor puede proteger, la policía investigar, y los mafiosos eliminar. ¡Cada rol cambia el rumbo del juego!",
     icon: <ShieldCheckIcon className="w-8 h-8" />,
   },
   {
-    image: "/assets/svgs/undraw_investigating_re_fdbq.svg",
+    image: "/assets/mafia/strategy.svg",
     title: "Acusaciones y Estrategia",
     description:
       "Convencer, mentir y deducir: el juego gira en torno a la persuasión y el análisis social.",

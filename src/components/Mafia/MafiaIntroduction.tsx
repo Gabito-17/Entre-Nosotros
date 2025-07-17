@@ -26,7 +26,7 @@ const MafiaIntroduction = () => {
 
       <motion.div className="lg:w-1/2 mt-8 lg:mt-0" variants={fadeRight}>
         <motion.img
-          src="/assets/svgs/undraw_secret_identity_re_9jjc.svg"
+          src="/assets/mafia/mafioso.svg"
           alt="Mafia preview"
           className="rounded-box shadow-xl w-full transition-all duration-300 ease-out"
           loading="eager"

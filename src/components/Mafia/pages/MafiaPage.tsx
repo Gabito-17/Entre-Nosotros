@@ -33,7 +33,7 @@ const MafiaPage = () => {
           Jugá sin necesidad de un Game Master y viví la experiencia con tus
           amigos de forma organizada y automática.
         </p>
-        <a href="/mafia/jugar" className="btn btn-primary">
+        <a href="/mafia/game" className="btn btn-primary">
           Iniciar partida
         </a>
       </motion.section>
