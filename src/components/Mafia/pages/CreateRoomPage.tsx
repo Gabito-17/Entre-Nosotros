@@ -1,83 +1,53 @@
 import React, { useState } from "react";
-import { supabase } from "../../../lib/supabaseClient.ts";
-import { useNavigate } from "react-router-dom"; // Si usás react-router-dom
+import { useMafiaGame } from "../../../stores/useGameMafiaStore.ts";
+import { v4 as uuidv4 } from "uuid";
 
-export default function CreateRoomPage() {
+export const CreateRoomPage = () => {
   const [name, setName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const setRoomId = useMafiaGame((state) => state.setRoomId);
+  const setPlayers = useMafiaGame((state) => state.setPlayers);
+  const myId = useMafiaGame((state) => state.myId);
+  const roomId = useMafiaGame((state) => state.roomId);
 
-  const generateRoomCode = () => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    return Array.from({ length: 4 }, () =>
-      chars.charAt(Math.floor(Math.random() * chars.length))
-    ).join("");
-  };
+  const handleCreateRoom = () => {
+    if (!name.trim()) return alert("Ingresá tu nombre");
 
-  const handleCreateRoom = async () => {
-    if (!name.trim()) return;
-    setLoading(true);
+    const newRoomId = uuidv4().slice(0, 6); // ID corto
+    setRoomId(newRoomId);
 
-    const code = generateRoomCode();
-
-    // Crear sala
-    const { data: roomData, error: roomErr } = await supabase
-      .from("rooms")
-      .insert([{ code, phase: "lobby" }])
-      .select()
-      .single();
-
-    if (roomErr || !roomData) {
-      console.error("Error creando la sala:", roomErr);
-      setLoading(false);
-      return;
-    }
-
-    // Crear jugador
-    const { data: playerData, error: playerErr } = await supabase
-      .from("players")
-      .insert([
-        {
-          name,
-          room_id: roomData.id,
-          is_host: true,
-          alive: true,
-          user_id: crypto.randomUUID(), // O tu lógica de autenticación
-        },
-      ])
-      .select()
-      .single();
-
-    if (playerErr || !playerData) {
-      console.error("Error creando jugador:", playerErr);
-      setLoading(false);
-      return;
-    }
-
-    // Navegar a la sala
-    navigate(`/mafia/${code}?userId=${playerData.user_id}`);
+    setPlayers([
+      {
+        id: myId!,
+        name,
+        alive: true,
+        isHost: true,
+        isSelf: true,
+      },
+    ]);
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto">
-      <h1 className="text-3xl font-bold mb-4">Crear sala de Mafia</h1>
+    <div className="p-4 max-w-md mx-auto text-center">
+      <h1 className="text-2xl font-bold mb-4">Crear una sala</h1>
 
-      <label className="block mb-2">Tu nombre</label>
       <input
         className="input input-bordered w-full mb-4"
         type="text"
+        placeholder="Tu nombre"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        placeholder="Escribe tu nombre"
       />
 
-      <button
-        className="btn btn-primary w-full"
-        onClick={handleCreateRoom}
-        disabled={loading}
-      >
-        {loading ? "Creando..." : "Crear sala"}
+      <button className="btn btn-primary w-full" onClick={handleCreateRoom}>
+        Crear sala
       </button>
+
+      {roomId && (
+        <div className="mt-4">
+          <p>Sala creada con ID:</p>
+          <code className="font-mono text-lg">{roomId}</code>
+        </div>
+      )}
     </div>
   );
-}
+};

@@ -8,7 +8,7 @@ import SuggestionsPage from "./pages/SuggestionPage.tsx";
 import RulesMafiaPage from "./components/Mafia/pages/RulesMafiaPage.tsx";
 import MafiaPage from "./components/Mafia/pages/MafiaPage.tsx";
 import MafiaGamePage from "./components/Mafia/pages/MafiaGamePage.tsx";
-import CreateRoomPage from "./components/Mafia/pages/CreateRoomPage.tsx";
+import { CreateRoomPage } from "./components/Mafia/pages/CreateRoomPage.tsx";
 
 // Britney
 import BritneyPage from "./components/Britney/pages/BritneyPage.tsx";
