@@ -6,12 +6,14 @@ import {
   ArrowRightEndOnRectangleIcon,
   ArrowRightStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import { useUserStore } from "../stores/useUserStore.ts"; // <-- importá el store
+import { useUserStore } from "../stores/useUserStore.ts";
+import { useUiStore } from "../stores/useUiStore.ts";
 
 export default function AuthButton() {
   const [loading, setLoading] = useState(true);
   const user = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
+  const openConfirmationModal = useUiStore((state) => state.openConfirmationModal);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -59,8 +61,25 @@ export default function AuthButton() {
           />
         </div>
         <button
-          onClick={handleLogout}
-          className="btn btn-ghost btn-sm tooltip"
+          onClick={() =>
+            openConfirmationModal({
+              title: "¿Cerrar sesión?",
+              message: "¿Estás seguro de que querés cerrar sesión?",
+              onConfirm: handleLogout,
+              actions: [
+                {
+                  label: "Cancelar",
+                  className: "btn btn-ghost",
+                },
+                {
+                  label: "Cerrar sesión",
+                  className: "btn btn-error",
+                  onClick: handleLogout,
+                },
+              ],
+            })
+          }
+          className="btn btn-ghost btn-sm tooltip tooltip-bottom"
           data-tip="Cerrar sesión"
         >
           <ArrowRightEndOnRectangleIcon className="w-5 h-5" />
@@ -72,7 +91,7 @@ export default function AuthButton() {
   return (
     <button
       onClick={handleLogin}
-      className="btn btn-primary btn-sm flex items-center gap-2 tooltip"
+      className="btn btn-primary btn-sm flex items-center gap-2 tooltip tooltip-bottom"
       data-tip="Iniciar sesión con Google"
     >
       <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
