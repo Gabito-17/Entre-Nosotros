@@ -137,7 +137,7 @@ const ConfigurationBar = () => {
             tabIndex={0}
             className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full max-w-xs"
           >
-            {[15, 18, 30, 40].map((score) => (
+            {[15, 18, 30].map((score) => (
               <li key={score} className="p-2">
                 <button
                   type="button"
