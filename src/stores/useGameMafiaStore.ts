@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { getOrCreateUserId } from '../utils/getOrCreateUserId.ts';
 
 type Role = 'mafia' | 'doctor' | 'police' | 'civilian';
 export type Phase = 'lobby' | 'night' | 'day' | 'ended';
@@ -33,7 +34,7 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
   roomId: null,
   players: [],
   phase: 'lobby',
-  myId: null,
+  myId: getOrCreateUserId(), // ✅ Acá sí podés ejecutar la función
   actions: {},
   logs: [],
 
@@ -57,7 +58,7 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
       roomId: null,
       players: [],
       phase: 'lobby',
-      myId: null,
+      myId: getOrCreateUserId(), // ✅ Genera un nuevo ID si reseteás el juego
       actions: {},
       logs: [],
     }),
