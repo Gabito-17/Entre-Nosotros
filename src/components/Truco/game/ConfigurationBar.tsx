@@ -9,7 +9,7 @@ const ConfigurationBar = () => {
   const {
     maxScore,
     pointStyle,
-    toggleMaxScore,
+    setMaxScore,
     setPointStyle,
     resetScores,
     score1,
@@ -60,7 +60,8 @@ const ConfigurationBar = () => {
     });
   };
 
-  const handleToggleMaxScore = () => {
+  // Ya no usamos toggleMaxScore, ahora directamente seteamos un maxScore elegido
+  const handleSelectMaxScore = (score: number) => {
     const partidaEnCurso = (score1 > 0 || score2 > 0) && !winner;
     if (partidaEnCurso) {
       addNotification(
@@ -69,13 +70,13 @@ const ConfigurationBar = () => {
       );
       return;
     }
-    toggleMaxScore();
+    setMaxScore(score);
+    // Cerrar dropdown
+    document.activeElement && (document.activeElement as HTMLElement).blur();
   };
 
   const handleSelectStyle = (style: "fosforo" | "lines" | "cafe") => {
     setPointStyle(style);
-
-    // 🔐 Cerrar dropdown (igual que en ThemeSelector)
     document.activeElement && (document.activeElement as HTMLElement).blur();
   };
 
@@ -123,14 +124,33 @@ const ConfigurationBar = () => {
           </ul>
         </div>
 
-        {/* Centro: Botón para cambiar puntaje máximo */}
-        <div className="justify-center">
-          <button
-            onClick={handleToggleMaxScore}
-            className="btn btn-sm btn-outline btn-primary w-full"
+        {/* Centro: Selector de puntaje máximo */}
+        <div className="dropdown dropdown-bottom dropdown-center">
+          <label
+            tabIndex={0}
+            className="btn btn-sm btn-outline btn-primary w-full cursor-pointer"
           >
             A {maxScore}
-          </button>
+          </label>
+
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full max-w-xs"
+          >
+            {[15, 18, 30, 40].map((score) => (
+              <li key={score} className="p-2">
+                <button
+                  type="button"
+                  onClick={() => handleSelectMaxScore(score)}
+                  className={`btn w-full ${
+                    maxScore === score ? "btn-primary" : "btn-outline"
+                  }`}
+                >
+                  {score}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* Derecha: Botón de reinicio */}

@@ -14,7 +14,7 @@ interface GameTrucoState {
   nombre1: string;
   nombre2: string;
 
-  toggleMaxScore: () => void;
+  setMaxScore: (score: number) => void;  // <-- nuevo método
   setPointStyle: (style: PointStyle) => void;
 
   addPoint: (team: "equipo1" | "equipo2", amount?: number) => void;
@@ -25,64 +25,70 @@ interface GameTrucoState {
 
 export const useGameTrucoStore = create<GameTrucoState>()(
   persist(
-  (set, get) => ({
-    maxScore: 15,
-    pointStyle: "fosforo",
-    score1: 0,
-    score2: 0,
-    winner: null,
+    (set, get) => ({
+      maxScore: 15,
+      pointStyle: "fosforo",
+      score1: 0,
+      score2: 0,
+      winner: null,
 
-    nombre1: "NOSOTROS",
-    nombre2: "ELLOS",
+      nombre1: "NOSOTROS",
+      nombre2: "ELLOS",
 
-    toggleMaxScore: () => {
-      const newMax = get().maxScore === 15 ? 30 : 15;
-      set({ maxScore: newMax });
-    },
+      setMaxScore: (score) => {
+        // Reiniciamos los puntajes al cambiar el maxScore para evitar inconsistencias
+        set({
+          maxScore: score,
+          score1: 0,
+          score2: 0,
+          winner: null,
+        });
+      },
 
-    setPointStyle: (style) => set({ pointStyle: style }),
+      setPointStyle: (style) => set({ pointStyle: style }),
 
-    addPoint: (team, amount = 1) =>
-      set((state) => {
-        const rawScore1 =
-          team === "equipo1" ? state.score1 + amount : state.score1;
-        const rawScore2 =
-          team === "equipo2" ? state.score2 + amount : state.score2;
+      addPoint: (team, amount = 1) =>
+        set((state) => {
+          const rawScore1 =
+            team === "equipo1" ? state.score1 + amount : state.score1;
+          const rawScore2 =
+            team === "equipo2" ? state.score2 + amount : state.score2;
 
-        const newScore1 = Math.min(Math.max(rawScore1, 0), 30);
-        const newScore2 = Math.min(Math.max(rawScore2, 0), 30);
+          const max = state.maxScore; // usamos maxScore actual
 
-        const winner =
-          newScore1 >= state.maxScore
-            ? "equipo1"
-            : newScore2 >= state.maxScore
-            ? "equipo2"
-            : null;
+          const newScore1 = Math.min(Math.max(rawScore1, 0), max);
+          const newScore2 = Math.min(Math.max(rawScore2, 0), max);
 
-        return {
-          score1: newScore1,
-          score2: newScore2,
-          winner,
-        };
-      }),
+          const winner =
+            newScore1 >= max
+              ? "equipo1"
+              : newScore2 >= max
+              ? "equipo2"
+              : null;
 
-    resetScores: () =>
-      set({
-        score1: 0,
-        score2: 0,
-        winner: null,
-      }),
+          return {
+            score1: newScore1,
+            score2: newScore2,
+            winner,
+          };
+        }),
 
-    setNombre: (team, nombre) =>
-      set((state) =>
-        team === "equipo1"
-          ? { nombre1: nombre }
-          : { nombre2: nombre }
-      ),
-  }),
-  {
-    name: "truco-config", // sigue siendo tu clave de almacenamiento
-  }
-)
+      resetScores: () =>
+        set({
+          score1: 0,
+          score2: 0,
+          winner: null,
+        }),
 
+      setNombre: (team, nombre) =>
+        set((state) =>
+          team === "equipo1"
+            ? { nombre1: nombre }
+            : { nombre2: nombre }
+        ),
+    }),
+    {
+      name: "truco-config",
+    }
+  )
 );
