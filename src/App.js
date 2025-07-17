@@ -4,6 +4,9 @@ import Layout from "./components/Layout/Layout.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import SuggestionsPage from "./pages/SuggestionPage.tsx";
 
+// Mafia
+import RulesMafiaPage from "./components/Mafia/pages/RulesMafiaPage.tsx";
+
 // Britney
 import BritneyPage from "./components/Britney/pages/BritneyPage.tsx";
 import RulesBritneyPage from "./components/Britney/pages/RulesBritneyPage.tsx";
@@ -14,6 +17,7 @@ import TrucoPage from "./components/Truco/pages/TrucoPage.tsx";
 import RulesTrucoPage from "./components/Truco/pages/TrucoRulesPage.tsx";
 import AnotadorTrucoPage from "./components/Truco/pages/AnotattorTrucoPage.tsx";
 import { UserInfo } from "./components/Users/UserInfo.tsx";
+import MafiaPage from "./components/Mafia/pages/MafiaPage.tsx";
 
 const App = () => {
   return (
@@ -33,6 +37,12 @@ const App = () => {
           <Route path="/truco" element={<TrucoPage />} />
           <Route path="/truco/reglas" element={<RulesTrucoPage />} />
           <Route path="/truco/anotador" element={<AnotadorTrucoPage />} />
+          
+          {/* Mafia routes */}
+          <Route path="/mafia/reglas" element={<RulesMafiaPage />} />
+          <Route path="/mafia" element={<MafiaPage />} />
+
+
           {/* Usuario routes */}
           <Route path="/user/info" element={<UserInfo />} />
         </Routes>
