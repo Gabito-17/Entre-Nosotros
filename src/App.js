@@ -8,6 +8,7 @@ import SuggestionsPage from "./pages/SuggestionPage.tsx";
 import RulesMafiaPage from "./components/Mafia/pages/RulesMafiaPage.tsx";
 import MafiaPage from "./components/Mafia/pages/MafiaPage.tsx";
 import MafiaGamePage from "./components/Mafia/pages/MafiaGamePage.tsx";
+import CreateRoomPage from "./components/Mafia/pages/CreateRoomPage.tsx";
 
 // Britney
 import BritneyPage from "./components/Britney/pages/BritneyPage.tsx";
@@ -45,7 +46,7 @@ const App = () => {
           <Route path="/mafia/game" element={<MafiaGamePage />} />
           <Route path="/mafia/reglas" element={<RulesMafiaPage />} />
           <Route path="/mafia" element={<MafiaPage />} />
-
+          <Route path="/mafia/crear-sala" element={<CreateRoomPage />} />
 
           {/* Usuario routes */}
           <Route path="/user/info" element={<UserInfo />} />
