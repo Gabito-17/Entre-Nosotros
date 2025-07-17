@@ -104,24 +104,31 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
 
       <div className="relative flex flex-col items-center justify-center p-6 min-h-[200px] w-full">
         {/* Área "Malas" */}
-        <div className="absolute top-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-none">
+        <div
+          onClick={() => handleChange(-1)}
+          className="absolute top-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
+        >
           <span
-            className="font-bold select-none user-select-none text-5xl"
-            style={{ color: "rgba(220, 38, 38, 0.25)" }} // rojo más transparente
+            className="font-bold user-select-none text-5xl"
+            style={{ color: "rgba(220, 38, 38, 0.25)" }}
           >
             Malas
           </span>
         </div>
 
         {/* Área "Buenas" */}
-        <div className="absolute bottom-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-none">
+        <div
+          onClick={() => handleChange(1)}
+          className="absolute bottom-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
+        >
           <span
-            className="font-bold select-none user-select-none text-5xl"
-            style={{ color: "rgba(34, 197, 94, 0.25)" }} // verde más transparente
+            className="font-bold user-select-none text-5xl"
+            style={{ color: "rgba(34, 197, 94, 0.25)" }}
           >
             Buenas
           </span>
         </div>
+
         {/* Línea divisoria */}
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 border-t-2 border-primary opacity-40 rounded w-3/5 pointer-events-none"
@@ -129,7 +136,9 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
         />
 
         {/* ScoreDisplay */}
-        <ScoreDisplay score={score} color={color} />
+        <div style={{ pointerEvents: "none" }}>
+          <ScoreDisplay score={score} color={color} />
+        </div>
       </div>
 
       {/* Número grande con animación */}
