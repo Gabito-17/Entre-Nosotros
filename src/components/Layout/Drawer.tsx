@@ -1,7 +1,6 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
 import { useSoundStore } from "../../stores/useSoundStore.ts";
-import AuthButton from "../AuthButton.tsx";
 
 const sections = [
   {
