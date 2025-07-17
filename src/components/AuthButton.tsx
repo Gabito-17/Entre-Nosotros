@@ -6,13 +6,12 @@ import {
   ArrowRightEndOnRectangleIcon,
   ArrowRightStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import { useUiStore } from "../stores/useUiStore.ts"; // Asegurate de que este path esté correcto
+import { useUserStore } from "../stores/useUserStore.ts"; // <-- importá el store
 
 export default function AuthButton() {
-  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
-  const openConfirmationModal = useUiStore((s) => s.openConfirmationModal);
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,20 +31,14 @@ export default function AuthButton() {
     return () => {
       listener.subscription.unsubscribe();
     };
-  }, []);
+  }, [setUser]);
 
   const handleLogin = async () => {
     await supabase.auth.signInWithOAuth({ provider: "google" });
   };
 
-  const confirmLogout = () => {
-    openConfirmationModal({
-      title: "Cerrar sesión",
-      message: "¿Estás seguro de que querés cerrar sesión?",
-      onConfirm: async () => {
-        await supabase.auth.signOut();
-      },
-    });
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
   };
 
   if (loading) {
@@ -66,8 +59,8 @@ export default function AuthButton() {
           />
         </div>
         <button
-          onClick={confirmLogout}
-          className="btn btn-ghost btn-sm tooltip tooltip-bottom"
+          onClick={handleLogout}
+          className="btn btn-ghost btn-sm tooltip"
           data-tip="Cerrar sesión"
         >
           <ArrowRightEndOnRectangleIcon className="w-5 h-5" />
@@ -79,7 +72,7 @@ export default function AuthButton() {
   return (
     <button
       onClick={handleLogin}
-      className="btn btn-primary btn-sm flex items-center gap-2 tooltip tooltip-bottom"
+      className="btn btn-primary btn-sm flex items-center gap-2 tooltip"
       data-tip="Iniciar sesión con Google"
     >
       <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
