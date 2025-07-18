@@ -1,33 +1,45 @@
 import React, { useState } from "react";
 import { useMafiaGame } from "../../../stores/useGameMafiaStore.ts";
-import { v4 as uuidv4 } from "uuid";
+import { useUserStore } from "../../../stores/useUserStore.ts";
 import { QrBox } from "../../QrBox.tsx";
+import { createRoomWithHost } from "../../../services/mafiaServices.ts";
 
 export const CreateRoomPage = () => {
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const user = useUserStore((state) => state.user);
   const setRoomId = useMafiaGame((state) => state.setRoomId);
   const setPlayers = useMafiaGame((state) => state.setPlayers);
-  const myId = useMafiaGame((state) => state.myId);
   const roomId = useMafiaGame((state) => state.roomId);
 
-  const handleCreateRoom = () => {
-    if (!name.trim()) return alert("Ingresá tu nombre");
+  const handleCreateRoom = async () => {
+  if (!user) return alert("Debe iniciar sesión para crear una sala");
+  if (!name.trim()) return alert("Ingresá tu nombre");
 
-    const newRoomId = uuidv4().slice(0, 6);
-    setRoomId(newRoomId);
+  setLoading(true);
+  const result = await createRoomWithHost(user.id, name);
+  setLoading(false);
 
-    setPlayers([
-      {
-        id: myId!,
-        name,
-        alive: true,
-        isHost: true,
-        isSelf: true,
-      },
-    ]);
-  };
+  if ("error" in result) {
+    alert(result.error);
+    return;
+  }
 
-  const roomUrl = `${window.location.origin}/room/${roomId}`;
+  setRoomId(result.roomId);
+  setPlayers([
+    {
+      id: user.id,
+      name,
+      alive: true,
+      isHost: true,
+      isSelf: true,
+    },
+  ]);
+};
+
+
+  const roomUrl = roomId ? `${window.location.origin}/room/${roomId}` : "";
 
   const copyToClipboard = async () => {
     try {
@@ -45,13 +57,17 @@ export const CreateRoomPage = () => {
       <input
         className="input input-bordered w-full mb-4"
         type="text"
-        placeholder="Nombre de la sala"
+        placeholder="Tu nombre"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
 
-      <button className="btn btn-primary w-full" onClick={handleCreateRoom}>
-        Crear sala
+      <button
+        className="btn btn-primary w-full"
+        onClick={handleCreateRoom}
+        disabled={loading}
+      >
+        {loading ? "Creando..." : "Crear sala"}
       </button>
 
       {roomId && (
