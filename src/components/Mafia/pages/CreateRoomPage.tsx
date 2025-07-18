@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { useMafiaGame } from '../../../stores/useGameMafiaStore.ts';
-import { v4 as uuidv4 } from 'uuid';
-import { QRCodeSVG } from 'qrcode.react';
+import React, { useState } from "react";
+import { useMafiaGame } from "../../../stores/useGameMafiaStore.ts";
+import { v4 as uuidv4 } from "uuid";
+import { QrBox } from "../../QrBox.tsx";
 
 export const CreateRoomPage = () => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const setRoomId = useMafiaGame((state) => state.setRoomId);
   const setPlayers = useMafiaGame((state) => state.setPlayers);
   const myId = useMafiaGame((state) => state.myId);
   const roomId = useMafiaGame((state) => state.roomId);
 
   const handleCreateRoom = () => {
-    if (!name.trim()) return alert('Ingresá tu nombre');
+    if (!name.trim()) return alert("Ingresá tu nombre");
 
     const newRoomId = uuidv4().slice(0, 6);
     setRoomId(newRoomId);
@@ -32,9 +32,9 @@ export const CreateRoomPage = () => {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(roomUrl);
-      alert('Link copiado al portapapeles');
+      alert("Link copiado al portapapeles");
     } catch (err) {
-      alert('No se pudo copiar el link');
+      alert("No se pudo copiar el link");
     }
   };
 
@@ -45,15 +45,12 @@ export const CreateRoomPage = () => {
       <input
         className="input input-bordered w-full mb-4"
         type="text"
-        placeholder="Tu nombre"
+        placeholder="Nombre de la sala"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
 
-      <button
-        className="btn btn-primary w-full"
-        onClick={handleCreateRoom}
-      >
+      <button className="btn btn-primary w-full" onClick={handleCreateRoom}>
         Crear sala
       </button>
 
@@ -70,7 +67,7 @@ export const CreateRoomPage = () => {
           </div>
 
           <div className="flex justify-center mt-4">
-            <QRCodeSVG value={roomUrl} size={128} />
+            <QrBox value={roomUrl} />
           </div>
         </div>
       )}
