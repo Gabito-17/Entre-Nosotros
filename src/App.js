@@ -1,6 +1,8 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout.tsx";
 
+
+import HandleLoginPage from "./pages/handleLoginPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import SuggestionsPage from "./pages/SuggestionPage.tsx";
 
@@ -31,6 +33,8 @@ const App = () => {
           {/* Home and general */}
           <Route path="/" element={<HomePage />} />
           <Route path="/sugerencias" element={<SuggestionsPage />} />
+          <Route path="/handle-login" element={<HandleLoginPage />} />
+
 
           {/* Britney routes */}
           <Route path="/britney" element={<BritneyPage />} />

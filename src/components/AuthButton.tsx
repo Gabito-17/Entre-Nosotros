@@ -13,7 +13,9 @@ export default function AuthButton() {
   const [loading, setLoading] = useState(true);
   const user = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
-  const openConfirmationModal = useUiStore((state) => state.openConfirmationModal);
+  const openConfirmationModal = useUiStore(
+    (state) => state.openConfirmationModal
+  );
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -36,7 +38,12 @@ export default function AuthButton() {
   }, [setUser]);
 
   const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({ provider: "google" });
+    const currentPath = window.location.pathname + window.location.search;
+    localStorage.setItem("redirectAfterLogin", currentPath);
+
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
   };
 
   const handleLogout = async () => {
