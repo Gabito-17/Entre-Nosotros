@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMafiaGame } from "../../../stores/useGameMafiaStore.ts";
 import { useUserStore } from "../../../stores/useUserStore.ts";
 import { QrBox } from "../../QrBox.tsx";
 import { createRoomWithHost } from "../../../services/mafiaServices.ts";
+import { getAllGames } from "../../../services/gamesServices.ts";
 
 export const CreateRoomPage = () => {
   const [name, setName] = useState("");
@@ -14,30 +15,29 @@ export const CreateRoomPage = () => {
   const roomId = useMafiaGame((state) => state.roomId);
 
   const handleCreateRoom = async () => {
-  if (!user) return alert("Debe iniciar sesión para crear una sala");
-  if (!name.trim()) return alert("Ingresá tu nombre");
+    if (!user) return alert("Debe iniciar sesión para crear una sala");
+    if (!name.trim()) return alert("Ingresá tu nombre");
 
-  setLoading(true);
-  const result = await createRoomWithHost(user.id, name);
-  setLoading(false);
+    setLoading(true);
+    const result = await createRoomWithHost(user.id, name);
+    setLoading(false);
 
-  if ("error" in result) {
-    alert(result.error);
-    return;
-  }
+    if ("error" in result) {
+      alert(result.error);
+      return;
+    }
 
-  setRoomId(result.roomId);
-  setPlayers([
-    {
-      id: user.id,
-      name,
-      alive: true,
-      isHost: true,
-      isSelf: true,
-    },
-  ]);
-};
-
+    setRoomId(result.roomId);
+    setPlayers([
+      {
+        id: user.id,
+        name,
+        alive: true,
+        isHost: true,
+        isSelf: true,
+      },
+    ]);
+  };
 
   const roomUrl = roomId ? `${window.location.origin}/room/${roomId}` : "";
 
