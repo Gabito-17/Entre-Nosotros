@@ -49,7 +49,6 @@ export const createRoomWithHost = async (
       room_id: newRoomId,
       user_id: userId,
       name,
-      is_host: true,
     },
   ]);
 

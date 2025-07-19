@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient.ts";
 import {
@@ -44,6 +45,11 @@ export default function AuthButton() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
     });
+
+    if(!error){
+      await ensurePlayerCreated();
+    };
+    
   };
 
   const handleLogout = async () => {
