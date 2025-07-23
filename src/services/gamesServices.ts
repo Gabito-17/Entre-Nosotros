@@ -45,28 +45,33 @@ export const getHostPlayer = async (hostId: string) => {
     return data;
   }
 };
-
 export const subscribeToPlayersInRoom = (
   roomId: string,
-  onChange: (payload: any) => void
+  onChange: (players: any[]) => void
 ) => {
   const channel = supabase
     .channel(`players-room-${roomId}`)
     .on(
       "postgres_changes",
       {
-        event: "*", // INSERT, UPDATE, DELETE
+        event: "*",
         schema: "public",
-        table: "players_in_room",
+        table: "players",
         filter: `room_id=eq.${roomId}`,
       },
-      (payload) => {
-        onChange(payload);
+      async () => {
+        // Volvés a pedir la lista completa actualizada
+        const { data } = await supabase
+          .from("players")
+          .select("*")
+          .eq("room_id", roomId);
+
+        onChange(data || []);
       }
     )
     .subscribe();
 
   return () => {
-    supabase.removeChannel(channel); // cleanup
+    supabase.removeChannel(channel);
   };
 };

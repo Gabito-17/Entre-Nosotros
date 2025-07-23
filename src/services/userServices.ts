@@ -1,6 +1,6 @@
 import { supabase } from "../lib/supabaseClient.ts";
 
-export const ensurePlayerCreated = async (): Promise<{ id: number } | null> => {
+export const ensurePlayerCreated = async (): Promise<{ id: string } | null> => {
   const {
     data: { user },
     error: userError,
@@ -19,7 +19,7 @@ export const ensurePlayerCreated = async (): Promise<{ id: number } | null> => {
       .from("players")
       .select("id")
       .eq("user_id", id)
-      .single();  
+      .single();
 
     if (existing) {
       return existing;
@@ -36,10 +36,10 @@ export const ensurePlayerCreated = async (): Promise<{ id: number } | null> => {
         user_id: id,
         name: user_metadata?.full_name || email,
         email: email,
-        avatar_url: user.user_metadata?.avatar_url || null,
+        avatar_url: user_metadata?.avatar_url || null,
       },
     ])
-    .select()
+    .select("id, user_id, name, email, avatar_url") // <- asegúrate de incluir "id"
     .single();
 
   if (insertError || !inserted) {
@@ -47,5 +47,5 @@ export const ensurePlayerCreated = async (): Promise<{ id: number } | null> => {
     return null;
   }
 
-  return { id: inserted.id };
+  return inserted;
 };

@@ -13,6 +13,6 @@ root.render(
 );
 
 // Activar Service Worker
-serviceWorkerRegistration.register();
+//serviceWorkerRegistration.register();
 
 reportWebVitals();

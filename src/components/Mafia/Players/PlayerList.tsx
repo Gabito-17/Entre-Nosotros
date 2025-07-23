@@ -1,35 +1,29 @@
-import { useEffect } from "react";
-import { subscribeToPlayersInRoom } from "../../../services/gamesServices.ts";
-import { useMafiaGame } from "../../../stores/useGameMafiaStore.ts";
+import React from "react";
 
-export function PlayerList({ roomId }) {
-  const players = useMafiaGame((state) => state.players);
-  const setPlayers = useMafiaGame((state) => state.setPlayers);
+type Player = {
+  id: string;
+  name: string;
+  isHost: boolean;
+};
 
-  useEffect(() => {
-    const unsubscribe = subscribeToPlayersInRoom(roomId, (payload) => {
-      if (payload.eventType === "INSERT") {
-        setPlayers((prevPlayers) => [...prevPlayers, payload.new]); // ✅ esto necesita una función actualizadora
-      } else if (payload.eventType === "DELETE") {
-        setPlayers((prevPlayers) =>
-          prevPlayers.filter((j) => j.id !== payload.old.id)
-        );
-      }
-    });
+type PlayerListProps = {
+  players: Player[];
+};
 
-    return () => {
-      unsubscribe();
-    };
-  }, [roomId, setPlayers]);
-
+export const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
   return (
-    <div>
-      <h2>Jugadores</h2>
-      <ul>
-        {players.map((p) => (
-          <li key={p.id}>{p.name}</li>
-        ))}
-      </ul>
-    </div>
+    <ul className="bg-white rounded-lg shadow-md p-4 text-left space-y-2">
+      {players.map((p) => (
+        <li
+          key={p.id}
+          className="flex justify-between items-center border-b pb-1"
+        >
+          <span>{p.name || p.id}</span>
+          {p.isHost && (
+            <span className="text-xs text-green-600 font-semibold">Host</span>
+          )}
+        </li>
+      ))}
+    </ul>
   );
-}
+};

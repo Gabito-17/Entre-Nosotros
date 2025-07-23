@@ -3,7 +3,8 @@ import { supabase } from "../lib/supabaseClient.ts";
 
 export const createRoomWithHost = async (
   userId: string,
-  name: string
+  roomName: string,
+  playerName: string
 ): Promise<{ roomId: string } | { error: string }> => {
   // Obtener ID del juego
   const { data: game, error: gameError } = await supabase
@@ -23,7 +24,7 @@ export const createRoomWithHost = async (
       game_id: game.id,
       host_id: userId,
       phase: "lobby",
-      name: name,
+      name: roomName,
       status: "preparing",
     },
   ]);
@@ -33,7 +34,7 @@ export const createRoomWithHost = async (
     return { error: "No se pudo crear la sala" };
   }
 
-  // Ya aseguramos que el player existe antes de esta función, así que lo buscamos directamente
+  // Buscamos eljugador existente
   const { data: player, error: fetchError } = await supabase
     .from("players")
     .select("id")
@@ -49,6 +50,9 @@ export const createRoomWithHost = async (
     {
       room_id: newRoomId,
       player_id: player.id,
+      name: playerName,
+      alive: true,
+      is_host: true,
     },
   ]);
 
@@ -62,42 +66,48 @@ export const createRoomWithHost = async (
 
 export const joinRoomIfAllowed = async (
   roomId: string,
-  playerId: number
-): Promise<{ success: boolean; players?: any[]; message?: string }> => {
-  // 1. Verificar sala
+  playerId: string,
+  playerName: string
+): Promise<{
+  success: boolean;
+  players?: any[];
+  room?: any;
+  message?: string;
+}> => {
   const { data: room, error: roomError } = await supabase
     .from("rooms")
-    .select("id, status")
+    .select("id, status, host_id") // ✅ Agregado host_id
     .eq("id", roomId)
     .single();
 
   if (roomError || !room) {
     return { success: false, message: "Sala no encontrada" };
   }
-  console.log("Room found:", room);
 
   if (room.status !== "preparing") {
     return { success: false, message: "La sala ya está en curso o finalizada" };
   }
 
-  // 2. Verificar si el jugador ya está en la sala
-  const { data: existing, error: existingError } = await supabase
+  const { data: existingPlayer, error: existingError } = await supabase
     .from("room_players")
-    .select("id")
+    .select("*")
     .eq("room_id", roomId)
     .eq("player_id", playerId)
     .maybeSingle();
 
   if (existingError) {
-    return { success: false, message: "Error al verificar el jugador" };
+    return { success: false, message: "Error al verificar jugador" };
   }
 
-  // 3. Insertar jugador si no existe
-  if (!existing) {
+  if (!existingPlayer) {
     const { error: insertError } = await supabase.from("room_players").insert([
       {
         room_id: roomId,
         player_id: playerId,
+        name: playerName,
+        joined_at: new Date().toISOString(),
+        is_host: false,
+        alive: true,
       },
     ]);
 
@@ -106,28 +116,23 @@ export const joinRoomIfAllowed = async (
     }
   }
 
-  // 4. Obtener lista actual de jugadores para devolver
-  const { data: players, error: playersError } = await supabase
+  const { data: roomPlayers, error: playersError } = await supabase
     .from("room_players")
-    .select(
-      `
-    player_id,
-    joined_at,
-    players (
-      id,
-      name,
-      alive,
-      avatar_url
-    )
-  `
-    )
-    .eq("room_id", roomId);
+    .select("player_id, name, is_host, alive, joined_at") // 👈 asegúrate de usar player_id
+    .eq("room_id", roomId)
+    .order("joined_at", { ascending: true });
 
   if (playersError) {
     return { success: false, message: "Error al obtener jugadores" };
   }
-
-  // Formatear para devolver solo lo necesario
-
-  return { success: true, players };
+  console.log("Jugadores en la sala:", roomPlayers);
+  return {
+    success: true,
+    players: roomPlayers,
+    room: {
+      id: room.id,
+      status: room.status,
+      hostId: room.host_id, // ✅ Renombrado aquí
+    },
+  };
 };

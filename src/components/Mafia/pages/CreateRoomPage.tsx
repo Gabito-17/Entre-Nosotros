@@ -6,92 +6,112 @@ import { useUserStore } from "../../../stores/useUserStore.ts";
 import { QrBox } from "../../QrBox.tsx";
 
 export const CreateRoomPage = () => {
-  const [name, setName] = useState("");
+  const [roomName, setRoomName] = useState("");
+  const [playerName, setPlayerName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const user = useUserStore((state) => state.user);
   const setRoomId = useMafiaGame((state) => state.setRoomId);
   const setPlayers = useMafiaGame((state) => state.setPlayers);
-
   const roomId = useMafiaGame((state) => state.roomId);
 
+  const roomUrl = roomId ? `${window.location.origin}/room/${roomId}` : "";
+
   const handleCreateRoom = async () => {
-    if (!user?.id) return alert("Error interno: ID de usuario no válido");
-    if (!user) return alert("Debe iniciar sesión para crear una sala");
-    if (!name.trim()) return alert("Ingresá tu nombre");
+    setErrorMsg("");
 
-    console.log("Usuario autenticado:", user);
-
-    const player = await ensurePlayerCreated();
-    if (!player) return alert("No se pudo asegurar el jugador");
+    if (!user?.id)
+      return setErrorMsg("Debe iniciar sesión para crear una sala");
+    if (!roomName.trim()) return setErrorMsg("Ingresá un nombre para la sala");
+    if (!playerName.trim()) return setErrorMsg("Ingresá tu nombre");
 
     setLoading(true);
-    const result = await createRoomWithHost(user.id, name);
-    setLoading(false);
 
-    if ("error" in result) {
-      alert(result.error);
-      return;
+    try {
+      const player = await ensurePlayerCreated();
+      if (!player) throw new Error("No se pudo asegurar el jugador");
+
+      const result = await createRoomWithHost(user.id, roomName, playerName);
+
+      if ("error" in result) throw new Error(result.error);
+
+      setRoomId(result.roomId);
+      setPlayers([
+        {
+          id: player.id,
+          user_id: user.id,
+          name: playerName,
+          alive: true,
+          isHost: true,
+          isSelf: true,
+        },
+      ]);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Ocurrió un error inesperado");
+    } finally {
+      setLoading(false);
     }
-
-    setRoomId(result.roomId);
-    setPlayers([
-      {
-        id: player.id, // ✅ ahora sí, player.id de la tabla
-        name,
-        alive: true,
-        isHost: true,
-        isSelf: true,
-      },
-    ]);
   };
-
-  const roomUrl = roomId ? `${window.location.origin}/room/${roomId}` : "";
 
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(roomUrl);
       alert("Link copiado al portapapeles");
-    } catch (err) {
+    } catch {
       alert("No se pudo copiar el link");
     }
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto text-center">
-      <h1 className="text-2xl font-bold mb-4">Crear una sala</h1>
+    <div className="p-6 max-w-md mx-auto text-center">
+      <h1 className="text-3xl font-bold mb-6">Crear una sala</h1>
 
-      <input
-        className="input input-bordered w-full mb-4"
-        type="text"
-        placeholder="Tu nombre"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      <div className="space-y-4">
+        <input
+          className="input input-bordered w-full"
+          type="text"
+          placeholder="Nombre de la sala"
+          value={roomName}
+          onChange={(e) => setRoomName(e.target.value)}
+        />
 
-      <button
-        className="btn btn-primary w-full"
-        onClick={handleCreateRoom}
-        disabled={loading}
-      >
-        {loading ? "Creando..." : "Crear sala"}
-      </button>
+        <input
+          className="input input-bordered w-full"
+          type="text"
+          placeholder="Tu nombre"
+          value={playerName}
+          onChange={(e) => setPlayerName(e.target.value)}
+        />
+
+        {errorMsg && <div className="text-red-500 text-sm">{errorMsg}</div>}
+
+        <button
+          className="btn btn-primary w-full"
+          onClick={handleCreateRoom}
+          disabled={loading}
+        >
+          {loading ? "Creando sala..." : "Crear sala"}
+        </button>
+      </div>
 
       {roomId && (
-        <div className="mt-6">
-          <p className="font-semibold mb-2">Compartí este link:</p>
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <code className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
+        <div className="mt-8 border-t pt-6">
+          <h2 className="text-lg font-semibold mb-2">Compartí este link</h2>
+
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <code className="bg-gray-100 px-2 py-1 rounded text-sm">
               {roomUrl}
             </code>
-            <button onClick={copyToClipboard} className="btn btn-sm">
+            <button
+              onClick={copyToClipboard}
+              className="btn btn-sm btn-outline"
+            >
               Copiar
             </button>
           </div>
 
-          <div className="flex justify-center mt-4">
-            <QrBox value={roomUrl} />
-          </div>
+          <QrBox value={roomUrl} />
         </div>
       )}
     </div>

@@ -5,7 +5,8 @@ type Role = "mafia" | "doctor" | "police" | "civilian";
 export type Phase = "lobby" | "night" | "day" | "ended";
 
 interface Player {
-  id: number;
+  id: string;
+  user_id: string;
   name: string;
   role?: Role;
   alive: boolean;
@@ -26,6 +27,7 @@ interface GameMafiaStore {
     updater: Player[] | ((prevPlayers: Player[]) => Player[])
   ) => void;
   setPhase: (phase: Phase) => void;
+  nextPhase: () => void;
   setMyId: (id: string) => void;
   addLog: (msg: string) => void;
   submitAction: (targetId: string) => void;
@@ -66,7 +68,18 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
       actions: { ...state.actions, [myId]: targetId },
     }));
   },
-
+  nextPhase: () => {
+    const phase = get().phase;
+    const next =
+      phase === "lobby"
+        ? "night"
+        : phase === "night"
+        ? "day"
+        : phase === "day"
+        ? "night"
+        : "ended";
+    set({ phase: next, actions: {} });
+  },
   reset: () =>
     set({
       roomId: null,
