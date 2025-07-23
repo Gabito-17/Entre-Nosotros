@@ -6,37 +6,48 @@ import { useUserStore } from "../../../stores/useUserStore.ts";
 import { QrBox } from "../../QrBox.tsx";
 
 export const CreateRoomPage = () => {
+  // Estado local para inputs y control de carga y error
   const [roomName, setRoomName] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  // Datos del usuario logueado
   const user = useUserStore((state) => state.user);
+
+  // Acciones y estado del store Zustand
   const setRoomId = useMafiaGame((state) => state.setRoomId);
   const setPlayers = useMafiaGame((state) => state.setPlayers);
   const roomId = useMafiaGame((state) => state.roomId);
 
+  // URL para compartir la sala creada
   const roomUrl = roomId ? `${window.location.origin}/room/${roomId}` : "";
 
+  // Función para crear la sala y asignar host
   const handleCreateRoom = async () => {
     setErrorMsg("");
 
-    if (!user?.id)
-      return setErrorMsg("Debe iniciar sesión para crear una sala");
+    // Validaciones simples
+    if (!user?.id) return setErrorMsg("Debe iniciar sesión para crear una sala");
     if (!roomName.trim()) return setErrorMsg("Ingresá un nombre para la sala");
     if (!playerName.trim()) return setErrorMsg("Ingresá tu nombre");
 
     setLoading(true);
 
     try {
+      // Asegurarse de que el jugador exista o crearlo
       const player = await ensurePlayerCreated();
       if (!player) throw new Error("No se pudo asegurar el jugador");
 
+      // Crear sala con el host
       const result = await createRoomWithHost(user.id, roomName, playerName);
 
       if ("error" in result) throw new Error(result.error);
 
+      // Guardar roomId en store
       setRoomId(result.roomId);
+
+      // Inicializar array de jugadores con el host (yo)
       setPlayers([
         {
           id: player.id,
@@ -54,6 +65,7 @@ export const CreateRoomPage = () => {
     }
   };
 
+  // Copiar URL al portapapeles
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(roomUrl);
@@ -74,6 +86,7 @@ export const CreateRoomPage = () => {
           placeholder="Nombre de la sala"
           value={roomName}
           onChange={(e) => setRoomName(e.target.value)}
+          disabled={loading}
         />
 
         <input
@@ -82,6 +95,7 @@ export const CreateRoomPage = () => {
           placeholder="Tu nombre"
           value={playerName}
           onChange={(e) => setPlayerName(e.target.value)}
+          disabled={loading}
         />
 
         {errorMsg && <div className="text-red-500 text-sm">{errorMsg}</div>}
@@ -95,6 +109,7 @@ export const CreateRoomPage = () => {
         </button>
       </div>
 
+      {/* Mostrar link y QR solo si la sala fue creada */}
       {roomId && (
         <div className="mt-8 border-t pt-6">
           <h2 className="text-lg font-semibold mb-2">Compartí este link</h2>

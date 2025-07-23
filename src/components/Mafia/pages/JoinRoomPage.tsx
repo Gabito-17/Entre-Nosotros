@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { subscribeToPlayersInRoom } from "../../../services/gamesServices.ts";
-import { joinRoomIfAllowed } from "../../../services/mafiaServices.ts";
-import { ensurePlayerCreated } from "../../../services/userServices.ts";
 import { useMafiaGame } from "../../../stores/useGameMafiaStore.ts";
 import { useUserStore } from "../../../stores/useUserStore.ts";
 import { PlayerList } from "../Players/PlayerList.tsx";
@@ -12,90 +9,77 @@ export const JoinRoomPage = () => {
   const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
 
-  const [hostId, setHostId] = useState<string | null>(null);
+  // Estado local para el input del nombre
   const [playerName, setPlayerName] = useState("");
-  const [hasJoined, setHasJoined] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const players = useMafiaGame((state) => state.players);
-  const setPlayers = useMafiaGame((state) => state.setPlayers);
-  const setRoomId = useMafiaGame((state) => state.setRoomId);
+  // Extraemos del store el estado y acciones necesarias
+  const {
+    players,
+    hostId,
+    hasJoined,
+    loading,
+    myId,
+    setRoomId,
+    setHostId,
+    setHasJoined,
+    setLoading,
+    joinRoom,
+    subscribeToPlayers,
+    leaveRoom,
+  } = useMafiaGame();
 
   const userId = user?.id;
 
+  // Suscripción a cambios en jugadores en tiempo real cuando cambia roomId
   useEffect(() => {
     if (!roomId) return;
 
-    const unsubscribe = subscribeToPlayersInRoom(roomId, (newPlayers) => {
-      console.log("🔄 Jugadores desde suscripción:", newPlayers);
-      setPlayers(newPlayers);
-    });
+    // Nos suscribimos a actualizaciones de jugadores
+    const unsubscribe = subscribeToPlayers(roomId);
 
+    // Limpiamos la suscripción al desmontar o cambiar roomId
     return () => {
-      if (unsubscribe) unsubscribe();
+      unsubscribe();
     };
-  }, [roomId, setPlayers]);
+  }, [roomId, subscribeToPlayers]);
 
+  // Función para intentar unirse a la sala
   const tryJoin = async () => {
     if (!playerName.trim()) {
       alert("Debes ingresar un nombre");
       return;
     }
 
-    setLoading(true);
+    // Ejecutamos la función joinRoom del store (que ya maneja loading)
+    const success = await joinRoom(roomId!, playerName);
 
-    const player = await ensurePlayerCreated();
-
-    if (!player) {
-      alert("No se pudo verificar el jugador");
-      setLoading(false);
+    if (!success) {
+      alert("No se pudo unir a la sala");
+      navigate("/");
       return;
     }
 
-    const result = await joinRoomIfAllowed(roomId!, player.id, playerName);
-
-    if (!result.success) {
-      alert(result.message || "Error al unirse a la sala");
-      setLoading(false);
-      return navigate("/");
-    }
-
-    setRoomId(roomId!);
-    setHostId(result.room?.hostId || null);
-
-    if (result.players) {
-      const myId = player.id;
-
-      const normalizedPlayers = result.players.map((p) => ({
-        id: p.player_id,
-        user_id: "", // si no lo tenés, dejalo vacío
-        name: p.name,
-        alive: p.alive,
-        isHost: p.is_host,
-        role: undefined,
-        isSelf: p.player_id === myId,
-      }));
-
-      setPlayers(normalizedPlayers);
-    }
-
-    setHasJoined(true);
-    setLoading(false);
+    // Ya está todo seteado en el store: hasJoined, hostId, players, myId, etc
   };
 
-  const handleStartGame = () => {
-    alert("¡Juego iniciado!");
+  // Handler para salir de la sala y limpiar estado
+  const handleLeave = () => {
+    leaveRoom();
+    navigate("/");
   };
 
+  // Handler para copiar link al portapapeles
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     alert("Enlace copiado al portapapeles");
   };
 
-  const handleLeave = () => {
-    navigate("/");
+  // Handler para iniciar el juego (solo host)
+  const handleStartGame = () => {
+    alert("¡Juego iniciado!");
   };
 
+  // Determinar si el usuario es el host
   const isHost = userId === hostId;
 
   return (
@@ -113,9 +97,10 @@ export const JoinRoomPage = () => {
             />
             <button
               onClick={tryJoin}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full"
+              disabled={loading}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full disabled:opacity-50"
             >
-              Unirse
+              {loading ? "Uniéndote..." : "Unirse"}
             </button>
           </>
         ) : (
