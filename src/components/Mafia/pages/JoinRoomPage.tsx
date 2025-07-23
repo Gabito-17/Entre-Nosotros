@@ -37,6 +37,8 @@ export const JoinRoomPage = () => {
     // Nos suscribimos a actualizaciones de jugadores
     const unsubscribe = subscribeToPlayers(roomId);
 
+
+    
     // Limpiamos la suscripción al desmontar o cambiar roomId
     return () => {
       unsubscribe();
@@ -52,7 +54,7 @@ export const JoinRoomPage = () => {
 
     // Ejecutamos la función joinRoom del store (que ya maneja loading)
     const success = await joinRoom(roomId!, playerName);
-
+    
     if (!success) {
       alert("No se pudo unir a la sala");
       navigate("/");

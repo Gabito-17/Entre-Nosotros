@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createRoomWithHost } from "../../../services/mafiaServices.ts";
 import { ensurePlayerCreated } from "../../../services/userServices.ts";
 import { useMafiaGame } from "../../../stores/useGameMafiaStore.ts";
@@ -23,12 +24,16 @@ export const CreateRoomPage = () => {
   // URL para compartir la sala creada
   const roomUrl = roomId ? `${window.location.origin}/room/${roomId}` : "";
 
+  //Navigate para redireccionar
+  const navigate = useNavigate();
+
   // Función para crear la sala y asignar host
   const handleCreateRoom = async () => {
     setErrorMsg("");
 
     // Validaciones simples
-    if (!user?.id) return setErrorMsg("Debe iniciar sesión para crear una sala");
+    if (!user?.id)
+      return setErrorMsg("Debe iniciar sesión para crear una sala");
     if (!roomName.trim()) return setErrorMsg("Ingresá un nombre para la sala");
     if (!playerName.trim()) return setErrorMsg("Ingresá tu nombre");
 
@@ -74,6 +79,12 @@ export const CreateRoomPage = () => {
       alert("No se pudo copiar el link");
     }
   };
+  // Navegar a la sala creada
+  const goToRoom = () => {
+    if (roomId) {
+      navigate(`/room/${roomId}`);
+    }
+  };
 
   return (
     <div className="p-6 max-w-md mx-auto text-center">
@@ -113,7 +124,6 @@ export const CreateRoomPage = () => {
       {roomId && (
         <div className="mt-8 border-t pt-6">
           <h2 className="text-lg font-semibold mb-2">Compartí este link</h2>
-
           <div className="flex items-center justify-center gap-2 mb-4">
             <code className="bg-gray-100 px-2 py-1 rounded text-sm">
               {roomUrl}
@@ -125,8 +135,10 @@ export const CreateRoomPage = () => {
               Copiar
             </button>
           </div>
-
-          <QrBox value={roomUrl} />
+          <QrBox value={roomUrl} />{" "}
+          <button onClick={goToRoom} className="mt-6 btn btn-success w-full">
+            Ir a la sala
+          </button>
         </div>
       )}
     </div>

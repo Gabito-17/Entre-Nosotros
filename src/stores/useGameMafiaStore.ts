@@ -33,7 +33,7 @@ interface GameMafiaStore {
   logs: string[]; // Logs o mensajes del juego
 
   // Setters básicos para actualizar estado
-  setRoomId: (id: string) => void;
+  setRoomId: (id: string | null) => void;
   setPlayers: (players: Player[] | ((prev: Player[]) => Player[])) => void;
   setPhase: (phase: Phase) => void;
   setMyId: (id: string | null) => void;
@@ -52,26 +52,101 @@ interface GameMafiaStore {
   reset: () => void;
 }
 
+/**
+ * Llaves usadas para persistir en localStorage
+ */
+const LS_KEYS = {
+  roomId: "gameMafia_roomId",
+  players: "gameMafia_players",
+  phase: "gameMafia_phase",
+  myId: "gameMafia_myId",
+  hostId: "gameMafia_hostId",
+  hasJoined: "gameMafia_hasJoined",
+};
+
+/**
+ * Función helper para cargar JSON del localStorage con fallback seguro
+ */
+const loadFromLS = <T>(key: string, fallback: T): T => {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+};
+
+/**
+ * Función helper para guardar en localStorage con JSON stringify
+ */
+const saveToLS = (key: string, value: any) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Puede fallar en navegadores que no soporten localStorage o modo incógnito
+  }
+};
+
 export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
-  roomId: null,
-  players: [],
-  phase: "lobby",
-  myId: null,
-  hostId: null,
-  hasJoined: false,
+  // Inicializamos estado intentando cargar desde localStorage para persistencia simple
+  roomId:
+    typeof window !== "undefined"
+      ? loadFromLS<string | null>(LS_KEYS.roomId, null)
+      : null,
+  players:
+    typeof window !== "undefined"
+      ? loadFromLS<Player[]>(LS_KEYS.players, [])
+      : [],
+  phase:
+    typeof window !== "undefined"
+      ? loadFromLS<Phase>(LS_KEYS.phase, "lobby")
+      : "lobby",
+  myId:
+    typeof window !== "undefined"
+      ? loadFromLS<string | null>(LS_KEYS.myId, null)
+      : null,
+  hostId:
+    typeof window !== "undefined"
+      ? loadFromLS<string | null>(LS_KEYS.hostId, null)
+      : null,
+  hasJoined:
+    typeof window !== "undefined"
+      ? loadFromLS<boolean>(LS_KEYS.hasJoined, false)
+      : false,
   loading: false,
   actions: {},
   logs: [],
 
-  setRoomId: (id) => set({ roomId: id }),
-  setPlayers: (updater) =>
-    set((state) => ({
-      players: typeof updater === "function" ? updater(state.players) : updater,
-    })),
-  setPhase: (phase) => set({ phase }),
-  setMyId: (id) => set({ myId: id }),
-  setHostId: (id) => set({ hostId: id }),
-  setHasJoined: (joined) => set({ hasJoined: joined }),
+  // Setters sincronizan estado con localStorage para persistencia
+
+  setRoomId: (id) => {
+    set({ roomId: id });
+    saveToLS(LS_KEYS.roomId, id);
+  },
+  setPlayers: (players) =>
+    set((state) => {
+      const newPlayers =
+        typeof players === "function" ? players(state.players) : players;
+      saveToLS(LS_KEYS.players, newPlayers);
+      return { players: newPlayers };
+    }),
+  setPhase: (phase) => {
+    set({ phase });
+    saveToLS(LS_KEYS.phase, phase);
+  },
+  setMyId: (id) => {
+    set({ myId: id });
+    saveToLS(LS_KEYS.myId, id);
+  },
+  setHostId: (id) => {
+    set({ hostId: id });
+    saveToLS(LS_KEYS.hostId, id);
+  },
+  setHasJoined: (joined) => {
+    set({ hasJoined: joined });
+    saveToLS(LS_KEYS.hasJoined, joined);
+  },
   setLoading: (loading) => set({ loading }),
 
   // Obtiene el ID del usuario autenticado desde Supabase
@@ -79,6 +154,7 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
     const { data, error } = await supabase.auth.getUser();
     if (data?.user?.id) {
       set({ myId: data.user.id });
+      saveToLS(LS_KEYS.myId, data.user.id);
     } else {
       console.error("No se pudo obtener el ID del usuario", error);
     }
@@ -92,15 +168,12 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
   joinRoom: async (roomId, playerName) => {
     set({ loading: true });
 
-    // Aquí se asume que `ensurePlayerCreated` retorna objeto {id, ...}
-    // si el jugador está creado o creado al momento
     const player = await ensurePlayerCreated();
     if (!player) {
       set({ loading: false });
       return false;
     }
 
-    // Llamada backend para unirse a la sala
     const result = await joinRoomIfAllowed(roomId, player.id, playerName);
 
     if (!result.success) {
@@ -110,7 +183,6 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
 
     const myId = player.id;
 
-    // Normalizar jugadores recibidos para el estado
     const normalizedPlayers = result.players.map((p) => ({
       id: p.player_id,
       user_id: "", // completar si disponible
@@ -121,7 +193,7 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
       isSelf: p.player_id === myId,
     }));
 
-    // Actualizar estado con datos recibidos
+    // Actualizar estado y persistir
     set({
       roomId,
       hostId: result.room?.hostId || null,
@@ -130,6 +202,11 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
       hasJoined: true,
       loading: false,
     });
+    saveToLS(LS_KEYS.roomId, roomId);
+    saveToLS(LS_KEYS.hostId, result.room?.hostId || null);
+    saveToLS(LS_KEYS.myId, myId);
+    saveToLS(LS_KEYS.players, normalizedPlayers);
+    saveToLS(LS_KEYS.hasJoined, true);
 
     return true;
   },
@@ -168,6 +245,7 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
           }));
 
           set({ players: normalized });
+          saveToLS(LS_KEYS.players, normalized);
         }
       )
       .subscribe();
@@ -179,7 +257,7 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
   },
 
   /**
-   * Limpia el estado del store, dejando todo en valores iniciales.
+   * Limpia el estado del store y localStorage, dejando todo en valores iniciales.
    */
   leaveRoom: () => {
     set({
@@ -193,12 +271,21 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
       actions: {},
       logs: [],
     });
+
+    // Limpiar localStorage para que no quede nada persistido
+    Object.values(LS_KEYS).forEach((key) => {
+      try {
+        localStorage.removeItem(key);
+      } catch {
+        // ignorar errores
+      }
+    });
   },
 
-  // Agrega un mensaje a los logs
+  // Agrega un mensaje a los logs (no persistido)
   addLog: (msg) => set((state) => ({ logs: [...state.logs, msg] })),
 
-  // Registra una acción del jugador actual contra un target
+  // Registra una acción del jugador actual contra un target (no persistido)
   submitAction: (targetId) => {
     const myId = get().myId;
     if (!myId) return;
@@ -207,7 +294,7 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
     }));
   },
 
-  // Avanza la fase del juego en secuencia
+  // Avanza la fase del juego en secuencia y persiste el nuevo estado
   nextPhase: () => {
     const phase = get().phase;
     const next =
@@ -218,11 +305,13 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
         : phase === "day"
         ? "night"
         : "ended";
+
     set({ phase: next, actions: {} });
+    saveToLS(LS_KEYS.phase, next);
   },
 
-  // Resetea todo el store
-  reset: () =>
+  // Resetea todo el store y localStorage a valores iniciales
+  reset: () => {
     set({
       roomId: null,
       players: [],
@@ -233,5 +322,11 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
       loading: false,
       actions: {},
       logs: [],
-    }),
+    });
+    Object.values(LS_KEYS).forEach((key) => {
+      try {
+        localStorage.removeItem(key);
+      } catch {}
+    });
+  },
 }));
