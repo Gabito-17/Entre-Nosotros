@@ -26,6 +26,8 @@ export const JoinRoomPage = () => {
     joinRoom,
     subscribeToPlayers,
     leaveRoom,
+    startGame,
+    addLog,
   } = useMafiaGame();
 
   const userId = user?.id;
@@ -34,14 +36,26 @@ export const JoinRoomPage = () => {
   useEffect(() => {
     if (!roomId) return;
 
+    setRoomId(roomId);
+    setHostId(null);
+    setHasJoined(false);
+
     // Nos suscribimos a actualizaciones de jugadores
     const unsubscribe = subscribeToPlayers(roomId);
 
     // Limpiamos la suscripción al desmontar o cambiar roomId
     return () => {
       unsubscribe();
+      leaveRoom();
     };
-  }, [roomId, subscribeToPlayers]);
+  }, [
+    roomId,
+    subscribeToPlayers,
+    setRoomId,
+    setHostId,
+    setHasJoined,
+    leaveRoom,
+  ]);
 
   // Función para intentar unirse a la sala
   const tryJoin = async () => {
@@ -75,8 +89,19 @@ export const JoinRoomPage = () => {
   };
 
   // Handler para iniciar el juego (solo host)
-  const handleStartGame = () => {
-    alert("¡Juego iniciado!");
+  const handleStartGame = async () => {
+    if (!startGame) return;
+
+    setLoading(true);
+    const success = await startGame();
+
+    if (success) {
+      addLog("La partida ha comenzado. Fase noche.");
+      alert("¡Juego iniciado!");
+    } else {
+      alert("No se pudo iniciar la partida. Revisa los logs.");
+    }
+    setLoading(false);
   };
 
   // Determinar si el usuario es el host
@@ -135,9 +160,10 @@ export const JoinRoomPage = () => {
                 {isHost && (
                   <button
                     onClick={handleStartGame}
-                    className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded"
+                    disabled={loading}
+                    className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded disabled:opacity-50"
                   >
-                    Iniciar juego
+                    {loading ? "Iniciando partida..." : "Iniciar juego"}
                   </button>
                 )}
               </>
