@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { getOrCreateUserId } from '../utils/getOrCreateUserId.ts';
+import { supabase } from "../lib/supabaseClient.ts";
 
-type Role = 'mafia' | 'doctor' | 'police' | 'civilian';
-export type Phase = 'lobby' | 'night' | 'day' | 'ended';
+type Role = "mafia" | "doctor" | "police" | "civilian";
+export type Phase = "lobby" | "night" | "day" | "ended";
 
 interface Player {
-  id: string;
+  id: number;
   name: string;
   role?: Role;
   alive: boolean;
@@ -22,7 +22,9 @@ interface GameMafiaStore {
   logs: string[];
 
   setRoomId: (id: string) => void;
-  setPlayers: (players: Player[]) => void;
+  setPlayers: (
+    updater: Player[] | ((prevPlayers: Player[]) => Player[])
+  ) => void;
   setPhase: (phase: Phase) => void;
   setMyId: (id: string) => void;
   addLog: (msg: string) => void;
@@ -33,15 +35,27 @@ interface GameMafiaStore {
 export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
   roomId: null,
   players: [],
-  phase: 'lobby',
-  myId: getOrCreateUserId(), // ✅ Acá sí podés ejecutar la función
+  phase: "lobby",
+  myId: null, // se setea más tarde
   actions: {},
   logs: [],
 
   setRoomId: (id) => set({ roomId: id }),
-  setPlayers: (players) => set({ players }),
+  setPlayers: (updater) =>
+    set((state) => ({
+      players: typeof updater === "function" ? updater(state.players) : updater,
+    })),
   setPhase: (phase) => set({ phase }),
   setMyId: (id) => set({ myId: id }),
+
+  fetchMyId: async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (data?.user?.id) {
+      set({ myId: data.user.id });
+    } else {
+      console.error("No se pudo obtener el ID del usuario", error);
+    }
+  },
 
   addLog: (msg) => set((state) => ({ logs: [...state.logs, msg] })),
 
@@ -57,8 +71,8 @@ export const useMafiaGame = create<GameMafiaStore>((set, get) => ({
     set({
       roomId: null,
       players: [],
-      phase: 'lobby',
-      myId: getOrCreateUserId(), // ✅ Genera un nuevo ID si reseteás el juego
+      phase: "lobby",
+      myId: null,
       actions: {},
       logs: [],
     }),

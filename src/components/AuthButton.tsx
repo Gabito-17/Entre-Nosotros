@@ -1,14 +1,14 @@
 "use client";
 
-
-import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabaseClient.ts";
 import {
   ArrowRightEndOnRectangleIcon,
   ArrowRightStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import { useUserStore } from "../stores/useUserStore.ts";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient.ts";
+import { ensurePlayerCreated } from "../services/userServices.ts";
 import { useUiStore } from "../stores/useUiStore.ts";
+import { useUserStore } from "../stores/useUserStore.ts";
 
 export default function AuthButton() {
   const [loading, setLoading] = useState(true);
@@ -46,10 +46,6 @@ export default function AuthButton() {
       provider: "google",
     });
 
-    if(!error){
-      await ensurePlayerCreated();
-    };
-    
   };
 
   const handleLogout = async () => {

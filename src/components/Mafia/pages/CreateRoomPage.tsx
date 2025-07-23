@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
+import { createRoomWithHost } from "../../../services/mafiaServices.ts";
+import { ensurePlayerCreated } from "../../../services/userServices.ts";
 import { useMafiaGame } from "../../../stores/useGameMafiaStore.ts";
 import { useUserStore } from "../../../stores/useUserStore.ts";
 import { QrBox } from "../../QrBox.tsx";
-import { createRoomWithHost } from "../../../services/mafiaServices.ts";
-import { getAllGames } from "../../../services/gamesServices.ts";
 
 export const CreateRoomPage = () => {
   const [name, setName] = useState("");
@@ -12,11 +12,18 @@ export const CreateRoomPage = () => {
   const user = useUserStore((state) => state.user);
   const setRoomId = useMafiaGame((state) => state.setRoomId);
   const setPlayers = useMafiaGame((state) => state.setPlayers);
+
   const roomId = useMafiaGame((state) => state.roomId);
 
   const handleCreateRoom = async () => {
+    if (!user?.id) return alert("Error interno: ID de usuario no válido");
     if (!user) return alert("Debe iniciar sesión para crear una sala");
     if (!name.trim()) return alert("Ingresá tu nombre");
+
+    console.log("Usuario autenticado:", user);
+
+    const player = await ensurePlayerCreated();
+    if (!player) return alert("No se pudo asegurar el jugador");
 
     setLoading(true);
     const result = await createRoomWithHost(user.id, name);
@@ -30,7 +37,7 @@ export const CreateRoomPage = () => {
     setRoomId(result.roomId);
     setPlayers([
       {
-        id: user.id,
+        id: player.id, // ✅ ahora sí, player.id de la tabla
         name,
         alive: true,
         isHost: true,

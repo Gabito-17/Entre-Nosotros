@@ -1,36 +1,39 @@
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "../lib/supabaseClient.ts";
 
-export const ensurePlayerCreated = async () => {
+export const ensurePlayerCreated = async (): Promise<{ id: number } | null> => {
   const {
     data: { user },
     error: userError,
   } = await supabase.auth.getUser();
 
   if (userError || !user) {
-    console.error('No se pudo obtener el usuario');
-    return;
+    console.error("No se pudo obtener el usuario");
+    return null;
   }
 
   const { id, email, user_metadata } = user;
 
   // Buscar si ya existe en "players"
-  const { data: existing, error: fetchError } = await supabase
-    .from('players')
-    .select('id')
-    .eq('auth_user_id', id)
-    .single();
+  try {
+    const { data: existing, error: fetchError } = await supabase
+      .from("players")
+      .select("id")
+      .eq("user_id", id)
+      .single();  
 
-  if (existing) {
-    console.log('Jugador ya existe:', existing.id);
-    return;
+    if (existing) {
+      return existing;
+    }
+  } catch (err) {
+    console.error("Falla inesperada al buscar player:", err);
   }
 
   // Crear nuevo jugador
   const { data: inserted, error: insertError } = await supabase
-    .from('players')
+    .from("players")
     .insert([
       {
-        auth_user_id: id, // clave foránea
+        user_id: id,
         name: user_metadata?.full_name || email,
         email: email,
         avatar_url: user.user_metadata?.avatar_url || null,
@@ -39,9 +42,10 @@ export const ensurePlayerCreated = async () => {
     .select()
     .single();
 
-  if (insertError) {
-    console.error('Error al insertar jugador:', insertError.message);
-  } else {
-    console.log('Jugador creado:', inserted);
+  if (insertError || !inserted) {
+    console.error("Error al insertar jugador:", insertError?.message);
+    return null;
   }
+
+  return { id: inserted.id };
 };
