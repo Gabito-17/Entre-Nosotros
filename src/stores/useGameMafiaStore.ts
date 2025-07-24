@@ -28,7 +28,7 @@ interface GameMafiaStore {
   phase: Phase; // Fase actual del juego
   myId: string | null; // ID del usuario actual
   hostId: string | null; // ID del host de la sala
-  hasJoined: boolean; // Indica si el usuario ya se unió a la sala
+  isInGame: boolean; // Indica si el usuario ya se unió a la sala
   loading: boolean; // Estado de carga para UI
   actions: Record<string, string>; // Acciones de los jugadores: {playerId: targetId}
   logs: string[]; // Logs o mensajes del juego
@@ -39,7 +39,7 @@ interface GameMafiaStore {
   setPhase: (phase: Phase) => void;
   setMyId: (id: string | null) => void;
   setHostId: (id: string | null) => void;
-  setHasJoined: (joined: boolean) => void;
+  setIsInGame: (joined: boolean) => void;
   setLoading: (loading: boolean) => void;
 
   // Funciones de lógica de juego y negocio
@@ -63,7 +63,7 @@ export const useMafiaGame = create<GameMafiaStore>()(
       phase: "lobby",
       myId: null,
       hostId: null,
-      hasJoined: false,
+      isInGame: false,
       loading: false,
       actions: {},
       logs: [],
@@ -77,7 +77,7 @@ export const useMafiaGame = create<GameMafiaStore>()(
       setPhase: (phase) => set({ phase }),
       setMyId: (id) => set({ myId: id }),
       setHostId: (id) => set({ hostId: id }),
-      setHasJoined: (joined) => set({ hasJoined: joined }),
+      setIsInGame: (joined) => set({ isInGame: joined }),
       setLoading: (loading) => set({ loading }),
 
       // Obtiene el ID del usuario autenticado desde Supabase
@@ -130,7 +130,7 @@ export const useMafiaGame = create<GameMafiaStore>()(
           hostId: result.room?.hostId || null,
           myId,
           players: normalizedPlayers,
-          hasJoined: isJoined,
+          isInGame: isJoined,
           loading: false,
         });
 
@@ -140,7 +140,7 @@ export const useMafiaGame = create<GameMafiaStore>()(
       /**
        * Suscribe a cambios en jugadores de la sala en Supabase.
        * Actualiza el estado local con datos nuevos en tiempo real.
-       * También actualiza si el jugador actual está en la sala para mantener `hasJoined`.
+       * También actualiza si el jugador actual está en la sala para mantener `isInGame`.
        * Retorna función para desuscribir la suscripción.
        */
       subscribeToPlayers: (roomId) => {
@@ -174,7 +174,7 @@ export const useMafiaGame = create<GameMafiaStore>()(
 
               set({
                 players: normalized,
-                hasJoined: normalized.some((p) => p.id === myId),
+                isInGame: normalized.some((p) => p.id === myId),
               });
             }
           )
@@ -195,7 +195,7 @@ export const useMafiaGame = create<GameMafiaStore>()(
           phase: "lobby",
           myId: null,
           hostId: null,
-          hasJoined: false,
+          isInGame: false,
           loading: false,
           actions: {},
           logs: [],
@@ -274,7 +274,7 @@ export const useMafiaGame = create<GameMafiaStore>()(
           phase: "lobby",
           myId: null,
           hostId: null,
-          hasJoined: false,
+          isInGame: false,
           loading: false,
           actions: {},
           logs: [],
@@ -287,7 +287,7 @@ export const useMafiaGame = create<GameMafiaStore>()(
         myId: state.myId,
         hostId: state.hostId,
         players: state.players,
-        hasJoined: state.hasJoined,
+        isInGame: state.isInGame,
         phase: state.phase,
         logs: state.logs,
         actions: state.actions,
