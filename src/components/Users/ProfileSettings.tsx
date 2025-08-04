@@ -5,7 +5,6 @@ import { usePlayerStore } from "../../stores/usePlayerStore.ts";
 import {
   fadeUp,
   fadeItem,
-  pulse,
   staggerContainer,
   expandFade} from "../../lib/Animations.ts"; // Asumo que estas variantes están exportadas desde un archivo común
 
