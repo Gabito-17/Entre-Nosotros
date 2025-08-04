@@ -1,5 +1,8 @@
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
+import {
+  SpeakerWaveIcon,
+  SpeakerXMarkIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { useSoundStore } from "../../stores/useSoundStore.ts";
 
 const sections = [
@@ -11,12 +14,20 @@ const sections = [
       { label: "Reglas", href: "/britney/reglas" },
     ],
   },
-  { 
+  {
     title: "Truco",
     items: [
       { label: "Acerca de", href: "/truco" },
       { label: "Anotador", href: "/truco/anotador" },
       { label: "Reglas", href: "/truco/reglas" },
+    ],
+  },
+  {
+    title: "Mafia",
+    items: [
+      { label: "Acerca de", href: "/mafia" },
+      { label: "Jugar", href: "/mafia/anotador" },
+      { label: "Reglas", href: "/mafia/reglas" },
     ],
   },
 ];
@@ -38,7 +49,6 @@ export default function Drawer() {
           >
             <XMarkIcon className="h-5 w-5" />
           </label>
-
         </div>
 
         {/* Menu */}
