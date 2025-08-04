@@ -59,8 +59,8 @@ const App = () => {
             <Route path="/room/:paramsRoomId" element={<JoinRoomPage />} />
 
             {/* Usuario routes */}
-            <Route path="/user/info" element={<UserInfo />} />
-            <Route path="/user/settings" element={<ProfileSettings />} />
+            <Route path="/perfil/info" element={<UserInfo />} />
+            <Route path="/perfil/settings" element={<ProfileSettings />} />
           </Routes>
         </PlayerProvider>
       </Layout>

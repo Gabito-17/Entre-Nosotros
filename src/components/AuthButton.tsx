@@ -3,107 +3,151 @@
 import {
   ArrowRightEndOnRectangleIcon,
   ArrowRightStartOnRectangleIcon,
+  PencilIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "../lib/supabaseClient.ts";
+import { ensurePlayerCreated } from "../services/userServices.ts"; // esto crea/fetchéa el player
+import { usePlayerStore } from "../stores/usePlayerStore.ts";
 import { useUiStore } from "../stores/useUiStore.ts";
-import { useUserStore } from "../stores/useUserStore.ts";
 
-export default function AuthButton() {
+export default function PlayerMenu() {
   const [loading, setLoading] = useState(true);
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
+  const player = usePlayerStore((state) => state.player);
+  const setPlayer = usePlayerStore((state) => state.setPlayer);
   const openConfirmationModal = useUiStore(
     (state) => state.openConfirmationModal
   );
 
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Manejar clic fuera del menú para cerrarlo
   useEffect(() => {
-    const fetchUser = async () => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Cargar jugador al montar
+  useEffect(() => {
+    const load = async () => {
       const { data } = await supabase.auth.getUser();
-      setUser(data.user);
+      if (!data.user) {
+        setPlayer(null);
+        setLoading(false);
+        return;
+      }
+
+      const player = await ensurePlayerCreated(); // fetch or create player
+      setPlayer(player);
       setLoading(false);
     };
 
-    fetchUser();
-    
-     
+    load();
+
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setUser(session?.user ?? null);
+        if (!session?.user) {
+          setPlayer(null);
+        } else {
+          ensurePlayerCreated().then(setPlayer);
+        }
       }
     );
 
     return () => {
       listener.subscription.unsubscribe();
     };
-  }, [setUser]);
+  }, [setPlayer]);
 
   const handleLogin = async () => {
     const currentPath = window.location.pathname + window.location.search;
     localStorage.setItem("redirectAfterLogin", currentPath);
-
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
+    await supabase.auth.signInWithOAuth({ provider: "google" });
   };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    setPlayer(null);
   };
 
   if (loading) {
     return <div className="animate-pulse h-10 w-24 bg-base-300 rounded-md" />;
   }
 
-  if (user) {
-    const avatar = user.user_metadata?.avatar_url ?? "/default-avatar.png";
-    const fullName = user.user_metadata?.full_name ?? "Usuario";
-
+  if (!player) {
     return (
-      <div className="flex items-center gap-2">
-        <div className="tooltip tooltip-bottom" data-tip={fullName}>
-          <img
-            src={avatar}
-            alt="Avatar"
-            className="w-8 h-8 rounded-full object-cover border"
-          />
-        </div>
-        <button
-          onClick={() =>
-            openConfirmationModal({
-              title: "¿Cerrar sesión?",
-              message: "¿Estás seguro de que querés cerrar sesión?",
-              onConfirm: handleLogout,
-              actions: [
-                {
-                  label: "Cancelar",
-                  className: "btn btn-ghost",
-                },
-                {
-                  label: "Cerrar sesión",
-                  className: "btn btn-error",
-                  onClick: handleLogout,
-                },
-              ],
-            })
-          }
-          className="btn btn-ghost btn-sm tooltip tooltip-bottom"
-          data-tip="Cerrar sesión"
-        >
-          <ArrowRightEndOnRectangleIcon className="w-5 h-5" />
-        </button>
-      </div>
+      <button
+        onClick={handleLogin}
+        className="btn btn-primary btn-sm flex items-center gap-2 tooltip tooltip-bottom"
+        data-tip="Iniciar sesión con Google"
+      >
+        <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
+        <span className="hidden sm:inline">Login</span>
+      </button>
     );
   }
 
+  const avatar = player.avatar_url || "/default-avatar.png";
+  const nickname = player.name || "Jugador";
+
   return (
-    <button
-      onClick={handleLogin}
-      className="btn btn-primary btn-sm flex items-center gap-2 tooltip tooltip-bottom"
-      data-tip="Iniciar sesión con Google"
-    >
-      <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
-      <span className="hidden sm:inline">Login</span>
-    </button>
+    <div className="relative" ref={menuRef}>
+      <img
+        src={avatar}
+        alt="Avatar"
+        className="w-8 h-8 rounded-full object-cover border cursor-pointer"
+        onClick={() => setMenuOpen(!menuOpen)}
+      />
+
+      {menuOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-base-100 rounded shadow-md z-50">
+          {" "}
+          <div className="p-2 text-sm font-semibold border-b text-gray-700">
+            {nickname}
+          </div>
+          <button
+            onClick={() => {
+              setMenuOpen(false);
+              window.location.href = "/perfil/settings"; // cambiar por navegación si usás react-router
+            }}
+            className="flex items-center w-full px-4 py-2 hover:bg-base-200"
+          >
+            <PencilIcon className="w-4 h-4 mr-2" />
+            Editar perfil
+          </button>
+          <button
+            onClick={() =>
+              openConfirmationModal({
+                title: "¿Cerrar sesión?",
+                message: "¿Estás seguro de que querés cerrar sesión?",
+                onConfirm: handleLogout,
+                actions: [
+                  {
+                    label: "Cancelar",
+                    className: "btn btn-ghost",
+                  },
+                  {
+                    label: "Cerrar sesión",
+                    className: "btn btn-error",
+                    onClick: handleLogout,
+                  },
+                ],
+              })
+            }
+            className="flex items-center w-full px-4 py-2 hover:bg-base-200"
+          >
+            <ArrowRightEndOnRectangleIcon className="w-4 h-4 mr-2" />
+            Cerrar sesión
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

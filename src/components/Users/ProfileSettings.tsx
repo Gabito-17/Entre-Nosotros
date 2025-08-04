@@ -2,6 +2,12 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient.ts";
 import { usePlayerStore } from "../../stores/usePlayerStore.ts";
+import {
+  fadeUp,
+  fadeItem,
+  pulse,
+  staggerContainer,
+  expandFade} from "../../lib/Animations.ts"; // Asumo que estas variantes están exportadas desde un archivo común
 
 export default function ProfileSettings() {
   const player = usePlayerStore((state) => state.player);
@@ -14,7 +20,6 @@ export default function ProfileSettings() {
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Cuando el player cambia (carga), seteamos localmente
   useEffect(() => {
     if (player) {
       setNickname(player.name || "");
@@ -37,7 +42,6 @@ export default function ProfileSettings() {
     if (!player) return alert("No hay jugador cargado");
 
     setLoading(true);
-
     let newAvatarUrl = avatarUrl;
 
     if (avatarFile) {
@@ -81,7 +85,6 @@ export default function ProfileSettings() {
       alert("❌ Error al actualizar perfil");
     } else {
       alert("✅ Perfil actualizado 🎉");
-      // Actualizamos el store para que esté sincronizado
       updatePlayer({
         name: nickname,
         avatar_url: newAvatarUrl,
@@ -105,29 +108,47 @@ export default function ProfileSettings() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      variants={fadeUp}
+      initial="hidden"
+      animate="visible"
       className="max-w-md mx-auto mt-10"
     >
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body space-y-5">
-          <h2 className="card-title text-center justify-center text-2xl">
+      <motion.div
+        className="card bg-base-100 shadow-xl"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div className="card-body space-y-5">
+          <motion.h2
+            className="card-title text-center justify-center text-2xl"
+            variants={fadeItem}
+            custom={0}
+          >
             Ajustes de perfil
-          </h2>
+          </motion.h2>
 
-          <div className="flex justify-center">
-            <div className="avatar">
+          <motion.div
+            className="flex justify-center"
+            variants={fadeItem}
+            custom={0.1}
+          >
+            <motion.div
+              className="avatar"
+              variants={pulse}
+              animate="animate"
+              initial="initial"
+            >
               <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                 <img
                   src={preview || avatarUrl || "/default-avatar.png"}
                   alt="Avatar"
                 />
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div className="form-control">
+          <motion.div className="form-control" variants={fadeItem} custom={0.2}>
             <label className="label font-semibold">Nombre de usuario</label>
             <input
               type="text"
@@ -136,9 +157,9 @@ export default function ProfileSettings() {
               className="input input-bordered w-full"
               disabled={loading}
             />
-          </div>
+          </motion.div>
 
-          <div className="form-control">
+          <motion.div className="form-control" variants={fadeItem} custom={0.3}>
             <label className="label font-semibold">Cambiar avatar</label>
             <input
               type="file"
@@ -147,17 +168,20 @@ export default function ProfileSettings() {
               className="file-input file-input-bordered w-full"
               disabled={loading}
             />
-          </div>
+          </motion.div>
 
-          <button
+          <motion.button
+            variants={expandFade}
+            initial="hidden"
+            animate="visible"
             onClick={handleUpdate}
             disabled={loading}
             className={`btn btn-primary w-full ${loading ? "loading" : ""}`}
           >
             {loading ? "Guardando..." : "Guardar cambios"}
-          </button>
-        </div>
-      </div>
+          </motion.button>
+        </motion.div>
+      </motion.div>
     </motion.div>
   );
 }
