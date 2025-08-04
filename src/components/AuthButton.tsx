@@ -6,7 +6,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient.ts";
-import { ensurePlayerCreated } from "../services/userServices.ts";
 import { useUiStore } from "../stores/useUiStore.ts";
 import { useUserStore } from "../stores/useUserStore.ts";
 
@@ -26,7 +25,8 @@ export default function AuthButton() {
     };
 
     fetchUser();
-
+    
+     
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
@@ -45,7 +45,6 @@ export default function AuthButton() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
     });
-
   };
 
   const handleLogout = async () => {

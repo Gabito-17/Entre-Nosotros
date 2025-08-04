@@ -22,41 +22,47 @@ import TrucoPage from "./components/Truco/pages/TrucoPage.tsx";
 import RulesTrucoPage from "./components/Truco/pages/TrucoRulesPage.tsx";
 
 // User
-import { UserInfo } from "./components/Users/UserInfo.tsx";
 import { JoinRoomPage } from "./components/Mafia/pages/JoinRoomPage.tsx";
 import ProfileSettings from "./components/Users/ProfileSettings.tsx";
+import { UserInfo } from "./components/Users/UserInfo.tsx";
+import { PlayerProvider } from "./hooks/playerProvider.tsx";
 
 const App = () => {
   return (
     <Router>
       <Layout>
-        <Routes>
-          {/* Home and general */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/sugerencias" element={<SuggestionsPage />} />
-          <Route path="/handle-login" element={<HandleLoginPage />} />
+        <PlayerProvider>
+          <Routes>
+            {/* Home and general */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/sugerencias" element={<SuggestionsPage />} />
+            <Route path="/handle-login" element={<HandleLoginPage />} />
 
-          {/* Britney routes */}
-          <Route path="/britney" element={<BritneyPage />} />
-          <Route path="/britney/reglas" element={<RulesBritneyPage />} />
-          <Route path="/britney/anotador" element={<AnotattorBritneyPage />} />
+            {/* Britney routes */}
+            <Route path="/britney" element={<BritneyPage />} />
+            <Route path="/britney/reglas" element={<RulesBritneyPage />} />
+            <Route
+              path="/britney/anotador"
+              element={<AnotattorBritneyPage />}
+            />
 
-          {/* Truco routes */}
-          <Route path="/truco" element={<TrucoPage />} />
-          <Route path="/truco/reglas" element={<RulesTrucoPage />} />
-          <Route path="/truco/anotador" element={<AnotadorTrucoPage />} />
+            {/* Truco routes */}
+            <Route path="/truco" element={<TrucoPage />} />
+            <Route path="/truco/reglas" element={<RulesTrucoPage />} />
+            <Route path="/truco/anotador" element={<AnotadorTrucoPage />} />
 
-          {/* Mafia routes */}
-          <Route path="/mafia/game" element={<MafiaGamePage />} />
-          <Route path="/mafia/reglas" element={<RulesMafiaPage />} />
-          <Route path="/mafia" element={<MafiaPage />} />
-          <Route path="/mafia/crear-sala" element={<CreateRoomPage />} />
-          <Route path="/room/:paramsRoomId" element={<JoinRoomPage />} />
+            {/* Mafia routes */}
+            <Route path="/mafia/game" element={<MafiaGamePage />} />
+            <Route path="/mafia/reglas" element={<RulesMafiaPage />} />
+            <Route path="/mafia" element={<MafiaPage />} />
+            <Route path="/mafia/crear-sala" element={<CreateRoomPage />} />
+            <Route path="/room/:paramsRoomId" element={<JoinRoomPage />} />
 
-          {/* Usuario routes */}
-          <Route path="/user/info" element={<UserInfo />} />
-          <Route path="/user/settings" element={<ProfileSettings />} />
-        </Routes>
+            {/* Usuario routes */}
+            <Route path="/user/info" element={<UserInfo />} />
+            <Route path="/user/settings" element={<ProfileSettings />} />
+          </Routes>
+        </PlayerProvider>
       </Layout>
     </Router>
   );
