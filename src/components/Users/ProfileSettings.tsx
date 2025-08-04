@@ -135,7 +135,7 @@ export default function ProfileSettings() {
           >
             <motion.div
               className="avatar"
-              variants={pulse}
+              variants={expandFade}
               animate="animate"
               initial="initial"
             >
