@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { User } from '@supabase/supabase-js';
+import { create } from "zustand";
+import { User } from "@supabase/supabase-js";
 
 interface UserStore {
   user: User | null;

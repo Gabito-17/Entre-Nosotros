@@ -23,3 +23,27 @@ export const scoreSchema = z
 
 // Puntaje especial -10 (por ejemplo para el botón -10)
 // export const scoreOrMinusTenSchema = z.union([scoreSchema, z.literal(-10)]);
+
+// Nickname: minimo de 1 y macimo de 16 caracteres
+export const nicknameSchema = z
+  .string()
+  .min(1, "El nickname no puede estar vacío")
+  .max(16, "El nickname no puede tener más de 16 caracteres");
+
+// Avatar: archivo de imagen opcional (JPEG, PNG o WEBP) con un tamaño máximo de 1 MB
+export const avatarSchema = z
+  .custom<File>((file) => file instanceof File, {
+    message: "Debe ser un archivo",
+  })
+  .refine((file) => file.size <= 3 * 1024 * 1024, {
+    message: "El avatar no debe pesar más de 3MB",
+  })
+  .refine(
+    (file) =>
+      ["image/jpeg", "image/png", "image/webp", "image/gif"].includes(
+        file.type
+      ),
+    {
+      message: "Formato inválido (solo JPG, PNG, WEBP, GIF)",
+    }
+  );
