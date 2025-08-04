@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabaseClient.ts";
+import type { Player } from "../stores/usePlayerStore.ts";
 
 export const ensurePlayerCreated = async (): Promise<Player | null> => {
   const {

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface Player {
+export interface Player {
   id: string;
   user_id: string;
   name?: string;
@@ -9,7 +9,7 @@ interface Player {
 
 interface PlayerStore {
   player: Player | null;
-  setPlayer: (player: Player) => void;
+  setPlayer: (player: Player | null) => void;
   updatePlayer: (updates: Partial<Player>) => void;
   clearPlayer: () => void;
 }
