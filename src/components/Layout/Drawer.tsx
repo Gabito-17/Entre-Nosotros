@@ -26,7 +26,7 @@ const sections = [
     title: "Mafia",
     items: [
       { label: "Acerca de", href: "/mafia" },
-      { label: "Jugar", href: "/mafia/anotador" },
+      { label: "Jugar", href: "/mafia/crear-sala" },
       { label: "Reglas", href: "/mafia/reglas" },
     ],
   },
