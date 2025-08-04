@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  isPlayerInRoom,
+  validateRoomJoin,
+} from "../../../services/mafiaServices.ts";
 import { useMafiaGame } from "../../../stores/useGameMafiaStore.ts";
 import { useUserStore } from "../../../stores/useUserStore.ts";
 import { PlayerList } from "../Players/PlayerList.tsx";
 
 export const JoinRoomPage = () => {
-  const { roomId } = useParams<{ roomId: string }>();
+  const { paramsRoomId } = useParams<{ paramsRoomId: string }>();
   const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
   const userId = user?.id;
@@ -13,6 +17,7 @@ export const JoinRoomPage = () => {
   const [playerName, setPlayerName] = useState("");
 
   const {
+    roomId,
     players,
     hostId,
     loading,
@@ -26,22 +31,39 @@ export const JoinRoomPage = () => {
     startGame,
     addLog,
     isInGame,
+    setIsInGame,
   } = useMafiaGame();
 
   // Al montar, configurar sala y suscribirse
   useEffect(() => {
-    if (!roomId) return;
+    if (!paramsRoomId || !user?.id) return;
 
-    setRoomId(roomId);
-    setHostId(null);
+    const init = async () => {
+      const validateRoom = await validateRoomJoin(paramsRoomId);
+      if (!validateRoom.success) {
+        alert(validateRoom.message || "Error al validar la sala");
+        navigate("/");
+        return;
+      }
 
-    const unsubscribe = subscribeToPlayers(roomId);
+      setRoomId(paramsRoomId);
 
-    return () => {
-      unsubscribe();
-      leaveRoom();
+      const playerInRoom = await isPlayerInRoom(paramsRoomId, user.id);
+
+      if (!playerInRoom.success) {
+        setIsInGame(false);
+        return;
+      }
+
+      setIsInGame(true); // Está conectado y dentro de la sala
+
+      setHostId(null);
+      const unsubscribe = subscribeToPlayers(paramsRoomId);
+      return () => unsubscribe();
     };
-  }, [roomId]);
+
+    init();
+  }, [paramsRoomId, user?.id]);
 
   const tryJoin = async () => {
     if (!playerName.trim()) {
@@ -51,6 +73,7 @@ export const JoinRoomPage = () => {
 
     setLoading(true);
     const success = await joinRoom(roomId!, playerName);
+    console.log(success);
 
     if (!success) {
       alert("No se pudo unir a la sala");

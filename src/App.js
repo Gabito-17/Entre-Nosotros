@@ -24,6 +24,7 @@ import RulesTrucoPage from "./components/Truco/pages/TrucoRulesPage.tsx";
 // User
 import { UserInfo } from "./components/Users/UserInfo.tsx";
 import { JoinRoomPage } from "./components/Mafia/pages/JoinRoomPage.tsx";
+import ProfileSettings from "./components/Users/ProfileSettings.tsx";
 
 const App = () => {
   return (
@@ -50,10 +51,11 @@ const App = () => {
           <Route path="/mafia/reglas" element={<RulesMafiaPage />} />
           <Route path="/mafia" element={<MafiaPage />} />
           <Route path="/mafia/crear-sala" element={<CreateRoomPage />} />
-          <Route path="/room/:roomId" element={<JoinRoomPage />} />
+          <Route path="/room/:paramsRoomId" element={<JoinRoomPage />} />
 
           {/* Usuario routes */}
           <Route path="/user/info" element={<UserInfo />} />
+          <Route path="/user/settings" element={<ProfileSettings />} />
         </Routes>
       </Layout>
     </Router>

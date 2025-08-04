@@ -1,16 +1,16 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { supabase } from "../lib/supabaseClient.ts";
-import { joinRoomIfAllowed, startGame } from "../services/mafiaServices.ts";
+import { joinRoom, startGame } from "../services/mafiaServices.ts";
 import { ensurePlayerCreated } from "../services/userServices.ts";
 
-// Roles posibles de los jugadores
+// Tipos de roles posibles en el juego
 type Role = "mafia" | "doctor" | "police" | "civilian";
 
 // Fases del juego
 export type Phase = "lobby" | "night" | "day" | "ended";
 
-// Definición del jugador
+// Representa a un jugador en la sala
 interface Player {
   id: string;
   user_id: string;
@@ -21,19 +21,20 @@ interface Player {
   isSelf?: boolean;
 }
 
-// Definición completa del store Zustand para el juego Mafia
+// Estado del store principal de Mafia
 interface GameMafiaStore {
-  roomId: string | null; // ID de la sala actual
-  players: Player[]; // Lista de jugadores en la sala
-  phase: Phase; // Fase actual del juego
-  myId: string | null; // ID del usuario actual
-  hostId: string | null; // ID del host de la sala
-  isInGame: boolean; // Indica si el usuario ya se unió a la sala
-  loading: boolean; // Estado de carga para UI
-  actions: Record<string, string>; // Acciones de los jugadores: {playerId: targetId}
-  logs: string[]; // Logs o mensajes del juego
+  roomId: string | null;
+  players: Player[];
+  phase: Phase;
+  myId: string | null;
+  hostId: string | null;
+  isInGame: boolean;
+  loading: boolean;
+  actions: Record<string, string>;
+  logs: string[];
+  playerName: string;
 
-  // Setters básicos para actualizar estado
+  // Setters básicos
   setRoomId: (id: string) => void;
   setPlayers: (players: Player[] | ((prev: Player[]) => Player[])) => void;
   setPhase: (phase: Phase) => void;
@@ -41,12 +42,13 @@ interface GameMafiaStore {
   setHostId: (id: string | null) => void;
   setIsInGame: (joined: boolean) => void;
   setLoading: (loading: boolean) => void;
+  setPlayerName: (name: string) => void;
 
-  // Funciones de lógica de juego y negocio
+  // Funciones principales
   fetchMyId: () => Promise<void>;
   joinRoom: (roomId: string, playerName: string) => Promise<boolean>;
   subscribeToPlayers: (roomId: string) => () => void;
-  leaveRoom: () => void;
+  leaveRoom: () => Promise<void>;
   addLog: (msg: string) => void;
   submitAction: (targetId: string) => void;
   nextPhase: () => void;
@@ -54,7 +56,6 @@ interface GameMafiaStore {
   startGame: () => Promise<boolean>;
 }
 
-// Creamos el store con persistencia usando middleware de Zustand
 export const useMafiaGame = create<GameMafiaStore>()(
   persist(
     (set, get) => ({
@@ -67,7 +68,9 @@ export const useMafiaGame = create<GameMafiaStore>()(
       loading: false,
       actions: {},
       logs: [],
+      playerName: "",
 
+      // Setters
       setRoomId: (id) => set({ roomId: id }),
       setPlayers: (updater) =>
         set((state) => ({
@@ -79,8 +82,9 @@ export const useMafiaGame = create<GameMafiaStore>()(
       setHostId: (id) => set({ hostId: id }),
       setIsInGame: (joined) => set({ isInGame: joined }),
       setLoading: (loading) => set({ loading }),
+      setPlayerName: (name: string) => set({ playerName: name }),
 
-      // Obtiene el ID del usuario autenticado desde Supabase
+      // 🔐 Obtiene ID del usuario actual logueado
       fetchMyId: async () => {
         const { data, error } = await supabase.auth.getUser();
         if (data?.user?.id) {
@@ -90,11 +94,7 @@ export const useMafiaGame = create<GameMafiaStore>()(
         }
       },
 
-      /**
-       * Intenta unirse a la sala con nombre dado.
-       * Realiza llamada a backend, carga jugadores iniciales y actualiza estado.
-       * Retorna true si pudo unirse, false si hubo error.
-       */
+      // 🚪 Unirse a una sala
       joinRoom: async (roomId, playerName) => {
         set({ loading: true });
 
@@ -104,8 +104,7 @@ export const useMafiaGame = create<GameMafiaStore>()(
           return false;
         }
 
-        const result = await joinRoomIfAllowed(roomId, player.id, playerName);
-
+        const result = await joinRoom(roomId, player.id, playerName);
         if (!result.success) {
           set({ loading: false });
           return false;
@@ -113,17 +112,18 @@ export const useMafiaGame = create<GameMafiaStore>()(
 
         const myId = player.id;
 
-        const normalizedPlayers = result.players.map((p) => ({
+        // Normalizar jugadores
+        const normalizedPlayers = result.players?.map((p) => ({
           id: p.player_id,
-          user_id: "", // completar si disponible
+          user_id: p.user_id || "", // se puede completar si viene del backend
           name: p.name,
           alive: p.alive,
           isHost: p.is_host,
-          role: undefined,
+          role: p.role,
           isSelf: p.player_id === myId,
         }));
 
-        const isJoined = normalizedPlayers.some((p) => p.id === myId);
+        const isJoined = normalizedPlayers?.some((p) => p.id === myId);
 
         set({
           roomId,
@@ -131,18 +131,14 @@ export const useMafiaGame = create<GameMafiaStore>()(
           myId,
           players: normalizedPlayers,
           isInGame: isJoined,
+          playerName,
           loading: false,
         });
 
         return true;
       },
 
-      /**
-       * Suscribe a cambios en jugadores de la sala en Supabase.
-       * Actualiza el estado local con datos nuevos en tiempo real.
-       * También actualiza si el jugador actual está en la sala para mantener `isInGame`.
-       * Retorna función para desuscribir la suscripción.
-       */
+      // 📡 Subscripción en tiempo real a cambios en jugadores de la sala
       subscribeToPlayers: (roomId) => {
         const channel = supabase
           .channel(`room_players_${roomId}`)
@@ -164,11 +160,11 @@ export const useMafiaGame = create<GameMafiaStore>()(
 
               const normalized = (data || []).map((p) => ({
                 id: p.player_id,
-                user_id: "", // completar si disponible
+                user_id: p.user_id || "",
                 name: p.name,
                 alive: p.alive,
                 isHost: p.is_host,
-                role: undefined,
+                role: p.role,
                 isSelf: p.player_id === myId,
               }));
 
@@ -185,15 +181,13 @@ export const useMafiaGame = create<GameMafiaStore>()(
         };
       },
 
-      /**
-       * Limpia el estado del store, dejando todo en valores iniciales.
-       */
-      leaveRoom: () => {
+      // ❌ Salida limpia de sala
+      leaveRoom: async () => {
+        // Aquí podrías implementar también lógica de salida en Supabase si es necesario.
         set({
           roomId: null,
           players: [],
           phase: "lobby",
-          myId: null,
           hostId: null,
           isInGame: false,
           loading: false,
@@ -202,10 +196,10 @@ export const useMafiaGame = create<GameMafiaStore>()(
         });
       },
 
-      // Agrega un mensaje a los logs
+      // 📝 Agrega un log al historial
       addLog: (msg) => set((state) => ({ logs: [...state.logs, msg] })),
 
-      // Registra una acción del jugador actual contra un target
+      // 🎯 Jugador realiza acción (votar, curar, matar, etc)
       submitAction: (targetId) => {
         const myId = get().myId;
         if (!myId) return;
@@ -214,7 +208,21 @@ export const useMafiaGame = create<GameMafiaStore>()(
         }));
       },
 
-      // Inicia el juego y asigna roles a los jugadores
+      // 🔁 Avanza a la siguiente fase
+      nextPhase: () => {
+        const phase = get().phase;
+        const next =
+          phase === "lobby"
+            ? "night"
+            : phase === "night"
+            ? "day"
+            : phase === "day"
+            ? "night"
+            : "ended";
+        set({ phase: next, actions: {} });
+      },
+
+      // 🚀 Inicia el juego (solo host)
       startGame: async () => {
         const { roomId, myId } = get();
         if (!roomId || !myId) return false;
@@ -230,9 +238,9 @@ export const useMafiaGame = create<GameMafiaStore>()(
           }
 
           set({
-            players: res.players.map((p) => ({
+            players: res.players?.map((p) => ({
               id: p.player_id,
-              user_id: "", // completar si tienes info
+              user_id: p.user_id || "",
               name: p.name,
               alive: p.alive,
               isHost: p.is_host,
@@ -246,27 +254,13 @@ export const useMafiaGame = create<GameMafiaStore>()(
           get().addLog("La partida ha comenzado. Fase noche.");
           return true;
         } catch (error) {
-          console.error("Error en startGame store", error);
+          console.error("Error en startGame", error);
           set({ loading: false });
           return false;
         }
       },
 
-      // Avanza la fase del juego en secuencia
-      nextPhase: () => {
-        const phase = get().phase;
-        const next =
-          phase === "lobby"
-            ? "night"
-            : phase === "night"
-            ? "day"
-            : phase === "day"
-            ? "night"
-            : "ended";
-        set({ phase: next, actions: {} });
-      },
-
-      // Resetea todo el store
+      // 🔄 Reset completo del estado (por ejemplo, al salir del juego)
       reset: () =>
         set({
           roomId: null,
@@ -278,10 +272,11 @@ export const useMafiaGame = create<GameMafiaStore>()(
           loading: false,
           actions: {},
           logs: [],
+          playerName: "",
         }),
     }),
     {
-      name: "mafia-game-store", // clave usada en localStorage
+      name: "mafia-game-store",
       partialize: (state) => ({
         roomId: state.roomId,
         myId: state.myId,
@@ -291,6 +286,7 @@ export const useMafiaGame = create<GameMafiaStore>()(
         phase: state.phase,
         logs: state.logs,
         actions: state.actions,
+        playerName: state.playerName,
       }),
     }
   )

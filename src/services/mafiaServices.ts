@@ -1,10 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "../lib/supabaseClient.ts";
 
-export const createRoomWithHost = async (
+export const createRoom = async (
   userId: string,
-  roomName: string,
-  playerName: string
+  roomName: string
 ): Promise<{ roomId: string } | { error: string }> => {
   // Obtener ID del juego
   const { data: game, error: gameError } = await supabase
@@ -34,37 +33,37 @@ export const createRoomWithHost = async (
     return { error: "No se pudo crear la sala" };
   }
 
-  // Buscamos eljugador existente
-  const { data: player, error: fetchError } = await supabase
-    .from("players")
-    .select("id")
-    .eq("user_id", userId)
-    .single();
-
-  if (fetchError || !player) {
-    console.error(fetchError);
-    return { error: "No se pudo obtener el jugador existente" };
-  }
-  // Relacionar player con room
-  const { error: linkError } = await supabase.from("room_players").insert([
-    {
-      room_id: newRoomId,
-      player_id: player.id,
-      name: playerName,
-      alive: true,
-      is_host: true,
-    },
-  ]);
-
-  if (linkError) {
-    console.error(linkError);
-    return { error: "No se pudo vincular el jugador a la sala" };
-  }
-
   return { roomId: newRoomId };
 };
 
-export const joinRoomIfAllowed = async (
+// Verifica si el jugador está en la sala y si está conectado
+export const isPlayerInRoom = async (
+  roomId: string,
+  playerId: string
+): Promise<{ success: boolean; isConnected?: boolean; message?: string }> => {
+  const { data: roomPlayer, error } = await supabase
+    .from("room_players")
+    .select("player_id, isConnect")
+    .eq("room_id", roomId)
+    .eq("player_id", playerId)
+    .maybeSingle();
+
+  if (error) {
+    return { success: false, message: "Error al consultar la sala o jugador" };
+  }
+
+  if (!roomPlayer) {
+    return { success: false, message: "Jugador no encontrado en la sala" };
+  }
+
+  return {
+    success: true,
+    isConnected: roomPlayer.isConnect,
+  };
+};
+
+// Ingresar jugador a sala (si es posible), y marcar como conectado
+export const joinRoom = async (
   roomId: string,
   playerId: string,
   playerName: string
@@ -74,9 +73,10 @@ export const joinRoomIfAllowed = async (
   room?: any;
   message?: string;
 }> => {
+  // 1. Verificar que la sala existe y esté en preparación y que el jugador no este en otra sala
   const { data: room, error: roomError } = await supabase
     .from("rooms")
-    .select("id, status, host_id") // ✅ Agregado host_id
+    .select("id, status, host_id")
     .eq("id", roomId)
     .single();
 
@@ -88,6 +88,7 @@ export const joinRoomIfAllowed = async (
     return { success: false, message: "La sala ya está en curso o finalizada" };
   }
 
+  // 2. Verificar si el jugador ya está en la sala
   const { data: existingPlayer, error: existingError } = await supabase
     .from("room_players")
     .select("*")
@@ -100,6 +101,7 @@ export const joinRoomIfAllowed = async (
   }
 
   if (!existingPlayer) {
+    // Si no está, lo insertamos como nuevo
     const { error: insertError } = await supabase.from("room_players").insert([
       {
         room_id: roomId,
@@ -108,6 +110,7 @@ export const joinRoomIfAllowed = async (
         joined_at: new Date().toISOString(),
         is_host: false,
         alive: true,
+        isConnect: true, // 👈 importante: lo marcamos como conectado
       },
     ]);
 
@@ -115,17 +118,16 @@ export const joinRoomIfAllowed = async (
       return { success: false, message: "No se pudo unir a la sala" };
     }
   }
-
+  // 3. Obtener todos los jugadores de la sala
   const { data: roomPlayers, error: playersError } = await supabase
     .from("room_players")
-    .select("player_id, name, is_host, alive, joined_at") // 👈 asegúrate de usar player_id
+    .select("player_id, name, is_host, alive, joined_at, isConnect")
     .eq("room_id", roomId)
     .order("joined_at", { ascending: true });
 
   if (playersError) {
     return { success: false, message: "Error al obtener jugadores" };
   }
-  console.log("Jugadores en la sala:", roomPlayers);
 
   return {
     success: true,
@@ -133,9 +135,49 @@ export const joinRoomIfAllowed = async (
     room: {
       id: room.id,
       status: room.status,
-      hostId: room.host_id, // ✅ Renombrado aquí
+      hostId: room.host_id,
     },
   };
+};
+
+// Valida si una sala permite unirse
+export const validateRoomJoin = async (
+  roomId: string
+): Promise<{ success: boolean; message?: string }> => {
+  // Buscar la sala
+  const { data: room, error } = await supabase
+    .from("rooms")
+    .select("status")
+    .eq("id", roomId)
+    .single();
+
+  if (error || !room) {
+    return { success: false, message: "La sala no existe" };
+  }
+
+  if (room.status !== "preparing") {
+    return {
+      success: false,
+      message: "La sala ya está en curso o fue finalizada",
+    };
+  }
+
+  // (Opcional) Validar cantidad máxima de jugadores
+  const { count, error: countError } = await supabase
+    .from("room_players")
+    .select("*", { count: "exact", head: true })
+    .eq("room_id", roomId);
+
+  if (countError) {
+    return { success: false, message: "No se pudo validar la sala" };
+  }
+
+  const MAX_PLAYERS = 10;
+  if (count !== null && count >= MAX_PLAYERS) {
+    return { success: false, message: "La sala está llena" };
+  }
+
+  return { success: true };
 };
 
 //Iniciar Partida
