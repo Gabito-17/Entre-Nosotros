@@ -1,19 +1,23 @@
-import { useEffect } from "react";
-import { supabase } from "../lib/supabaseClient.ts"; // ajustá la ruta si hace falta
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient.ts";
 import { useUserStore } from "../stores/useUserStore.ts";
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const setUser = useUserStore((state) => state.setUser);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadUser = async () => {
+    async function loadUser() {
       const { data, error } = await supabase.auth.getUser();
       if (error) {
-        console.error("Error al obtener el usuario:", error.message);
+        console.error("Error al obtener usuario:", error);
+        setUser(null);
+        setLoading(false);
         return;
       }
       setUser(data.user ?? null);
-    };
+      setLoading(false);
+    }
 
     loadUser();
 
@@ -27,6 +31,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       listener.subscription.unsubscribe();
     };
   }, [setUser]);
+
+  if (loading) {
+    return <div>Cargando usuario...</div>; // O spinner bonito
+  }
 
   return <>{children}</>;
 }

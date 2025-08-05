@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Cropper, { Area } from "react-easy-crop";
+import { useNavigate } from "react-router-dom";
 import {
   expandFade,
   fadeItem,
@@ -15,12 +16,13 @@ import { avatarSchema, nicknameSchema } from "../../validation/validation.ts";
 
 export default function ProfileSettings() {
   const player = usePlayerStore((state) => state.player);
+  const user = useUserStore((state) => state.user);
   const updatePlayer = usePlayerStore((state) => state.updatePlayer);
 
-  const user = useUserStore((state) => state.user);
-  const [nickname, setNickname] = useState("");
-  const [originalNickname, setOriginalNickname] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
+  const navigate = useNavigate();
+
+  const [newNickname, setNewNickname] = useState("");
+  const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -30,18 +32,19 @@ export default function ProfileSettings() {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
+  // Redirigir si no está logueado
   useEffect(() => {
-    if (player) {
-      setNickname(player.name || "");
-      setOriginalNickname(player.name || "");
-      setAvatarUrl(player.avatar_url || "");
-      setPreview(null);
-      setAvatarFile(null);
-      setCrop({ x: 0, y: 0 });
-      setZoom(1);
-      setCroppedAreaPixels(null);
+    if (!user) {
+      navigate("/handle-login");
     }
-  }, [player]);
+  }, [user, navigate]);
+
+  // Liberar URL del preview
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
@@ -63,7 +66,7 @@ export default function ProfileSettings() {
     if (!user) return alert("No estás autenticado");
     if (!player) return alert("No hay jugador cargado");
 
-    const result = nicknameSchema.safeParse(nickname);
+    const result = nicknameSchema.safeParse(newNickname);
     if (!result.success) {
       setNicknameError(result.error.errors[0].message);
       return;
@@ -71,16 +74,16 @@ export default function ProfileSettings() {
 
     setNicknameError(null);
     setLoading(true);
-    let newAvatarUrl = avatarUrl;
-    let fileToUpload = avatarFile; // <-- aquí
+    let fileToUpload = avatarFile;
+    let uploadedAvatarUrl = "";
 
+    // Recortar imagen si hay cambios
     if (avatarFile && preview && croppedAreaPixels) {
       try {
         const croppedBlob = await getCroppedImg(preview, croppedAreaPixels);
-        const croppedFile = new File([croppedBlob], avatarFile.name, {
+        fileToUpload = new File([croppedBlob], avatarFile.name, {
           type: avatarFile.type,
         });
-        fileToUpload = croppedFile; // <-- aquí actualizamos la variable local
       } catch (e) {
         console.error(e);
         alert("❌ Error al recortar imagen");
@@ -88,20 +91,27 @@ export default function ProfileSettings() {
         return;
       }
     }
-    const avatarValidation = avatarSchema.safeParse(fileToUpload);
-    if (!avatarValidation.success) {
-      alert(`❌ ${avatarValidation.error.errors[0].message}`);
-      setLoading(false);
-      return;
-    }
 
+    // Subir imagen a Supabase
     if (fileToUpload) {
+      const avatarValidation = avatarSchema.safeParse(fileToUpload);
+      if (!avatarValidation.success) {
+        alert(`❌ ${avatarValidation.error.errors[0].message}`);
+        setLoading(false);
+        return;
+      }
+
       const fileExt = fileToUpload.name.split(".").pop();
       const fileName = `${player.id}.${fileExt}`;
 
+      // Eliminar anterior
+      await supabase.storage.from("avatars").remove([fileName]);
+
       const { error: uploadError } = await supabase.storage
         .from("avatars")
-        .upload(fileName, fileToUpload, { upsert: true });
+        .upload(fileName, fileToUpload, {
+          upsert: true,
+        });
 
       if (uploadError) {
         console.error(uploadError);
@@ -110,12 +120,23 @@ export default function ProfileSettings() {
         return;
       }
 
-      const { data } = supabase.storage.from("avatars").getPublicUrl(fileName);
-      newAvatarUrl = data.publicUrl;
+      const { data: publicUrlData } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(fileName);
+
+      if (!publicUrlData?.publicUrl) {
+        alert("❌ No se pudo obtener la URL del avatar");
+        setLoading(false);
+        return;
+      }
+
+      uploadedAvatarUrl = `${publicUrlData.publicUrl}?t=${Date.now()}`;
+      setNewAvatarUrl(uploadedAvatarUrl);
     }
 
-    const hasNicknameChanged = nickname !== originalNickname;
-    const hasAvatarChanged = newAvatarUrl !== avatarUrl;
+    const hasNicknameChanged = newNickname && newNickname !== player.name;
+    const hasAvatarChanged =
+      uploadedAvatarUrl && uploadedAvatarUrl !== player.avatar_url;
 
     if (!hasNicknameChanged && !hasAvatarChanged) {
       alert("No hiciste ningún cambio.");
@@ -126,8 +147,8 @@ export default function ProfileSettings() {
     const { error } = await supabase
       .from("players")
       .update({
-        ...(hasNicknameChanged && { name: nickname }),
-        ...(hasAvatarChanged && { avatar_url: newAvatarUrl }),
+        ...(hasNicknameChanged && { name: newNickname }),
+        ...(hasAvatarChanged && { avatar_url: uploadedAvatarUrl }),
       })
       .eq("id", player.id);
 
@@ -137,13 +158,15 @@ export default function ProfileSettings() {
     } else {
       alert("✅ Perfil actualizado 🎉");
       updatePlayer({
-        name: nickname,
-        avatar_url: newAvatarUrl,
+        name: hasNicknameChanged ? newNickname : player.name,
+        avatar_url: hasAvatarChanged ? uploadedAvatarUrl : player.avatar_url,
       });
-      setOriginalNickname(nickname);
-      setAvatarUrl(newAvatarUrl);
+
+      // Resetear estado local
       setAvatarFile(null);
       setPreview(null);
+      setNewAvatarUrl("");
+      setNewNickname("");
       setCrop({ x: 0, y: 0 });
       setZoom(1);
       setCroppedAreaPixels(null);
@@ -182,33 +205,40 @@ export default function ProfileSettings() {
             Ajustes de perfil
           </motion.h2>
 
+          {/* Avatar actual */}
           <motion.div
-            className="flex justify-center"
+            className="flex flex-col items-center"
             variants={fadeItem}
             custom={0.1}
           >
             <motion.div
               className="avatar"
               variants={expandFade}
-              animate="animate"
               initial="initial"
+              animate="animate"
             >
-              <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+              <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
                 <img
-                  src={preview || avatarUrl || "/default-avatar.png"}
+                  src={preview || player.avatar_url || "/default-avatar.png"}
                   alt="Avatar"
                 />
               </div>
             </motion.div>
+            {player.name && (
+              <p className="mt-2 text-lg font-semibold text-center">
+                {player.name}
+              </p>
+            )}
           </motion.div>
 
+          {/* Input nickname */}
           <motion.div className="form-control" variants={fadeItem} custom={0.2}>
-            <label className="label font-semibold">Nickname</label>
+            <label className="label font-semibold">Cambiar usuario</label>
             <input
               type="text"
-              value={nickname}
+              value={newNickname}
               onChange={(e) => {
-                setNickname(e.target.value);
+                setNewNickname(e.target.value);
                 setNicknameError(null);
               }}
               className={`input input-bordered w-full ${
@@ -221,6 +251,7 @@ export default function ProfileSettings() {
             )}
           </motion.div>
 
+          {/* Input avatar */}
           <motion.div className="form-control" variants={fadeItem} custom={0.3}>
             <label className="label font-semibold">Cambiar avatar</label>
             <input
@@ -231,22 +262,23 @@ export default function ProfileSettings() {
               disabled={loading}
             />
             {preview && (
-              <div className="relative w-full h-64">
+              <div className="relative w-full h-64 mt-4">
                 <Cropper
                   image={preview}
                   crop={crop}
                   zoom={zoom}
-                  aspect={1} // 1:1 para avatar cuadrado
+                  aspect={1}
                   onCropChange={setCrop}
                   onZoomChange={setZoom}
-                  onCropComplete={(_, croppedAreaPixels) => {
-                    setCroppedAreaPixels(croppedAreaPixels);
-                  }}
+                  onCropComplete={(_, croppedAreaPixels) =>
+                    setCroppedAreaPixels(croppedAreaPixels)
+                  }
                 />
               </div>
             )}
           </motion.div>
 
+          {/* Botón de guardar */}
           <motion.button
             variants={expandFade}
             initial="hidden"
