@@ -1,95 +1,134 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  isPlayerInRoom,
+  validateRoomJoin,
+} from "../../../services/mafiaServices.ts";
 import { useMafiaGame } from "../../../stores/useGameMafiaStore.ts";
 import { useUserStore } from "../../../stores/useUserStore.ts";
 import { PlayerList } from "../Players/PlayerList.tsx";
 
 export const JoinRoomPage = () => {
-  const { roomId } = useParams<{ roomId: string }>();
+  const { paramsRoomId } = useParams<{ paramsRoomId: string }>();
   const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
+  const userId = user?.id;
 
-  // Estado local para el input del nombre
   const [playerName, setPlayerName] = useState("");
 
-  // Extraemos del store el estado y acciones necesarias
   const {
+    roomId,
     players,
     hostId,
-    hasJoined,
     loading,
     myId,
     setRoomId,
     setHostId,
-    setHasJoined,
     setLoading,
     joinRoom,
     subscribeToPlayers,
     leaveRoom,
+    startGame,
+    addLog,
+    isInGame,
+    setIsInGame,
   } = useMafiaGame();
 
-  const userId = user?.id;
-
-  // Suscripción a cambios en jugadores en tiempo real cuando cambia roomId
+  // Al montar, configurar sala y suscribirse
   useEffect(() => {
-    if (!roomId) return;
+    if (!paramsRoomId || !user?.id) return;
 
-    // Nos suscribimos a actualizaciones de jugadores
-    const unsubscribe = subscribeToPlayers(roomId);
+    const init = async () => {
+      const validateRoom = await validateRoomJoin(paramsRoomId);
+      if (!validateRoom.success) {
+        alert(validateRoom.message || "Error al validar la sala");
+        navigate("/");
+        return;
+      }
 
+<<<<<<< HEAD
 
     
     // Limpiamos la suscripción al desmontar o cambiar roomId
     return () => {
       unsubscribe();
-    };
-  }, [roomId, subscribeToPlayers]);
+=======
+      setRoomId(paramsRoomId);
 
-  // Función para intentar unirse a la sala
+      const playerInRoom = await isPlayerInRoom(paramsRoomId, user.id);
+
+      if (!playerInRoom.success) {
+        setIsInGame(false);
+        return;
+      }
+
+      setIsInGame(true); // Está conectado y dentro de la sala
+
+      setHostId(null);
+      const unsubscribe = subscribeToPlayers(paramsRoomId);
+      return () => unsubscribe();
+>>>>>>> feature/add-mafia
+    };
+
+    init();
+  }, [paramsRoomId, user?.id]);
+
   const tryJoin = async () => {
     if (!playerName.trim()) {
       alert("Debes ingresar un nombre");
       return;
     }
 
-    // Ejecutamos la función joinRoom del store (que ya maneja loading)
+    setLoading(true);
     const success = await joinRoom(roomId!, playerName);
+<<<<<<< HEAD
     
+=======
+    console.log(success);
+
+>>>>>>> feature/add-mafia
     if (!success) {
       alert("No se pudo unir a la sala");
+      setLoading(false);
       navigate("/");
       return;
     }
 
-    // Ya está todo seteado en el store: hasJoined, hostId, players, myId, etc
+    setLoading(false);
   };
 
-  // Handler para salir de la sala y limpiar estado
   const handleLeave = () => {
     leaveRoom();
     navigate("/");
   };
 
-  // Handler para copiar link al portapapeles
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     alert("Enlace copiado al portapapeles");
   };
 
-  // Handler para iniciar el juego (solo host)
-  const handleStartGame = () => {
-    alert("¡Juego iniciado!");
+  const handleStartGame = async () => {
+    setLoading(true);
+    const success = await startGame();
+
+    if (success) {
+      addLog("La partida ha comenzado. Fase noche.");
+      alert("¡Juego iniciado!");
+    } else {
+      alert("No se pudo iniciar la partida.");
+    }
+
+    setLoading(false);
   };
 
-  // Determinar si el usuario es el host
   const isHost = userId === hostId;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
       <div className="max-w-md w-full space-y-4 text-center">
-        {!hasJoined ? (
+        {!isInGame ? (
           <>
-            <h1 className="text-2xl font-bold">Entrar a la sala: {roomId}</h1>
+            <h1 className="text-2xl font-bold">Unirse a la sala: {roomId}</h1>
             <input
               type="text"
               placeholder="Tu nombre"
@@ -108,41 +147,37 @@ export const JoinRoomPage = () => {
         ) : (
           <>
             <h1 className="text-3xl font-bold">Sala: {roomId}</h1>
-            {loading ? (
-              <p>Cargando sala...</p>
-            ) : (
-              <>
-                <p className="text-gray-500">
-                  Jugadores conectados: {players.length}
-                </p>
 
-                <PlayerList players={players} />
+            <p className="text-gray-500">
+              Jugadores conectados: {players.length}
+            </p>
 
-                <div className="flex justify-center space-x-4 pt-4">
-                  <button
-                    onClick={handleCopyLink}
-                    className="px-4 py-2 bg-blue-600 text-white rounded"
-                  >
-                    Copiar enlace
-                  </button>
+            <PlayerList players={players} />
 
-                  <button
-                    onClick={handleLeave}
-                    className="px-4 py-2 bg-red-600 text-white rounded"
-                  >
-                    Salir
-                  </button>
-                </div>
+            <div className="flex justify-center space-x-4 pt-4">
+              <button
+                onClick={handleCopyLink}
+                className="px-4 py-2 bg-blue-600 text-white rounded"
+              >
+                Copiar enlace
+              </button>
 
-                {isHost && (
-                  <button
-                    onClick={handleStartGame}
-                    className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded"
-                  >
-                    Iniciar juego
-                  </button>
-                )}
-              </>
+              <button
+                onClick={handleLeave}
+                className="px-4 py-2 bg-red-600 text-white rounded"
+              >
+                Salir
+              </button>
+            </div>
+
+            {isHost && (
+              <button
+                onClick={handleStartGame}
+                disabled={loading}
+                className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded disabled:opacity-50"
+              >
+                {loading ? "Iniciando partida..." : "Iniciar juego"}
+              </button>
             )}
           </>
         )}

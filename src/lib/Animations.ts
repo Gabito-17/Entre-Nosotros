@@ -1,5 +1,4 @@
-import { Variants } from "framer-motion";
-import { easeInOut } from "framer-motion";
+import { easeInOut, Variants } from "framer-motion";
 
 export const fadeLeft = {
   hidden: { opacity: 0, x: -50 },
@@ -10,7 +9,6 @@ export const fadeRight = {
   hidden: { opacity: 0, x: 50 },
   visible: { opacity: 1, x: 0, transition: { duration: 2 } },
 };
-
 
 export const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -23,9 +21,6 @@ export const fadeUp = {
     },
   },
 };
-
-
-
 
 export const fadeItem: Variants = {
   hidden: { opacity: 0, x: -40 },
@@ -60,19 +55,21 @@ export const staggerContainer = {
   },
 };
 
-export const pulse = {
+// Animación de pulso con loop infinito
+export const pulse: Variants = {
   initial: { scale: 1 },
   animate: {
     scale: [1, 1.1, 1],
     transition: {
       duration: 0.4,
       repeat: Infinity,
-      repeatType: "loop",
+      repeatType: "loop" as const,
     },
   },
 };
 
-export const expandFade = {
+// Fade + Scale in
+export const expandFade: Variants = {
   hidden: { opacity: 0, scale: 0.9 },
   visible: {
     opacity: 1,
@@ -80,7 +77,6 @@ export const expandFade = {
     transition: { duration: 0.3, ease: "easeOut" },
   },
 };
-
 
 // Variants separados para sumar y restar
 export const scoreUp = {
@@ -101,7 +97,7 @@ export const scoreUp = {
       damping: 18,
       mass: 2,
     },
-  }
+  },
 };
 
 export const scoreDown = {

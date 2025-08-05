@@ -1,6 +1,7 @@
 import { supabase } from "../lib/supabaseClient.ts";
+import type { Player } from "../stores/usePlayerStore.ts";
 
-export const ensurePlayerCreated = async (): Promise<{ id: string } | null> => {
+export const ensurePlayerCreated = async (): Promise<Player | null> => {
   const {
     data: { user },
     error: userError,
@@ -11,39 +12,38 @@ export const ensurePlayerCreated = async (): Promise<{ id: string } | null> => {
     return null;
   }
 
-  const { id, email, user_metadata } = user;
+  const { id: userId, email, user_metadata } = user;
 
-  // Buscar si ya existe en "players"
-  try {
-    const { data: existing, error: fetchError } = await supabase
-      .from("players")
-      .select("id")
-      .eq("user_id", id)
-      .single();
+  // Buscar player existente
+  const { data: existing, error: fetchError } = await supabase
+    .from("players")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
 
-    if (existing) {
-      return existing;
-    }
-  } catch (err) {
-    console.error("Falla inesperada al buscar player:", err);
+  if (fetchError && fetchError.code !== "PGRST116") {
+    // Código 116 = Not found (PostgREST)
+    console.error("Error buscando player:", fetchError);
+    return null;
   }
 
-  // Crear nuevo jugador
+  if (existing) return existing;
+
+  // Crear player si no existe
   const { data: inserted, error: insertError } = await supabase
     .from("players")
     .insert([
       {
-        user_id: id,
+        user_id: userId,
         name: user_metadata?.full_name || email,
-        email: email,
         avatar_url: user_metadata?.avatar_url || null,
       },
     ])
-    .select("id, user_id, name, email, avatar_url") // <- asegúrate de incluir "id"
+    .select()
     .single();
 
-  if (insertError || !inserted) {
-    console.error("Error al insertar jugador:", insertError?.message);
+  if (insertError) {
+    console.error("Error al crear player:", insertError);
     return null;
   }
 
