@@ -1,10 +1,7 @@
 "use client";
 
-import { UserGroupIcon } from "@heroicons/react/16/solid";
-import { use } from "framer-motion/client";
 import { useEffect, useState } from "react";
 import { useGameTrucoStore } from "../../../stores/useGameTrucoStore.ts";
-import { number } from "zod/v4";
 
 interface FosforosDisplayProps {
   count: number; // puntaje total (1 a 30)
@@ -13,7 +10,6 @@ interface FosforosDisplayProps {
 export default function FosforosDisplay({ count }: FosforosDisplayProps) {
   const [show, setShow] = useState(false);
   const maxScore = useGameTrucoStore((state) => state.maxScore);
-  
 
   useEffect(() => {
     setShow(false);
@@ -25,7 +21,7 @@ export default function FosforosDisplay({ count }: FosforosDisplayProps) {
   const squareSize = 80;
   const fosforoSize = 45;
 
-    // Determina el tamaño del grupo y posiciones según maxScore
+  // Determina el tamaño del grupo y posiciones según maxScore
   const groupSize = maxScore === 18 ? 3 : 5;
   const montanitaPositions =
     groupSize === 3
@@ -42,10 +38,7 @@ export default function FosforosDisplay({ count }: FosforosDisplayProps) {
           { top: 20, left: 20, rotate: "45deg" },
         ];
 
-  const fullGroups = Math.floor(count / groupSize);
-  const remaining = count % groupSize;
   const totalGroups = Math.ceil(maxScore / groupSize);
-
 
   const renderMontanita = (keyPrefix: string, fosforosCount: number) => (
     <div
@@ -74,18 +67,12 @@ export default function FosforosDisplay({ count }: FosforosDisplayProps) {
     </div>
   );
 
- 
-
   return (
     <div className="flex flex-col items-center">
       {Array.from({ length: totalGroups }).map((_, i) => {
         // Calcula cuántos fósforos tiene este grupo
         const start = i * groupSize;
-        const end = start + groupSize;
-        const fosforosEnGrupo = Math.max(
-          0,
-          Math.min(count - start, groupSize)
-        );
+        const fosforosEnGrupo = Math.max(0, Math.min(count - start, groupSize));
         // Si no hay fósforos en este grupo, dibuja vacío
         if (fosforosEnGrupo <= 0) {
           return (
