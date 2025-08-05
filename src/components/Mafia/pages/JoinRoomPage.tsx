@@ -21,7 +21,6 @@ export const JoinRoomPage = () => {
     players,
     hostId,
     loading,
-    myId,
     setRoomId,
     setHostId,
     setLoading,
