@@ -3,7 +3,7 @@
 import { PencilIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { scoreDown, scoreUp } from "../../../lib/Animations.ts";
+import { scoreDown, scoreUp, smoothFadeUp } from "../../../lib/Animations.ts";
 import { useGameTrucoStore } from "../../../stores/useGameTrucoStore.ts";
 import { usePlaySound } from "../../../stores/usePlaySound.ts";
 import { ScoreDisplay } from "../displays/ScoreDisplay.tsx";
@@ -110,12 +110,15 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
             onClick={() => handleChange(-1)}
             className="absolute top-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
           >
-            <span
+            <motion.span
               className="font-bold user-select-none text-5xl"
               style={{ color: "rgba(220, 38, 38, 0.25)" }}
+              variants={smoothFadeUp}
+              initial="hidden"
+              animate="visible"
             >
               Malas
-            </span>
+            </motion.span>
           </div>
         )}
 
@@ -125,12 +128,15 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
             onClick={() => handleChange(1)}
             className="absolute bottom-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
           >
-            <span
+            <motion.span
               className="font-bold user-select-none text-5xl"
               style={{ color: "rgba(34, 197, 94, 0.25)" }}
+              variants={smoothFadeUp}
+              initial="hidden"
+              animate="visible"
             >
               Buenas
-            </span>
+            </motion.span>
           </div>
         )}
 
