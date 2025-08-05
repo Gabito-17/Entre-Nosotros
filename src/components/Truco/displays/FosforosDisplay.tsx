@@ -38,7 +38,7 @@ export default function FosforosDisplay({ count }: FosforosDisplayProps) {
           { top: 20, left: 20, rotate: "45deg" },
         ];
 
-  const totalGroups = Math.ceil(maxScore / groupSize);
+  const totalVisualGroups = 6;
 
   const renderMontanita = (keyPrefix: string, fosforosCount: number) => (
     <div
@@ -69,11 +69,10 @@ export default function FosforosDisplay({ count }: FosforosDisplayProps) {
 
   return (
     <div className="flex flex-col items-center">
-      {Array.from({ length: totalGroups }).map((_, i) => {
-        // Calcula cuántos fósforos tiene este grupo
+      {Array.from({ length: totalVisualGroups }).map((_, i) => {
         const start = i * groupSize;
         const fosforosEnGrupo = Math.max(0, Math.min(count - start, groupSize));
-        // Si no hay fósforos en este grupo, dibuja vacío
+
         if (fosforosEnGrupo <= 0) {
           return (
             <div
@@ -82,7 +81,7 @@ export default function FosforosDisplay({ count }: FosforosDisplayProps) {
             />
           );
         }
-        // Si hay fósforos, dibuja el grupo con la cantidad correspondiente
+
         return renderMontanita(`grupo-${i}`, fosforosEnGrupo);
       })}
     </div>
