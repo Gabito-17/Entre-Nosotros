@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { createRoom } from "../../../services/mafiaServices.ts";
 import { useMafiaGame } from "../../../stores/useGameMafiaStore.ts";
 import { useUserStore } from "../../../stores/useUserStore.ts";
@@ -52,7 +53,7 @@ export const CreateRoomPage = () => {
   // Navegar a la sala creada
   const goToRoom = () => {
     if (roomId) {
-      navigate(`/room/${roomId}`);
+      return <Navigate to={roomUrl} replace />;
     }
   };
 
