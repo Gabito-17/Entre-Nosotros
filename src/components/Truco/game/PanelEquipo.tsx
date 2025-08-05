@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useGameTrucoStore } from "../../../stores/useGameTrucoStore.ts";
-import { ScoreDisplay } from "../displays/ScoreDisplay.tsx";
-import { motion, AnimatePresence } from "framer-motion";
-import { scoreUp, scoreDown } from "../../../lib/Animations.ts";
 import { PencilIcon } from "@heroicons/react/24/outline";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { scoreDown, scoreUp } from "../../../lib/Animations.ts";
+import { useGameTrucoStore } from "../../../stores/useGameTrucoStore.ts";
 import { usePlaySound } from "../../../stores/usePlaySound.ts";
+import { ScoreDisplay } from "../displays/ScoreDisplay.tsx";
 
 interface PanelEquipoProps {
   equipo: "equipo1" | "equipo2";
@@ -21,6 +21,7 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
   );
   const setNombre = useGameTrucoStore((state) => state.setNombre);
   const addPoint = useGameTrucoStore((state) => state.addPoint);
+  const maxScore = useGameTrucoStore((state) => state.maxScore);
 
   const [editing, setEditing] = useState(false);
   const [tempNombre, setTempNombre] = useState(nombre);
@@ -104,30 +105,34 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
 
       <div className="relative flex flex-col items-center justify-center p-6 min-h-[200px] w-full">
         {/* Área "Malas" */}
-        <div
-          onClick={() => handleChange(-1)}
-          className="absolute top-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
-        >
-          <span
-            className="font-bold user-select-none text-5xl"
-            style={{ color: "rgba(220, 38, 38, 0.25)" }}
+        {maxScore !== 15 && (
+          <div
+            onClick={() => handleChange(-1)}
+            className="absolute top-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
           >
-            Malas
-          </span>
-        </div>
+            <span
+              className="font-bold user-select-none text-5xl"
+              style={{ color: "rgba(220, 38, 38, 0.25)" }}
+            >
+              Malas
+            </span>
+          </div>
+        )}
 
         {/* Área "Buenas" */}
-        <div
-          onClick={() => handleChange(1)}
-          className="absolute bottom-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
-        >
-          <span
-            className="font-bold user-select-none text-5xl"
-            style={{ color: "rgba(34, 197, 94, 0.25)" }}
+        {maxScore !== 15 && (
+          <div
+            onClick={() => handleChange(1)}
+            className="absolute bottom-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
           >
-            Buenas
-          </span>
-        </div>
+            <span
+              className="font-bold user-select-none text-5xl"
+              style={{ color: "rgba(34, 197, 94, 0.25)" }}
+            >
+              Buenas
+            </span>
+          </div>
+        )}
 
         {/* Línea divisoria */}
         <div
