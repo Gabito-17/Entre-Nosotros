@@ -25,7 +25,7 @@ import RulesTrucoPage from "./components/Truco/pages/TrucoRulesPage.tsx";
 import { JoinRoomPage } from "./components/Mafia/pages/JoinRoomPage.tsx";
 import ProfileSettings from "./components/Users/ProfileSettings.tsx";
 import { UserInfo } from "./components/Users/UserInfo.tsx";
-import { PlayerProvider } from "./hooks/PlayerProvider.tsx";
+//import { PlayerProvider } from "./hooks/PlayerProvider.tsx";
 import { UserProvider } from "./hooks/UserProvider.tsx";
 
 const App = () => {
@@ -33,7 +33,6 @@ const App = () => {
     <Router>
       <Layout>
         <UserProvider>
-          <PlayerProvider>
             <Routes>
               {/* Home and general */}
               <Route path="/" element={<HomePage />} />
@@ -64,7 +63,6 @@ const App = () => {
               <Route path="/perfil/info" element={<UserInfo />} />
               <Route path="/perfil/settings" element={<ProfileSettings />} />
             </Routes>
-          </PlayerProvider>
         </UserProvider>
       </Layout>
     </Router>
