@@ -46,13 +46,6 @@ export const JoinRoomPage = () => {
         return;
       }
 
-<<<<<<< HEAD
-
-    
-    // Limpiamos la suscripción al desmontar o cambiar roomId
-    return () => {
-      unsubscribe();
-=======
       setRoomId(paramsRoomId);
 
       const playerInRoom = await isPlayerInRoom(paramsRoomId, user.id);
@@ -67,7 +60,6 @@ export const JoinRoomPage = () => {
       setHostId(null);
       const unsubscribe = subscribeToPlayers(paramsRoomId);
       return () => unsubscribe();
->>>>>>> feature/add-mafia
     };
 
     init();
@@ -81,12 +73,8 @@ export const JoinRoomPage = () => {
 
     setLoading(true);
     const success = await joinRoom(roomId!, playerName);
-<<<<<<< HEAD
-    
-=======
     console.log(success);
 
->>>>>>> feature/add-mafia
     if (!success) {
       alert("No se pudo unir a la sala");
       setLoading(false);
