@@ -6,8 +6,7 @@ import HomePage from "./pages/HomePage.tsx";
 import SuggestionsPage from "./pages/SuggestionPage.tsx";
 
 // Mafia
-import { CreateRoomPage } from "./components/Mafia/pages/CreateRoomPage.tsx";
-import MafiaGamePage from "./components/Mafia/pages/MafiaGamePage.tsx";
+import CreateRoomPage from "./components/Mafia/pages/CreateRoomPage.tsx";
 import MafiaPage from "./components/Mafia/pages/MafiaPage.tsx";
 import RulesMafiaPage from "./components/Mafia/pages/RulesMafiaPage.tsx";
 
@@ -22,10 +21,11 @@ import TrucoPage from "./components/Truco/pages/TrucoPage.tsx";
 import RulesTrucoPage from "./components/Truco/pages/TrucoRulesPage.tsx";
 
 // User
-import { JoinRoomPage } from "./components/Mafia/pages/JoinRoomPage.tsx";
 import ProfileSettings from "./components/Users/ProfileSettings.tsx";
 import { UserInfo } from "./components/Users/UserInfo.tsx";
 //import { PlayerProvider } from "./hooks/PlayerProvider.tsx";
+import RoomPage from "./components/Mafia/pages/RoomPage.tsx";
+import { PlayerProvider } from "./hooks/PlayerProvider.tsx";
 import { UserProvider } from "./hooks/UserProvider.tsx";
 
 const App = () => {
@@ -33,6 +33,7 @@ const App = () => {
     <Router>
       <Layout>
         <UserProvider>
+          <PlayerProvider>
             <Routes>
               {/* Home and general */}
               <Route path="/" element={<HomePage />} />
@@ -53,16 +54,16 @@ const App = () => {
               <Route path="/truco/anotador" element={<AnotadorTrucoPage />} />
 
               {/* Mafia routes */}
-              <Route path="/mafia/game" element={<MafiaGamePage />} />
               <Route path="/mafia/reglas" element={<RulesMafiaPage />} />
               <Route path="/mafia" element={<MafiaPage />} />
               <Route path="/mafia/crear-sala" element={<CreateRoomPage />} />
-              <Route path="/room/:paramsRoomId" element={<JoinRoomPage />} />
+              <Route path="/mafia/sala/:roomId" element={<RoomPage />} />
 
               {/* Usuario routes */}
               <Route path="/perfil/info" element={<UserInfo />} />
               <Route path="/perfil/settings" element={<ProfileSettings />} />
             </Routes>
+          </PlayerProvider>
         </UserProvider>
       </Layout>
     </Router>

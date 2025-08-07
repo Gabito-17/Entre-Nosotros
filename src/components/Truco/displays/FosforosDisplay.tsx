@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useGameTrucoStore } from "../../../stores/useGameTrucoStore.ts";
 
 interface FosforosDisplayProps {
@@ -8,14 +7,7 @@ interface FosforosDisplayProps {
 }
 
 export default function FosforosDisplay({ count }: FosforosDisplayProps) {
-  const [show, setShow] = useState(false);
   const maxScore = useGameTrucoStore((state) => state.maxScore);
-
-  useEffect(() => {
-    setShow(false);
-    const timeout = setTimeout(() => setShow(true), 200);
-    return () => clearTimeout(timeout);
-  }, [count]);
 
   const fosforoImg = "/assets/truco/fosforo.svg"; // ⚠️ Ruta relativa desde public/
   const squareSize = 80;

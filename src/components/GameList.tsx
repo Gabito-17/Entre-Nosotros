@@ -16,14 +16,14 @@ const games: Game[] = [
     name: "Truco Argentino",
     description: "Clásico juego de cartas con señas, mentiras y equipos.",
     image: "/assets/images/truco.png",
-    href: "/truco/anotador",
+    href: "/truco",
     icon: <PuzzlePieceIcon className="w-8 h-8" />,
   },
   {
     name: "Britney",
     description: "Juego original de estrategia, memoria y diversión.",
     image: "/assets/images/i5.webp",
-    href: "/britney/anotador",
+    href: "/britney",
     icon: <BoltIcon className="w-8 h-8" />,
   },
 ];
