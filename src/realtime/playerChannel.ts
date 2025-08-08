@@ -1,8 +1,16 @@
+import { RealtimeChannel } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabaseClient.ts";
 import { getRoomPlayers } from "../services/roomServices.ts";
 import { useRoomStore } from "../stores/useRoomStore.ts";
 
+let activeChannels: Record<string, RealtimeChannel> = {};
+
 export const subscribeToRoomPlayers = (roomId: string) => {
+  if (activeChannels[roomId]) {
+    console.log("🔁 Ya existe una subscripción activa para:", roomId);
+    return activeChannels[roomId];
+  }
+
   console.log("📡 Subscribing to room_players for room:", roomId);
 
   const { setPlayers } = useRoomStore.getState();
@@ -28,5 +36,16 @@ export const subscribeToRoomPlayers = (roomId: string) => {
     )
     .subscribe();
 
+  activeChannels[roomId] = channel;
+
   return channel;
+};
+
+export const unsubscribeFromRoomPlayers = (roomId: string) => {
+  const channel = activeChannels[roomId];
+  if (channel) {
+    console.log("🧹 Desuscribiendo de:", roomId);
+    channel.unsubscribe();
+    delete activeChannels[roomId];
+  }
 };

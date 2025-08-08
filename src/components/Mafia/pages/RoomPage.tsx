@@ -16,11 +16,21 @@ export default function RoomPage() {
   const [roomNotFound, setRoomNotFound] = useState(false);
 
   useEffect(() => {
-    if (!roomId || !player) return;
+    if (!roomId) return;
 
-    let playerChannel: ReturnType<typeof subscribeToRoomPlayers> | null = null;
+    let hasJoined = false;
+    let playerChannel: any;
 
-    const setupRoom = async () => {
+    const waitForPlayer = async () => {
+      while (!usePlayerStore.getState().player) {
+        await new Promise((r) => setTimeout(r, 100));
+      }
+
+      const player = usePlayerStore.getState().player;
+
+      if (!player || hasJoined) return;
+      hasJoined = true;
+
       const room = await joinRoom(roomId);
       if (!room) {
         setRoomNotFound(true);
@@ -28,18 +38,23 @@ export default function RoomPage() {
       }
 
       setRoom(room);
+
       const players = await getRoomPlayers(roomId);
-      setPlayers(players);
+      if (players) setPlayers(players);
 
       playerChannel = subscribeToRoomPlayers(roomId);
     };
 
-    setupRoom().finally(() => setLoading(false));
+    waitForPlayer().finally(() => setLoading(false));
 
     return () => {
-      playerChannel?.unsubscribe();
+      if (playerChannel) {
+        playerChannel.unsubscribe().then(() => {
+          console.log("🧹 Canal desuscripto correctamente");
+        });
+      }
     };
-  }, [roomId, player]);
+  }, [roomId]);
 
   if (loading) return <div className="text-center mt-10">Cargando sala...</div>;
   if (roomNotFound)
