@@ -1,7 +1,7 @@
 // src/services/roomService.ts
 import { supabase } from "../lib/supabaseClient.ts";
 import { Player, usePlayerStore } from "../stores/usePlayerStore.ts";
-import { Room } from "../stores/useRoomStore.ts";
+import { Room, RoomPlayer } from "../stores/useRoomStore.ts";
 import { ensurePlayerCreated } from "./userServices.ts";
 
 // Crea una nueva sala para un juego dado
@@ -130,10 +130,14 @@ export const joinRoom = async (roomId: string): Promise<Room | null> => {
   return room;
 };
 
+type ActiveRoomEntry = {
+  room_id: string;
+  rooms: { status: "waiting" | "playing" | "finished" };
+};
+
 // Busca la sala activa para el jugador actual
 export const fetchActiveRoom = async () => {
   const player = usePlayerStore.getState().player;
-
   if (!player) return null;
 
   const { data, error } = await supabase
@@ -146,19 +150,22 @@ export const fetchActiveRoom = async () => {
     return null;
   }
 
-  const match = data.find((entry) =>
-    ["waiting", "playing"].includes(entry.rooms?.status)
+  const typedData: ActiveRoomEntry[] = (data ?? []).map((d) => ({
+    room_id: d.room_id,
+    rooms: Array.isArray(d.rooms) ? d.rooms[0] : d.rooms,
+  }));
+
+  const match = typedData.find((entry) =>
+    ["waiting", "playing"].includes(entry.rooms.status)
   );
 
-  if (match) {
-    return match.room_id;
-  }
-
-  return null;
+  return match?.room_id ?? null;
 };
 
 // Obtiene todos los jugadores de una sala
-export const getRoomPlayers = async (roomId: string) => {
+export const getRoomPlayers = async (
+  roomId: string
+): Promise<RoomPlayer[] | null> => {
   const { data, error } = await supabase
     .from("room_players")
     .select("player_id, is_host, is_connect, alive, players(name, avatar_url)")
@@ -169,5 +176,18 @@ export const getRoomPlayers = async (roomId: string) => {
     return null;
   }
 
-  return data;
+  const players: RoomPlayer[] = data.map((p) => {
+    const playerInfo = Array.isArray(p.players) ? p.players[0] : p.players;
+
+    return {
+      player_id: p.player_id,
+      is_host: p.is_host,
+      is_connect: p.is_connect,
+      alive: p.alive,
+      name: playerInfo?.name ?? "Sin nombre",
+      avatar_url: playerInfo?.avatar_url ?? undefined,
+    };
+  });
+
+  return players;
 };

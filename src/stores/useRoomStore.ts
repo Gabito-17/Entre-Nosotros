@@ -1,24 +1,22 @@
 import { create } from "zustand";
 
-export interface Room {
-  id: string;
-  host_id: string;
-  created_at?: string;
-  game_id: string;
-  status?: "waiting" | "playing" | "finished";
-  phase?: string;
-}
+export type RoomStatus = "waiting" | "playing" | "finished";
 
-export interface RoomPlayer {
+export type Room = {
+  id: string;
+  code: string;
+  status: RoomStatus;
+  created_at: string;
+};
+
+export type RoomPlayer = {
   player_id: string;
+  name: string;
+  avatar_url?: string;
   is_host: boolean;
   is_connect: boolean;
   alive: boolean;
-  players: {
-    name: string;
-    avatar_url?: string;
-  };
-}
+};
 
 interface RoomStore {
   room: Room | null;

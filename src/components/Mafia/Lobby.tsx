@@ -12,7 +12,7 @@ export default function Lobby() {
 
   const [loading, setLoading] = useState(false);
 
-  const isHost = playersInRoom.find(
+  const isHost = playersInRoom.some(
     (p) => p.player_id === player?.id && p.is_host
   );
 
@@ -35,11 +35,16 @@ export default function Lobby() {
   const handleLeaveRoom = async () => {
     if (!room || !player) return;
 
-    await supabase
+    const { error } = await supabase
       .from("room_players")
       .delete()
       .eq("room_id", room.id)
       .eq("player_id", player.id);
+
+    if (error) {
+      console.error("Error leaving room:", error.message);
+      return;
+    }
 
     navigate("/mafia");
   };
@@ -58,11 +63,11 @@ export default function Lobby() {
           >
             <div className="avatar">
               <div className="w-12 rounded-full">
-                <img src={p.players.avatar_url || "/default-avatar.png"} />
+                <img src={p.avatar_url || "/default-avatar.png"} alt={p.name} />
               </div>
             </div>
             <div className="flex-1">
-              <p className="font-medium">{p.players.name}</p>
+              <p className="font-medium">{p.name}</p>
               <p className="text-sm text-gray-500">
                 {p.is_host ? "Host" : p.alive ? "Jugador" : "Muerto"}
               </p>
