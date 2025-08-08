@@ -1,64 +1,44 @@
+// src/components/pages/RoomPage.tsx
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "../../../lib/supabaseClient.ts";
-import { joinRoom } from "../../../services/roomServices.ts";
+import { QrBox } from "../../../components/QrBox.tsx";
+import { subscribeToRoomPlayers } from "../../../realtime/playerChannel.ts";
+import { getRoomPlayers, joinRoom } from "../../../services/roomServices.ts";
 import { usePlayerStore } from "../../../stores/usePlayerStore.ts";
 import { useRoomStore } from "../../../stores/useRoomStore.ts";
 import Lobby from "../Lobby.tsx";
 
 export default function RoomPage() {
   const { roomId } = useParams<{ roomId: string }>();
-
   const player = usePlayerStore((state) => state.player);
-  const setRoom = useRoomStore((state) => state.setRoom);
-  const [roomPlayers, setRoomPlayers] = useState([]);
+  const { setRoom, setPlayers } = useRoomStore();
   const [loading, setLoading] = useState(true);
   const [roomNotFound, setRoomNotFound] = useState(false);
 
   useEffect(() => {
-    const enterRoom = async () => {
-      if (!roomId || !player) return; // Esperamos a tener player
+    if (!roomId || !player) return;
 
+    let playerChannel: ReturnType<typeof subscribeToRoomPlayers> | null = null;
+
+    const setupRoom = async () => {
       const room = await joinRoom(roomId);
-
       if (!room) {
         setRoomNotFound(true);
-        setLoading(false);
         return;
       }
 
       setRoom(room);
+      const players = await getRoomPlayers(roomId);
+      setPlayers(players);
 
-      // Obtener todos los jugadores de la sala
-      const { data: players, error: playersError } = await supabase
-        .from("room_players")
-        .select(
-          `
-        player_id,
-        is_host,
-        is_connect,
-        alive,
-        players (
-          name,
-          avatar_url
-        )
-      `
-        )
-        .eq("room_id", roomId);
-
-      if (playersError) {
-        console.error("Error cargando jugadores:", playersError);
-        return;
-      }
-
-      setRoomPlayers(players);
-      setLoading(false);
+      playerChannel = subscribeToRoomPlayers(roomId);
     };
 
-    // Solo llamamos si player ya existe
-    if (player) {
-      enterRoom();
-    }
+    setupRoom().finally(() => setLoading(false));
+
+    return () => {
+      playerChannel?.unsubscribe();
+    };
   }, [roomId, player]);
 
   if (loading) return <div className="text-center mt-10">Cargando sala...</div>;
@@ -67,9 +47,12 @@ export default function RoomPage() {
       <div className="text-center mt-10 text-red-500">Sala no encontrada</div>
     );
 
+  const fullUrl = `http://192.168.18.3:3000/mafia/sala/${roomId}`;
+
   return (
     <div className="max-w-3xl mx-auto mt-10">
-      <Lobby players={roomPlayers} />
+      <QrBox value={fullUrl} />
+      <Lobby />
     </div>
   );
 }

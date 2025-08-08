@@ -63,7 +63,6 @@ export const createRoom = async ({
   };
 };
 
-
 //Permite al jugador unirse a una sala existente
 // Retorna la sala si se unió correctamente, o null si hubo un error
 // Asegura que el jugador esté creado antes de unirse
@@ -131,6 +130,7 @@ export const joinRoom = async (roomId: string): Promise<Room | null> => {
   return room;
 };
 
+// Busca la sala activa para el jugador actual
 export const fetchActiveRoom = async () => {
   const player = usePlayerStore.getState().player;
 
@@ -147,7 +147,7 @@ export const fetchActiveRoom = async () => {
   }
 
   const match = data.find((entry) =>
-    ["waiting", "playing"].includes(entry.rooms.status)
+    ["waiting", "playing"].includes(entry.rooms?.status)
   );
 
   if (match) {
@@ -155,4 +155,19 @@ export const fetchActiveRoom = async () => {
   }
 
   return null;
+};
+
+// Obtiene todos los jugadores de una sala
+export const getRoomPlayers = async (roomId: string) => {
+  const { data, error } = await supabase
+    .from("room_players")
+    .select("player_id, is_host, is_connect, alive, players(name, avatar_url)")
+    .eq("room_id", roomId);
+
+  if (error) {
+    console.error("Error al traer jugadores:", error);
+    return null;
+  }
+
+  return data;
 };

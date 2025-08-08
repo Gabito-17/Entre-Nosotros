@@ -1,87 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabaseClient.ts";
 import { usePlayerStore } from "../../stores/usePlayerStore.ts";
-import { RoomPlayer, useRoomStore } from "../../stores/useRoomStore.ts";
+import { useRoomStore } from "../../stores/useRoomStore.ts";
 
 export default function Lobby() {
   const navigate = useNavigate();
   const room = useRoomStore((state) => state.room);
-  const setRoom = useRoomStore((state) => state.setRoom);
+  const playersInRoom = useRoomStore((state) => state.players);
   const player = usePlayerStore((state) => state.player);
 
-  const [playersInRoom, setPlayersInRoom] = useState<RoomPlayer[]>([]);
   const [loading, setLoading] = useState(false);
 
   const isHost = playersInRoom.find(
     (p) => p.player_id === player?.id && p.is_host
   );
-
-  // 👉 Obtiene los jugadores actuales en la sala
-  const fetchRoomPlayers = async () => {
-    if (!room) return;
-    const { data, error } = await supabase
-      .from("room_players")
-      .select(
-        "player_id, is_host, is_connect, alive, players(name, avatar_url)"
-      )
-      .eq("room_id", room.id);
-
-    if (!error && data) {
-      setPlayersInRoom(data);
-    } else {
-      console.error("Error fetching room players:", error?.message);
-    }
-  };
-
-  // 👉 Escucha cambios en room_players y en la room (para detectar el inicio del juego)
-  useEffect(() => {
-    if (!room?.id) return;
-
-    fetchRoomPlayers();
-
-    const roomPlayersChannel = supabase
-      .channel("room-players-lobby")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "room_players",
-          filter: `room_id=eq.${room.id}`,
-        },
-        fetchRoomPlayers
-      )
-      .subscribe();
-
-    const roomStatusChannel = supabase
-      .channel("room-status-listener")
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "rooms",
-          filter: `id=eq.${room.id}`,
-        },
-        async (payload) => {
-          const newStatus = payload.new.status;
-          const newPhase = payload.new.phase;
-
-          setRoom({
-            ...room,
-            status: newStatus,
-            phase: newPhase,
-          });
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(roomPlayersChannel);
-      supabase.removeChannel(roomStatusChannel);
-    };
-  }, [room?.id]);
 
   const handleStartGame = async () => {
     if (!room) return;

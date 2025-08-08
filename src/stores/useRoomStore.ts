@@ -22,15 +22,18 @@ export interface RoomPlayer {
 
 interface RoomStore {
   room: Room | null;
+  players: RoomPlayer[];
   setRoom: (room: Room | null) => void;
+  setPlayers: (players: RoomPlayer[]) => void;
   updateRoom: (updates: Partial<Room>) => void;
   clearRoom: () => void;
 }
 
 export const useRoomStore = create<RoomStore>((set) => ({
   room: null,
-
+  players: [],
   setRoom: (room) => set({ room }),
+  setPlayers: (players) => set({ players }),
 
   updateRoom: (updates) =>
     set((state) => ({
