@@ -1,3 +1,4 @@
+import { HeartIcon, KeyIcon, UserMinusIcon } from "@heroicons/react/24/solid"; // o /outline si preferís el estilo outline
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabaseClient.ts";
@@ -12,7 +13,6 @@ export default function Lobby() {
   const player = usePlayerStore((state) => state.player);
 
   const [loading, setLoading] = useState(false);
-  const [isQrOpen, setIsQrOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState("");
 
   const isHost = playersInRoom.some(
@@ -61,57 +61,92 @@ export default function Lobby() {
     });
   };
 
+  const getInitials = (name: string) =>
+    name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+
   return (
     <div className="max-w-xl mx-auto mt-10 p-6 bg-base-100 rounded-lg shadow-lg">
       <header className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-center flex-1">
-          Sala: <span className="text-primary">{room?.id.slice(0, 6)}</span>
+          Sala: <span className="text-primary">{room?.name}</span>
         </h2>
-        <button
+        <label
+          htmlFor="qr-modal"
           className="btn btn-sm btn-outline"
-          onClick={() => setIsQrOpen(true)}
           title="Mostrar QR"
-          aria-label="Mostrar código QR"
         >
           QR
-        </button>
+        </label>
       </header>
 
       <section className="mb-6">
         <h3 className="text-xl font-semibold mb-4">Jugadores en la sala</h3>
         <div className="flex flex-col gap-3 max-h-96 overflow-y-auto">
-          {playersInRoom.map((p) => (
-            <div
-              key={p.player_id}
-              className="flex items-center gap-4 bg-base-200 p-4 rounded-lg shadow-sm"
-            >
-              <div className="avatar">
-                <div className="w-14 h-14 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                  <img
-                    src={p.avatar_url || "/default-avatar.png"}
-                    alt={p.name}
-                  />
-                </div>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{p.name}</p>
-                <p className="text-sm text-gray-500">
-                  {p.is_host ? "Host" : p.alive ? "Jugador" : "Muerto"}
-                </p>
-              </div>
-              <div
-                className={`badge ${
-                  p.is_connect ? "badge-success" : "badge-error"
-                }`}
-                title={p.is_connect ? "Conectado" : "Desconectado"}
-              >
-                {p.is_connect ? "Conectado" : "Desconectado"}
-              </div>
-            </div>
-          ))}
           {playersInRoom.length === 0 && (
             <p className="text-center text-gray-500">No hay jugadores aún</p>
           )}
+
+          {playersInRoom.map((p) => (
+            <div
+              key={p.player_id}
+              className={`card w-full transition-all duration-200 border ${
+                p.is_connect
+                  ? "border-green-200 bg-green-50/50"
+                  : "border-gray-200 bg-gray-50/50 opacity-75"
+              } ${!p.alive ? "border-red-200 bg-red-50/50" : ""}`}
+            >
+              <div className="card-body p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="relative">
+                    <div className="avatar relative w-12 h-12 rounded-full overflow-hidden bg-primary/10 text-primary flex items-center justify-center font-semibold text-lg select-none">
+                      {p.avatar_url ? (
+                        <img src={p.avatar_url} alt={p.name} />
+                      ) : (
+                        getInitials(p.name)
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-2">
+                      <h3 className="font-semibold text-sm truncate">
+                        {p.name}
+                      </h3>
+                      {p.is_host && (
+                        <span className="badge badge-sm badge-primary text-xs flex items-center">
+                          <KeyIcon className="h-3 w-3 mr-1" />
+                          Host
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center space-x-2 mt-1">
+                      <span
+                        className={`badge badge-sm ${
+                          p.alive ? "badge-primary" : "badge-error"
+                        } text-xs flex items-center`}
+                      >
+                        {p.alive ? (
+                          <>
+                            <HeartIcon className="h-3 w-3 mr-1" /> Alive
+                          </>
+                        ) : (
+                          <>
+                            <UserMinusIcon className="h-3 w-3 mr-1" />{" "}
+                            Eliminated
+                          </>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -132,18 +167,12 @@ export default function Lobby() {
       </footer>
 
       {/* Modal para QR */}
-      <input
-        type="checkbox"
-        id="qr-modal"
-        className="modal-toggle"
-        checked={isQrOpen}
-      />
+      <input type="checkbox" id="qr-modal" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box relative max-w-sm">
           <label
             htmlFor="qr-modal"
             className="btn btn-sm btn-circle absolute right-2 top-2"
-            onClick={() => setIsQrOpen(false)}
             aria-label="Cerrar modal"
           >
             ✕
@@ -168,3 +197,4 @@ export default function Lobby() {
     </div>
   );
 }
+  
