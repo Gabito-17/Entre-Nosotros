@@ -1,17 +1,17 @@
 "use client";
 
 import {
+  ArrowRightEndOnRectangleIcon,
+  ArrowRightStartOnRectangleIcon,
+  ChevronDownIcon,
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
   XMarkIcon,
-  ArrowRightStartOnRectangleIcon,
-  ArrowRightEndOnRectangleIcon,
-  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-import ThemeSelector from "../ThemeSelector.tsx";
-import { useSoundStore } from "../../stores/useSoundStore.ts";
-import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabaseClient.ts";
+import { useSoundStore } from "../../stores/useSoundStore.ts";
+import { useUserStore } from "../../stores/useUserStore.ts";
+import ThemeSelector from "../ThemeSelector.tsx";
 
 const sections = [
   {
@@ -44,29 +44,10 @@ export default function Drawer() {
   const isMuted = useSoundStore((state) => state.isMuted);
   const toggleMute = useSoundStore((state) => state.toggleMute);
 
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
   const [openSection, setOpenSection] = useState<string | null>(null);
-
-  // Supabase auth
-  useEffect(() => {
-    const loadUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user || null);
-      setLoading(false);
-    };
-    loadUser();
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user || null);
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
 
   const handleLogin = async () => {
     const currentPath = window.location.pathname + window.location.search;
@@ -95,9 +76,7 @@ export default function Drawer() {
           </label>
 
           <div className="flex items-center gap-3">
-            {loading ? (
-              <div className="animate-pulse h-8 w-20 bg-base-300 rounded-md" />
-            ) : user ? (
+            {user ? (
               <div className="flex items-center gap-2">
                 <img
                   src={user.user_metadata?.avatar_url || "/default-avatar.png"}
@@ -130,7 +109,7 @@ export default function Drawer() {
           {sections.map(({ title, items }) => {
             const isOpen = openSection === title;
             return (
-              <div key={title}  >
+              <div key={title}>
                 <button
                   className="w-full flex justify-between items-center px-3 py-2 text-left font-semibold hover:bg-base-300 transition"
                   onClick={() => setOpenSection(isOpen ? null : title)}
@@ -160,7 +139,9 @@ export default function Drawer() {
             );
           })}
         </nav>
+
         <ThemeSelector />
+
         {/* MUTE */}
         <div className="border-t px-4 py-3">
           <button

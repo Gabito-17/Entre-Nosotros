@@ -1,3 +1,4 @@
+// hooks/UserProvider.tsx
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient.ts";
 import { useUserStore } from "../stores/useUserStore.ts";
@@ -7,17 +8,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadUser() {
+    const loadUser = async () => {
       const { data, error } = await supabase.auth.getUser();
       if (error) {
-        console.error("Error al obtener usuario:", error);
+        console.error("Error al obtener usuario:", error.message);
         setUser(null);
-        setLoading(false);
-        return;
+      } else {
+        setUser(data.user ?? null);
       }
-      setUser(data.user ?? null);
       setLoading(false);
-    }
+    };
 
     loadUser();
 
@@ -28,12 +28,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     );
 
     return () => {
-      listener.subscription.unsubscribe();
+      listener?.subscription?.unsubscribe();
     };
   }, [setUser]);
 
   if (loading) {
-    return <div>Cargando usuario...</div>; // O spinner bonito
+    return <div>Cargando usuario...</div>; // o spinner
   }
 
   return <>{children}</>;
