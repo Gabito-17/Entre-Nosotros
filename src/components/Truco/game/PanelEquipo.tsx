@@ -105,40 +105,37 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
 
       <div className="relative flex flex-col items-center justify-center p-6 min-h-[200px] w-full">
         {/* Área "Malas" */}
-        {maxScore !== 15 && (
-          <div
-            onClick={() => handleChange(-1)}
-            className="absolute top-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
+        <div
+          onClick={() => handleChange(-1)}
+          className="absolute top-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
+        >
+          <motion.span
+            className="font-bold user-select-none text-5xl"
+            style={{ color: "rgba(220, 38, 38, 0.25)" }}
+            variants={smoothFadeUp}
+            initial="hidden"
+            animate="visible"
           >
-            <motion.span
-              className="font-bold user-select-none text-5xl"
-              style={{ color: "rgba(220, 38, 38, 0.25)" }}
-              variants={smoothFadeUp}
-              initial="hidden"
-              animate="visible"
-            >
-              Malas
-            </motion.span>
-          </div>
-        )}
+            {maxScore === 15 ? "A 15" : "Malas"}
+          </motion.span>
+        </div>
 
         {/* Área "Buenas" */}
-        {maxScore !== 15 && (
-          <div
-            onClick={() => handleChange(1)}
-            className="absolute bottom-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
+
+        <div
+          onClick={() => handleChange(1)}
+          className="absolute bottom-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
+        >
+          <motion.span
+            className="font-bold user-select-none text-5xl"
+            style={{ color: "rgba(34, 197, 94, 0.25)" }}
+            variants={smoothFadeUp}
+            initial="hidden"
+            animate="visible"
           >
-            <motion.span
-              className="font-bold user-select-none text-5xl"
-              style={{ color: "rgba(34, 197, 94, 0.25)" }}
-              variants={smoothFadeUp}
-              initial="hidden"
-              animate="visible"
-            >
-              Buenas
-            </motion.span>
-          </div>
-        )}
+            {maxScore === 15 ? "A 15" : "Buenas"}
+          </motion.span>
+        </div>
 
         {/* Línea divisoria */}
         <div
