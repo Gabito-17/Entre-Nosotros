@@ -12,6 +12,7 @@ import { supabase } from "../../lib/supabaseClient.ts";
 import { useSoundStore } from "../../stores/useSoundStore.ts";
 import { useUserStore } from "../../stores/useUserStore.ts";
 import ThemeSelector from "../ThemeSelector.tsx";
+import { useState } from "react";
 
 const sections = [
   {
