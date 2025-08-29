@@ -1,4 +1,3 @@
-// hooks/UserProvider.tsx
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient.ts";
 import { useUserStore } from "../stores/useUserStore.ts";
