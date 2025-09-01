@@ -1,16 +1,12 @@
 "use client";
 
 import {
-  ArrowRightEndOnRectangleIcon,
-  ArrowRightStartOnRectangleIcon,
   ChevronDownIcon,
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { supabase } from "../../lib/supabaseClient.ts";
 import { useSoundStore } from "../../stores/useSoundStore.ts";
-import { useUserStore } from "../../stores/useUserStore.ts";
 import ThemeSelector from "../ThemeSelector.tsx";
 import { useState } from "react";
 
@@ -44,22 +40,7 @@ const sections = [
 export default function Drawer() {
   const isMuted = useSoundStore((state) => state.isMuted);
   const toggleMute = useSoundStore((state) => state.toggleMute);
-
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
-
   const [openSection, setOpenSection] = useState<string | null>(null);
-
-  const handleLogin = async () => {
-    const currentPath = window.location.pathname + window.location.search;
-    localStorage.setItem("redirectAfterLogin", currentPath);
-    await supabase.auth.signInWithOAuth({ provider: "google" });
-  };
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-  };
 
   return (
     <>
@@ -75,34 +56,6 @@ export default function Drawer() {
           >
             <XMarkIcon className="h-5 w-5" />
           </label>
-
-          <div className="flex items-center gap-3">
-            {user ? (
-              <div className="flex items-center gap-2">
-                <img
-                  src={user.user_metadata?.avatar_url || "/default-avatar.png"}
-                  alt="Avatar"
-                  className="w-8 h-8 rounded-full object-cover border"
-                />
-                <button
-                  onClick={handleLogout}
-                  className="btn btn-ghost btn-sm tooltip tooltip-bottom"
-                  data-tip="Cerrar sesión"
-                >
-                  <ArrowRightEndOnRectangleIcon className="w-5 h-5" />
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={handleLogin}
-                className="btn btn-primary btn-sm flex items-center gap-2 tooltip tooltip-bottom"
-                data-tip="Iniciar sesión con Google"
-              >
-                <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
-                <span className="hidden sm:inline">Login</span>
-              </button>
-            )}
-          </div>
         </div>
 
         {/* NAVIGATION (ACCORDION) */}
