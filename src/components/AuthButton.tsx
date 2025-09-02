@@ -22,20 +22,18 @@ export default function AuthButton() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  /** --- Helpers --- **/
-  const fetchAndSetPlayer = async () => {
-    const { data } = await supabase.auth.getUser();
-    if (!data.user) {
-      setPlayer(null);
-    } else {
-      const newPlayer = await ensurePlayerCreated();
-      setPlayer(newPlayer);
-    }
-    setLoading(false);
-  };
-
   /** --- Effects --- **/
   useEffect(() => {
+    const fetchAndSetPlayer = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) {
+        setPlayer(null);
+      } else {
+        const newPlayer = await ensurePlayerCreated();
+        setPlayer(newPlayer);
+      }
+      setLoading(false);
+    };
     fetchAndSetPlayer();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
