@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 const names = [
-  "Ger", "Facu", "Coco", "Flopy", "Dai", "Juany", "Guille", "Lauro", "Patricia"
+  "Alexis", "Ger", "Facu", "Coco", "Flopy", "Dai", "Juany", "Guille", "Lauro", "Patricia", "Panchito",
 ];
 
 const Acknowledgements = () => {
