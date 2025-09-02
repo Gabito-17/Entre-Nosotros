@@ -31,14 +31,22 @@ const Introduction = () => {
         </h1>
         <p className="text-lg leading-relaxed mb-6 text-base-content">
           Esta plataforma nació como un proyecto entre amigos con la idea de
-          crear una herramienta digital para mejorar la experiencia de nuestras
-          partidas con juegos de cartas. Queremos lograr que jugar a juegos
-          sociales raros nuestros sea más sencillo.
+          hacer más divertidas y fáciles de organizar nuestras partidas de
+          juegos de cartas. Queremos que jugar a esos juegos sociales, incluso
+          los más raros o inventados por nosotros, sea simple y entretenido para
+          todos.
+        </p>
+        <p className="text-lg leading-relaxed mb-6 text-base-content">
+          Acá vas a encontrar anotadores digitales, reglas explicadas de
+          distintos juegos y herramientas pensadas para que tus partidas sean
+          más ordenadas y divertidas, tanto si jugás en familia como con amigos.
         </p>
         <p className="text-lg leading-relaxed text-base-content">
-          Acá vas a encontrar anotadores digitales, reglas de distintos juegos y
-          utilidades diseñadas para que tus partidas sean más organizadas, tanto
-          si estás en una reunión familiar como entre amigos.
+          Lo que empezó como una solución casera para no perder la cuenta de los
+          puntos terminó creciendo en un proyecto que busca acercar a más
+          personas a los juegos mencionados. Nuestro objetivo es que cada
+          partida sea más disfrutable, dejando de lado las complicaciones y
+          enfocándonos en lo más importante: divertirse juntos.
         </p>
       </motion.div>
     </section>
