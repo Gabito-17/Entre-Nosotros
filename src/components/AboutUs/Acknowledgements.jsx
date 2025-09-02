@@ -1,7 +1,17 @@
 import { motion } from "framer-motion";
 
 const names = [
-  "Alexis", "Ger", "Facu", "Coco", "Flopy", "Dai", "Juany", "Guille", "Lauro", "Patricia", "Panchito",
+  "Alexis",
+  "Coco",
+  "Dai",
+  "Facu",
+  "Flopy",
+  "Guille",
+  "Ger",
+  "Juany",
+  "Lauro",
+  "Patricia",
+  "Panchito",
 ];
 
 const Acknowledgements = () => {
@@ -10,7 +20,10 @@ const Acknowledgements = () => {
   return (
     <motion.div
       className="mx-auto text-center py-8 px-6"
-      variants={{ initial: {}, animate: { transition: { staggerChildren: 0.3 } } }}
+      variants={{
+        initial: {},
+        animate: { transition: { staggerChildren: 0.3 } },
+      }}
       initial="initial"
       animate="animate"
     >
@@ -19,13 +32,18 @@ const Acknowledgements = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0, transition: { duration: 0.6 } }}
       >
-        Agradezco a la valiosa comunidad de los pibes por probar la aplicación y brindar su valiosa retroalimentación... ídolos.
+        Agradezco a la valiosa comunidad de los pibes por probar la aplicación y
+        brindar su valiosa retroalimentación... ídolos.
       </motion.p>
 
       <motion.p
         className="text-3xl font-bold mb-8 text-primary"
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.3 } }}
+        animate={{
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.6, delay: 0.3 },
+        }}
       >
         Muchas Gracias
       </motion.p>
@@ -37,7 +55,7 @@ const Acknowledgements = () => {
           transition={{
             duration: duplicatedNames.length * 1.5, // Ajusta la velocidad
             ease: "linear",
-            repeat: Infinity
+            repeat: Infinity,
           }}
           style={{ width: "max-content" }}
         >
