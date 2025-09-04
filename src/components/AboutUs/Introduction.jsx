@@ -5,18 +5,22 @@ const Introduction = () => {
   return (
     <section className="py-8 text-center lg:text-left lg:flex lg:space-x-12 px-6 container mx-auto">
       <motion.div
-        className="lg:w-1/2 lg:mt-0"
+        className="lg:w-1/2 lg:mt-0 flex justify-center items-center"
         variants={fadeLeft}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
-        <img
-          src={"/assets/svgs/undraw_having-fun_kkeu.svg"}
-          alt="Ilustración de juegos sociales"
-          className="rounded-lg shadow-lg w-full"
-          loading="lazy"
-        />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="rounded-md shadow-lg w-full h-128 object-cover"
+          onLoadedMetadata={(e) => (e.currentTarget.playbackRate = 1.5)}
+        >
+          <source src="/assets/videos/couple-playing.mp4" type="video/mp4" />
+        </video>
       </motion.div>
 
       <motion.div
