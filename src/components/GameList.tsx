@@ -1,7 +1,7 @@
+import { BoltIcon, PuzzlePieceIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
-import { fadeContainer, fadeItem } from "../lib/Animations.ts";
-import { PuzzlePieceIcon, BoltIcon } from "@heroicons/react/24/outline";
 import { FC, JSX } from "react";
+import { fadeContainer, fadeItem } from "../lib/Animations.ts";
 
 interface Game {
   name: string;
@@ -32,7 +32,7 @@ const GameList: FC = () => {
   return (
     <div className="text-base-content py-16 bg-base-100">
       <h2 className="text-3xl font-bold mb-10 text-center text-primary">
-        Juegos disponibles
+        Anotadores disponibles
       </h2>
 
       <motion.div
