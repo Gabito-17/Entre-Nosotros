@@ -19,7 +19,7 @@ const Introduction = () => {
           className="rounded-md shadow-lg w-full h-128 object-cover"
           onLoadedMetadata={(e) => (e.currentTarget.playbackRate = 1.5)}
         >
-          <source src="/assets/videos/couple-playing.mp4" type="video/mp4" />
+          <source src="/assets/videos/couple-playing.webm" type="video/webm" />
         </video>
       </motion.div>
 
