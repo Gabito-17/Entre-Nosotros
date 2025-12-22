@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
-import TrucoIntroduction from "../TrucoIntroduction.tsx"; // Asegurate de que esté bien el path
-import FeaturesTruco from "../TrucoFeatures.tsx";         // Asegurate de que esté bien el path
-import Footer from "../../Layout/Footer.jsx";
+import TrucoIntroduction from "../TrucoIntroduction.tsx"; 
+import FeaturesTruco from "../TrucoFeatures.tsx";  
 import { fadeUp } from "../../../lib/Animations.ts";
 
 const TrucoPage = () => {
@@ -39,8 +38,6 @@ const TrucoPage = () => {
           Utilizar anotador
         </a>
       </motion.section>
-
-      <Footer />
     </div>
   );
 };

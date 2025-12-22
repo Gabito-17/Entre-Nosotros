@@ -1,5 +1,4 @@
 import RulesSteps from "../MafiaRulesSteps.tsx";
-import Footer from "../../Layout/Footer.jsx";
 
 const RulesPage = () => {
   return (
@@ -12,7 +11,6 @@ const RulesPage = () => {
         </a>
       </section>
 
-      <Footer />
     </div>
   );
 };

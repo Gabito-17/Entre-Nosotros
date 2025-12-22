@@ -1,5 +1,5 @@
 import RulesSteps from "../BritneyRulesSteps.jsx";
-import Footer from "../../Layout/Footer.jsx";
+
 
 const RulesPage = () => {
   return (
@@ -12,7 +12,6 @@ const RulesPage = () => {
         </a>
       </section>
 
-      <Footer />
     </div>
   );
 };

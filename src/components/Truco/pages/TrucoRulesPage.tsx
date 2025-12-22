@@ -1,4 +1,4 @@
-import Footer from "../../Layout/Footer";
+
 import RulesTruco from "../TrucoRulesSteps.tsx";
 
 const RulesPage = () => {
@@ -13,7 +13,6 @@ const RulesPage = () => {
         </a>
       </section>
 
-      <Footer />
     </div>
   );
 };

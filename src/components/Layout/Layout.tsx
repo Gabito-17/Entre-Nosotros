@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-import { useSoundStore } from "../../stores/useSoundStore.ts"; // ajustá el path si es distinto
+import { useSoundStore } from "../../stores/useSoundStore.ts";
 import ConfirmationModal from "../Modals/ConfirmationModal.tsx";
 import Drawer from "./Drawer.tsx";
 import NavBar from "./NavBar.tsx";
+import Footer from "./Footer.jsx";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const setMuted = useSoundStore((state) => state.setMuted);
@@ -16,23 +17,37 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="drawer drawer-end">
-      {/* Checkbox que controla el drawer */}
+      {/* Control del drawer */}
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
 
-      {/* Contenido principal */}
-      <div className="drawer-content flex flex-col min-h-svh">
+      {/* App */}
+      <div className="flex min-h-screen flex-col bg-base-100">
         <NavBar />
 
-        {/* Contenedor centrado con límite de ancho */}
-        <main className="flex-1 pt-16 px-4">
-          <div className="w-full max-w-screen-xl mx-auto">{children}</div>
+        {/* MAIN */}
+        <main className="flex-1">
+          {/* Container global */}
+          <div className="
+            mx-auto
+            w-full
+            max-w-7xl
+            px-4
+            sm:px-6
+            lg:px-8
+            py-6
+          ">
+            {children}
+          </div>
         </main>
+        <Footer/>
       </div>
 
-      {/* Drawer lateral */}
+      {/* Drawer */}
       <div className="drawer-side z-[60]">
+        <label htmlFor="my-drawer" className="drawer-overlay" />
         <Drawer />
       </div>
+
       <ConfirmationModal />
     </div>
   );

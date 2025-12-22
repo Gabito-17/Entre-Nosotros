@@ -1,7 +1,6 @@
 import Acknowledgements from "../components/AboutUs/Acknowledgements.jsx";
 import Introduction from "../components/AboutUs/Introduction.jsx";
 import GameList from "../components/GameList.tsx";
-import Footer from "../components/Layout/Footer.jsx";
 import { motion } from "framer-motion";
 import { fadeUp } from "../lib/Animations.ts";
 
@@ -40,7 +39,6 @@ const HomePage = () => {
         <Acknowledgements />
       </motion.section>
 
-      <Footer />
     </div>
   );
 };

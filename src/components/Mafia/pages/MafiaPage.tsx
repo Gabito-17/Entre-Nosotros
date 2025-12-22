@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import Features from "../MafiaFeatures.tsx";
 import Introduction from "../MafiaIntroduction.tsx";
-import Footer from "../../Layout/Footer.jsx";
 import { fadeUp } from "../../../lib/Animations.ts";
 
 const MafiaPage = () => {
@@ -38,7 +37,6 @@ const MafiaPage = () => {
         </a>
       </motion.section>
 
-      <Footer />
     </div>
   );
 };
