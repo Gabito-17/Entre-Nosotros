@@ -21,7 +21,7 @@ const SuggestionsPage = () => {
   };
 
   return (
-    <div className="py-6 px-4 pt-24">
+    <div className="py-6 px-4">
       <div className="mx-auto text-center">
         <h3 className="footer-title text-primary">Déjanos tu sugerencia</h3>
         <p className="text-sm mb-4">

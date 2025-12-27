@@ -74,9 +74,17 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-base-100  shadow-lg overflow-hidden max-w-sm mx-auto">
+    <div className="flex flex-col bg-base-100 shadow-lg overflow-hidden w-full min-w-0">
       {/* Header con nombre y edición */}
-      <div className="bg-primary text-primary-content px-6 py-3 flex items-center justify-between uppercase font-extrabold tracking-wider text-lg">
+      <div
+        className="
+  bg-primary text-primary-content
+ px-3 py-1.5 sm:px-6 sm:py-3
+  flex items-center justify-between
+  uppercase font-extrabold
+  text-sm sm:text-lg
+"
+      >
         {editing ? (
           <input
             ref={inputRef}
@@ -103,14 +111,14 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
         )}
       </div>
 
-      <div className="relative flex flex-col items-center justify-center p-6 min-h-[200px] w-full">
+      <div className="relative flex flex-col items-center justify-center p-3 sm:p-6 min-h-[140px] sm:min-h-[200px] w-full">
         {/* Área "Malas" */}
         <div
           onClick={() => handleChange(-1)}
           className="absolute top-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
         >
           <motion.span
-            className="font-bold user-select-none text-5xl"
+            className="font-bold select-none text-2xl sm:text-5xl"
             style={{ color: "rgba(220, 38, 38, 0.25)" }}
             variants={smoothFadeUp}
             initial="hidden"
@@ -127,7 +135,7 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
           className="absolute bottom-0 left-0 right-0 h-1/2 flex items-center justify-center pointer-events-auto cursor-pointer select-none"
         >
           <motion.span
-            className="font-bold user-select-none text-5xl"
+            className="font-bold select-none text-3xl sm:text-5xl"
             style={{ color: "rgba(34, 197, 94, 0.25)" }}
             variants={smoothFadeUp}
             initial="hidden"
@@ -150,11 +158,11 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
       </div>
 
       {/* Número grande con animación */}
-      <div className="flex justify-center my-2 px-4 select-none">
+      <div className="flex justify-center my-1 px-2 select-none">
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
             key={animationKey}
-            className={`text-7xl font-extrabold ${color} drop-shadow-lg`}
+            className={`text-5xl sm:text-7xl font-extrabold ${color} drop-shadow-lg`}
             variants={isIncrement ? scoreUp : scoreDown}
             initial="initial"
             animate="animate"
@@ -166,16 +174,16 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
       </div>
 
       {/* Botones */}
-      <div className="flex justify-center gap-6 mb-6 px-4">
+      <div className="flex justify-center gap-4 mb-3 px-2">
         <button
-          className="btn btn-md btn-outline btn-secondary w-20"
+          className="btn btn-sm sm:btn-md btn-outline btn-secondary w-14 sm:w-20"
           onClick={() => handleChange(-1)}
           aria-label="Restar punto"
         >
           −
         </button>
         <button
-          className="btn btn-md btn-outline btn-primary w-20"
+          className="btn btn-sm sm:btn-md btn-outline btn-primary w-14 sm:w-20"
           onClick={() => handleChange(1)}
           aria-label="Sumar punto"
         >

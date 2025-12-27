@@ -24,7 +24,7 @@ export default function TanteadorTruco() {
   }, [winner, openGameOverModal]);
 
   return (
-    <div>
+    <div className="w-full flex flex-col gap-4 min-w-0">
       {/* La barra de configuración */}
       <motion.div
         className="relative z-40"
@@ -36,9 +36,9 @@ export default function TanteadorTruco() {
       </motion.div>
 
       {/* Paneles con scores */}
-      <div className="flex flex-row divide-x divide-neutral">
+      <div className="grid grid-cols-2 divide-x divide-neutral w-full min-w-0">
         <motion.div
-          className="flex-1"
+          className="w-full min-w-0"
           variants={fadeLeft}
           initial="hidden"
           animate="visible"
@@ -47,7 +47,7 @@ export default function TanteadorTruco() {
         </motion.div>
 
         <motion.div
-          className="flex-1"
+          className="w-full min-w-0"
           variants={fadeRight}
           initial="hidden"
           animate="visible"

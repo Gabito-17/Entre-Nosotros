@@ -21,13 +21,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
 
       {/* App */}
-      <div className="flex min-h-screen flex-col bg-base-100">
+      <div className="flex min-h-svh flex-col bg-base-100">
         <NavBar />
 
         {/* MAIN */}
-        <main className="flex-1">
+        <main className="flex-1 pt-16">
           {/* Container global */}
-          <div className="
+          <div
+            className="
             mx-auto
             w-full
             max-w-7xl
@@ -35,15 +36,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             sm:px-6
             lg:px-8
             py-6
-          ">
+            
+          "
+          >
             {children}
           </div>
         </main>
-        <Footer/>
+        <Footer />
       </div>
 
       {/* Drawer */}
-      <div className="drawer-side z-[60]">
+      <div className="drawer-side z-[60] overflow-x-hidden">
         <label htmlFor="my-drawer" className="drawer-overlay" />
         <Drawer />
       </div>

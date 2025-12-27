@@ -27,14 +27,14 @@ const sections = [
       { label: "Reglas", href: "/truco/reglas" },
     ],
   },
-  {
-    title: "Mafia",
-    items: [
-      { label: "Acerca de", href: "/mafia" },
-      { label: "Jugar", href: "/mafia/crear-sala" },
-      { label: "Reglas", href: "/mafia/reglas" },
-    ],
-  },
+  // {
+  //   title: "Mafia",
+  //   items: [
+  //     { label: "Acerca de", href: "/mafia" },
+  //     { label: "Jugar", href: "/mafia/crear-sala" },
+  //     { label: "Reglas", href: "/mafia/reglas" },
+  //   ],
+  // },
 ];
 
 export default function Drawer() {
@@ -46,7 +46,21 @@ export default function Drawer() {
     <>
       <label htmlFor="my-drawer" className="drawer-overlay cursor-pointer" />
 
-      <aside className="w-64 bg-base-200 min-h-svh flex flex-col justify-between shadow-lg overflow-y-auto">
+      <aside
+        className="
+    bg-base-200
+    min-h-svh
+    flex
+    flex-col
+    justify-between
+    shadow-lg
+    overflow-y-auto
+
+    w-full
+    sm:w-80
+    max-w-full
+  "
+      >
         {/* HEADER */}
         <div className="flex items-center justify-between border-b px-4 py-3">
           <label

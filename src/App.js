@@ -31,8 +31,6 @@ import { UserProvider } from "./hooks/UserProvider.tsx";
 const App = () => {
   return (
     <Router>
-      <UserProvider>
-        <PlayerProvider>
           <Layout>
             <Routes>
               {/* Home and general */}
@@ -64,8 +62,6 @@ const App = () => {
               <Route path="/perfil/settings" element={<ProfileSettings />} />
             </Routes>
           </Layout>
-        </PlayerProvider>
-      </UserProvider>
     </Router>
   );
 };

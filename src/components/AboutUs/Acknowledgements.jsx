@@ -15,58 +15,39 @@ const names = [
 ];
 
 const Acknowledgements = () => {
-  const duplicatedNames = [...names, ...names]; // Duplicamos para efecto continuo
+  const duplicatedNames = [...names, ...names];
 
   return (
-    <motion.div
-      className="mx-auto text-center py-8 px-6"
-      variants={{
-        initial: {},
-        animate: { transition: { staggerChildren: 0.3 } },
-      }}
-      initial="initial"
-      animate="animate"
-    >
-      <motion.p
-        className="text-lg mb-6"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0, transition: { duration: 0.6 } }}
-      >
+    <section className="mx-auto text-center py-8 px-6 overflow-x-hidden">
+      <p className="text-lg mb-6">
         Agradezco a la valiosa comunidad de los pibes por probar la aplicación y
         brindar su valiosa retroalimentación... ídolos.
-      </motion.p>
+      </p>
 
-      <motion.p
-        className="text-3xl font-bold mb-8 text-primary"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.6, delay: 0.3 },
-        }}
-      >
+      <p className="text-3xl font-bold mb-8 text-primary">
         Muchas Gracias
-      </motion.p>
+      </p>
 
-      <div className="relative overflow-hidden w-full max-w-2xl mx-auto rounded-box shadow-inner p-4">
+      {/* CONTENEDOR */}
+      <div className="relative w-full max-w-2xl mx-auto overflow-hidden rounded-box shadow-inner p-6">
+        {/* CARRIL */}
         <motion.div
-          className="flex gap-8 whitespace-nowrap text-lg font-semibold text-primary"
+          className="absolute left-0 top-1/2 -translate-y-1/2 flex gap-8 whitespace-nowrap text-lg font-semibold text-primary"
           animate={{ x: ["0%", "-50%"] }}
           transition={{
-            duration: duplicatedNames.length * 1.5, // Ajusta la velocidad
+            duration: duplicatedNames.length * 1.5,
             ease: "linear",
             repeat: Infinity,
           }}
-          style={{ width: "max-content" }}
         >
           {duplicatedNames.map((name, idx) => (
-            <span key={idx} className="px-4">
+            <span key={idx} className="px-4 shrink-0">
               {name}
             </span>
           ))}
         </motion.div>
       </div>
-    </motion.div>
+    </section>
   );
 };
 
