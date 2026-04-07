@@ -25,9 +25,10 @@
 
 🎮 Soporte para el juego Truco Argentino
 
-- Puntaje máximo configurable (15, 30)
+- Puntaje máximo configurable (15, 18, 30)
 - Estilos visuales clásicos como representación de fósforos
 - Manejo de equipos, nombres personalizados y rotación de mano
+(Un agradecimiento especial para panchito por su aporte en el anotador a 18 puntos).
 
 📦 Zustand como gestor de estado
 
@@ -87,7 +88,7 @@ npm run start
 
 - Agregar nuevos tipos de juegos compatibles
 - Mejora de experiencia en móviles
-- Temas visuales personalizables
+- Finalizar "La Mafia"
 
 ---
 
