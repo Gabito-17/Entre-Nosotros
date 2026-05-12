@@ -26,7 +26,7 @@ interface GameTrucoState {
 export const useGameTrucoStore = create<GameTrucoState>()(
   persist(
     (set, get) => ({
-      maxScore: 15,
+      maxScore: 30,
       pointStyle: "fosforo",
       score1: 0,
       score2: 0,
