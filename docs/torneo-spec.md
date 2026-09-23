@@ -52,6 +52,7 @@ torneo para juntadas con muchos equipos, que reutiliza ese anotador.
 - Ronda: número, partidos[], equipoLibre?
 - Partido: id, equipoA, equipoB, tantosA, tantosB, ganador, estado
 
-## Decisiones pendientes
-- ¿Eliminación con partido por el 3er puesto o se define por tantos?
-- ¿Liga a una sola vuelta o ida y vuelta?
+## Decisiones tomadas
+- **3er puesto (eliminación):** sin partido extra. Lo define la mejor diferencia
+  de tantos entre los perdedores de semis.
+- **Liga:** a una sola vuelta.
