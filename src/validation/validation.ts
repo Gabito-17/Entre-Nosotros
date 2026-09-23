@@ -47,3 +47,22 @@ export const avatarSchema = z
       message: "Formato inválido (solo JPG, PNG, WEBP, GIF)",
     }
   );
+
+// Torneo: nombre del torneo, de cada equipo y de sus participantes
+export const torneoNombreSchema = z
+  .string()
+  .trim()
+  .min(2, "El nombre del torneo debe tener al menos 2 caracteres")
+  .max(30, "El nombre del torneo es demasiado largo");
+
+export const equipoNombreSchema = z
+  .string()
+  .trim()
+  .min(1, "El equipo necesita un nombre")
+  .max(20, "El nombre del equipo es demasiado largo");
+
+export const participanteNombreSchema = z
+  .string()
+  .trim()
+  .min(1, "El nombre del participante no puede estar vacío")
+  .max(20, "El nombre del participante es demasiado largo");
