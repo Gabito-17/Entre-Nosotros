@@ -1,4 +1,5 @@
 import { esPotenciaDe2, siguientePotenciaDe2 } from "./llaveEliminacion.ts";
+import { claveCruce } from "./partido.ts";
 import { Cruce, Ronda } from "./tipos.ts";
 
 // Todas las validaciones devuelven un mensaje de error, o null si está todo bien.
@@ -18,8 +19,6 @@ const validarBasico = (cruces: Cruce[], equipoIds: string[]): string | null => {
   }
   return null;
 };
-
-const claveCruce = (a: string | null, b: string | null) => [a, b].sort().join("|");
 
 // Ronda manual de liga: además, ningún cruce puede repetirse (liga a una vuelta).
 export const validarRondaManualLiga = (

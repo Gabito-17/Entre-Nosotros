@@ -36,6 +36,9 @@ export const validarResultado = (
   }
   const max = Math.max(tantosA, tantosB);
   const min = Math.min(tantosA, tantosB);
+  if (max > puntosPartida) {
+    return `Nadie puede pasarse de ${puntosPartida} tantos`;
+  }
   if (max !== puntosPartida) {
     return `El ganador tiene que llegar a ${puntosPartida} tantos`;
   }
@@ -78,7 +81,10 @@ export const mezclar = <T>(items: T[], random: () => number = Math.random) => {
   return copia;
 };
 
-export const buscarPartido = (rondas: Ronda[], partidoId: string) =>
+// Identifica un cruce sin importar el orden de los equipos (A-B = B-A)
+export const claveCruce = (a: string | null, b: string | null) => [a, b].sort().join("|");
+
+export const buscarPartido =(rondas: Ronda[], partidoId: string) =>
   rondas.flatMap((r) => r.partidos).find((p) => p.id === partidoId) ?? null;
 
 export const reemplazarPartido = (

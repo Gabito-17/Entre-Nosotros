@@ -206,12 +206,56 @@ describe("liga", () => {
 
     expect(store().agregarRondaManual([[a, b]])).toBe(true);
     expect(torneo().rondas[0].equipoLibre).toBe(c);
+    jugarPendientes();
     expect(store().agregarRondaManual([[b, a]])).toBe(false);
-    store().agregarRondaManual([[a, c]]);
-    store().agregarRondaManual([[b, c]]);
+    expect(store().agregarRondaManual([[a, c]])).toBe(true);
+    jugarPendientes();
+    expect(store().agregarRondaManual([[b, c]])).toBe(true);
 
     jugarPendientes();
     expect(store().finalizarTorneo()).toBe(true);
+  });
+
+  test("manual: la próxima ronda se arma cuando termina la actual", () => {
+    crearConEquipos("liga", "manual", 4);
+    const [a, b, c, d] = torneo().equipos.map((e) => e.id);
+    store().iniciarTorneo({ cruces: [[a, b], [c, d]], pasesLibres: [] });
+    store().registrarResultado(torneo().rondas[0].partidos[0].id, 15, 3, "manual");
+
+    expect(store().agregarRondaManual([[a, c]])).toBe(false);
+    expect(ultimoAviso()).toMatch(/Terminá la ronda 1/);
+    jugarPendientes();
+    expect(store().agregarRondaManual([[a, c]])).toBe(true);
+  });
+
+  test("manual: se deshace la última ronda solo si no tiene resultados", () => {
+    crearConEquipos("liga", "manual", 4);
+    const [a, b, c, d] = torneo().equipos.map((e) => e.id);
+    store().iniciarTorneo({ cruces: [[a, b], [c, d]], pasesLibres: [] });
+    jugarPendientes();
+    store().agregarRondaManual([[a, c], [b, d]]);
+
+    expect(store().quitarUltimaRonda()).toBe(true);
+    expect(torneo().rondas).toHaveLength(1);
+
+    // La ronda 1 ya tiene resultados: no se puede quitar
+    expect(store().quitarUltimaRonda()).toBe(false);
+    expect(ultimoAviso()).toMatch(/ya tiene resultados/);
+    expect(torneo().rondas).toHaveLength(1);
+  });
+
+  test("automática: no se quitan rondas", () => {
+    crearConEquipos("liga", "automatico", 3);
+    store().iniciarTorneo();
+    expect(store().quitarUltimaRonda()).toBe(false);
+    expect(torneo().rondas).toHaveLength(3);
+  });
+
+  test("automática: se cargan resultados de cualquier ronda", () => {
+    crearConEquipos("liga", "automatico", 4);
+    store().iniciarTorneo();
+    const ultimo = torneo().rondas[2].partidos[0];
+    expect(store().registrarResultado(ultimo.id, 15, 7, "manual")).toBe(true);
   });
 
   test("manual: puede iniciar con la 1ª ronda armada", () => {

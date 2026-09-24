@@ -3,9 +3,11 @@ import {
   crearPrimeraRondaManual,
   eliminacionCompleta,
   generarPrimeraRonda,
+  nombreRondaEliminacion,
   partidosAfectadosPorCorreccion,
   sincronizarLlave,
   siguientePotenciaDe2,
+  totalRondasEliminacion,
 } from "./llaveEliminacion.ts";
 import { reemplazarPartido } from "./partido.ts";
 import { Ronda } from "./tipos.ts";
@@ -132,4 +134,18 @@ test("crearPrimeraRondaManual respeta los cruces y los pases elegidos", () => {
     ["e4", null, "pase_libre"],
     ["e2", "e5", "pendiente"],
   ]);
+});
+
+describe("nombres de las rondas", () => {
+  test.each([
+    [2, ["Final"]],
+    [3, ["Semifinales", "Final"]],
+    [6, ["Cuartos de final", "Semifinales", "Final"]],
+    [16, ["Octavos de final", "Cuartos de final", "Semifinales", "Final"]],
+    [17, ["Ronda 1", "Octavos de final", "Cuartos de final", "Semifinales", "Final"]],
+  ])("%i equipos", (n, nombres) => {
+    const rondas = [generarPrimeraRonda(ids(n))];
+    expect(totalRondasEliminacion(rondas)).toBe(nombres.length);
+    expect(nombres.map((_, i) => nombreRondaEliminacion(i + 1, rondas))).toEqual(nombres);
+  });
 });

@@ -58,7 +58,7 @@ Se respeta la organización `components/<Juego>/{pages,…}`, con la lógica en 
 - `src/components/Truco/pages/`: `TorneoTrucoPage.tsx` y `NuevoTorneoTrucoPage.tsx`.
 - `src/components/Truco/torneo/`: componentes del torneo (como `game/` y `displays/`).
   - `ConfigTorneoForm`, `EquiposAbm`, `CrucesManualesEditor`
-  - `RondasLiga`, `LlaveEliminacion`, `PartidoCard`
+  - `RondasLiga`, `LlaveEliminacion`, `PartidoCard`, `RondaDesplegable` (ronda plegable compartida)
   - `ResultadoManualModal`, `TablaPosiciones`, `Podio`, `HistorialTorneos`
 - Rutas nuevas en `src/App.js`: `/truco/torneo` (torneo en curso, o la pantalla de inicio con historial)
   y `/truco/torneo/nuevo`. El partido sigue abriéndose en `/truco/anotador`.
@@ -119,11 +119,54 @@ Se respeta la organización `components/<Juego>/{pages,…}`, con la lógica en 
   - En liga se arma cada ronda a mano.
   - En eliminación se arma la 1ª ronda a mano (incluye quién tiene pase libre) y las siguientes salen de la llave.
 
-### F4 — Fixture y resultados
+### F4 — Fixture y resultados (hecha)
 - `TorneoTrucoPage` muestra las rondas: `RondasLiga` para liga y `LlaveEliminacion` para eliminación.
-- `PartidoCard` tiene tres acciones: "Jugar en anotador", "Cargar a mano" y "Corregir".
-- `ResultadoManualModal` valida que un equipo tenga exactamente `puntosPartida` y el otro menos.
-- La corrección en eliminación usa `ConfirmationModal` e invalida en cascada.
+  Las dos usan `RondaDesplegable`: cada ronda es plegable, con un contador de jugados (ej. 1/2), y solo
+  queda abierta la primera ronda con partidos pendientes. Arriba hay una barra de progreso
+  (partidos jugados sobre n·(n−1)/2 en liga, o sobre n − 1 en eliminación).
+- `PartidoCard` muestra los equipos uno debajo del otro, para que entren nombres largos en el celular,
+  con los tantos y una tilde en el ganador. Tiene tres acciones:
+  - "Anotador" queda deshabilitado hasta F5.
+  - "Cargar a mano" se deshabilita mientras no se conocen los dos equipos.
+  - "Corregir" aparece cuando el partido ya se jugó.
+- `ResultadoManualModal` es una hoja inferior en el celular y un modal centrado en pantallas grandes:
+  - Cada equipo tiene un botón "Ganó" que le pone `puntosPartida`, y un campo numérico (`inputMode="numeric"`, solo dígitos).
+  - Valida mientras se escribe con `validarResultado`, que ahora también avisa "Nadie puede pasarse de N tantos".
+  - "Guardar" queda deshabilitado mientras el resultado sea inválido o, al corregir, sea igual al que ya estaba.
+- Corrección en eliminación: si `partidosAfectadosPorCorreccion` devuelve partidos, el mismo modal pasa a un
+  paso de confirmación ("Cambia el ganador") con la lista de resultados que se borran (ej. "Final: A 15 – 14 B"),
+  y ofrece "Volver" o "Corregir igual". Se hace dentro del modal y no con `ConfirmationModal`, para que
+  "Volver" no pierda el marcador que se estaba cargando. En liga se corrige sin ese paso, porque ningún
+  otro partido depende del resultado.
+- `LlaveEliminacion` nombra las rondas según sus partidos (`nombreRondaEliminacion`: Final, Semifinales,
+  Cuartos, Octavos; si no, "Ronda N"). Muestra bloqueadas las rondas que todavía no se armaron
+  (`totalRondasEliminacion`) y avisa cuando se jugó la final. El podio queda para F6.
+
+#### Liga manual: cuántas rondas faltan y cuándo termina
+- La cantidad de rondas no es fija (depende de cómo se arme cada una), pero la de cruces sí: n·(n−1)/2.
+  `estadoCrucesLiga` (en `fixtureLiga.ts`) devuelve:
+  - `total` y `jugados`.
+  - `sinArmar`: los cruces que no están en ninguna ronda.
+  - `rondasMinimas`: una cota inferior, max(rivales pendientes del equipo más atrasado, ⌈sinArmar / ⌊n/2⌋⌉).
+    Se muestra como "Faltan N cruces por armar · al menos M rondas más".
+- La liga termina cuando `ligaCompleta` da true: todos los pares están en el fixture y no queda nada pendiente.
+  No se puede trabar, porque cualquier par que falte siempre puede formar una ronda. Se muestra
+  "¡Ya jugaron todos contra todos!". El botón "Finalizar" queda para F6.
+- "Cruces por jugar (N)" (plegable) lista, por equipo, los rivales sin resultado, y marca en qué ronda
+  están si ya se armaron.
+- Decisiones tomadas con el usuario:
+  - Se permiten rondas incompletas. El editor solo avisa qué equipos que se deben un partido quedan sin jugar.
+  - **Liga manual:** la próxima ronda se arma solo cuando termina la actual. `agregarRondaManual` lo exige en el store
+    y "Armar ronda N" queda deshabilitado con la cantidad de resultados que faltan.
+  - **Liga con sorteo:** se pueden cargar resultados de cualquier ronda (una mesa libre adelanta un partido).
+- `CrucesManualesEditor` en liga:
+  - Deshabilita a los equipos que ya jugaron con todos los que quedan sin asignar, y lo explica en texto
+    (en el celular no hay tooltips).
+  - Sigue deshabilitando los rivales repetidos.
+  - El mensaje de "Cruces listos" dice cuántos cruces quedan después de esa ronda.
+- Deshacer: `quitarUltimaRonda` (solo liga manual) borra la última ronda si ninguno de sus partidos tiene resultado.
+  La UI pide confirmación, y el botón queda deshabilitado con el motivo si ya hay resultados.
+- `claveCruce` pasó a `partido.ts` y la comparten el motor y el editor.
 
 ### F5 — Integración con el anotador
 - Cambios en `useGameTrucoStore.ts` (contexto de torneo, guardar y restaurar la partida libre),
@@ -143,7 +186,8 @@ Se respeta la organización `components/<Juego>/{pages,…}`, con la lógica en 
 - Manual con `npm start`:
   1. Liga con 5 equipos: el fixture tiene 5 rondas y cada equipo queda libre una vez.
   2. Jugar un partido desde el anotador: el ganador y los tantos vuelven solos a la tabla.
-  3. Cargar un resultado a mano y corregirlo.
+  3. Cargar un resultado a mano y corregirlo. Liga manual con 4 equipos: "Armar ronda 2" se habilita recién al
+     terminar la ronda 1, el editor no deja repetir cruces y al final aparece "¡Ya jugaron todos contra todos!".
   4. Empezar una partida libre, abrir un partido del torneo, volver al anotador libre: la partida libre se restauró.
   5. Eliminación con 6 equipos: hay 2 pases libres y 2 partidos. Corregir la semi después de jugada la final
      invalida la final. El podio respeta la regla del 3°.

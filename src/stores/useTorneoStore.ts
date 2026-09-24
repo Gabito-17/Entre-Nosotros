@@ -74,6 +74,7 @@ type TorneoState = {
   // se agregan después con agregarRondaManual.
   iniciarTorneo: (primeraRonda?: { cruces: Cruce[]; pasesLibres: string[] }) => boolean;
   agregarRondaManual: (cruces: Cruce[]) => boolean;
+  quitarUltimaRonda: () => boolean;
 
   registrarResultado: (
     partidoId: string,
@@ -345,6 +346,14 @@ export const useTorneoStore = create<TorneoState>()(
             return false;
           }
 
+          // La próxima ronda se arma cuando termina la actual, así no se
+          // pierde de vista en qué ronda va la juntada.
+          const ultima = torneo.rondas[torneo.rondas.length - 1];
+          if (ultima?.partidos.some((p) => p.estado === "pendiente")) {
+            notify(`Terminá la ronda ${ultima.numero} antes de armar la próxima`, "error");
+            return false;
+          }
+
           const ids = torneo.equipos.map((e) => e.id);
           const error = validarRondaManualLiga(cruces, ids, torneo.rondas);
           if (error) {
@@ -354,6 +363,29 @@ export const useTorneoStore = create<TorneoState>()(
 
           const ronda = crearRondaManualLiga(torneo.rondas.length + 1, cruces, ids);
           guardar({ ...torneo, rondas: [...torneo.rondas, ronda] });
+          return true;
+        },
+
+        // Para deshacer una ronda de liga manual armada por error. Solo si
+        // ninguno de sus partidos tiene resultado (la UI pide confirmación).
+        quitarUltimaRonda: () => {
+          const torneo = enEstado("en_curso", "El torneo no está en curso");
+          if (!torneo) return false;
+          if (torneo.formato !== "liga" || torneo.modoCruces !== "manual") {
+            notify("Solo en liga con cruces manuales se quitan rondas", "error");
+            return false;
+          }
+          const ultima = torneo.rondas[torneo.rondas.length - 1];
+          if (!ultima) {
+            notify("No hay rondas para quitar", "error");
+            return false;
+          }
+          if (ultima.partidos.some((p) => p.estado === "jugado")) {
+            notify(`La ronda ${ultima.numero} ya tiene resultados cargados`, "error");
+            return false;
+          }
+
+          guardar({ ...torneo, rondas: torneo.rondas.slice(0, -1) });
           return true;
         },
 

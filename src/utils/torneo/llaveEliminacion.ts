@@ -135,3 +135,21 @@ export const eliminacionCompleta = (rondas: Ronda[]) => {
     ultima.partidos[0].estado === "jugado"
   );
 };
+
+// Rondas que tiene la llave completa: la 1ª ronda (con pases libres) ocupa
+// una potencia de 2 de lugares y cada ronda los reduce a la mitad.
+export const totalRondasEliminacion = (rondas: Ronda[]) =>
+  rondas.length === 0 ? 0 : Math.log2(rondas[0].partidos.length) + 1;
+
+const NOMBRES_POR_PARTIDOS: Record<number, string> = {
+  1: "Final",
+  2: "Semifinales",
+  4: "Cuartos de final",
+  8: "Octavos de final",
+};
+
+// Nombre de la ronda según cuántos partidos (o pases libres) tiene.
+export const nombreRondaEliminacion = (numero: number, rondas: Ronda[]) => {
+  const partidos = rondas.length === 0 ? 0 : rondas[0].partidos.length / 2 ** (numero - 1);
+  return NOMBRES_POR_PARTIDOS[partidos] ?? `Ronda ${numero}`;
+};

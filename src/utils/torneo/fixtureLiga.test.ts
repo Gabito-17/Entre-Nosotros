@@ -1,4 +1,4 @@
-import { crearRondaManualLiga, generarFixtureLiga, ligaCompleta } from "./fixtureLiga.ts";
+import { crearRondaManualLiga, estadoCrucesLiga, generarFixtureLiga, ligaCompleta } from "./fixtureLiga.ts";
 import { ids, jugar, randomConSemilla, todosLosPartidos } from "./helpersTest.ts";
 
 describe("generarFixtureLiga (método del círculo)", () => {
@@ -62,5 +62,35 @@ describe("ligaCompleta", () => {
     const jugadas = rondas.map((r) => ({ ...r, partidos: r.partidos.map((p) => jugar(p)) }));
     expect(ligaCompleta(jugadas, 4)).toBe(true);
     expect(ligaCompleta(jugadas.slice(0, 2), 4)).toBe(false);
+  });
+});
+
+describe("estadoCrucesLiga", () => {
+  test("sin rondas: faltan todos los cruces", () => {
+    expect(estadoCrucesLiga(ids(4), [])).toMatchObject({ total: 6, jugados: 0, rondasMinimas: 3 });
+    expect(estadoCrucesLiga(ids(4), []).sinArmar).toHaveLength(6);
+    // Impar: entran 2 partidos por ronda, así que 10 cruces son 5 rondas
+    expect(estadoCrucesLiga(ids(5), []).rondasMinimas).toBe(5);
+  });
+
+  test("una ronda incompleta deja atrasados a los que no jugaron", () => {
+    const rondas = [crearRondaManualLiga(1, [["e1", "e2"]], ids(4))];
+    const estado = estadoCrucesLiga(ids(4), rondas);
+
+    expect(estado.sinArmar).toHaveLength(5);
+    expect(estado.sinArmar).not.toContainEqual(["e1", "e2"]);
+    // e3 y e4 todavía tienen 3 rivales cada uno
+    expect(estado.rondasMinimas).toBe(3);
+  });
+
+  test("un cruce armado al revés cuenta igual", () => {
+    const rondas = [crearRondaManualLiga(1, [["e2", "e1"]], ids(3))];
+    expect(estadoCrucesLiga(ids(3), rondas).sinArmar).not.toContainEqual(["e1", "e2"]);
+  });
+
+  test("con el fixture completo no falta armar nada y cuenta los jugados", () => {
+    const rondas = generarFixtureLiga(ids(4));
+    const jugadas = [{ ...rondas[0], partidos: rondas[0].partidos.map((p) => jugar(p)) }, ...rondas.slice(1)];
+    expect(estadoCrucesLiga(ids(4), jugadas)).toEqual({ total: 6, jugados: 2, sinArmar: [], rondasMinimas: 0 });
   });
 });
