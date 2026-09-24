@@ -34,9 +34,14 @@ const TrucoPage = () => {
         <p className="text-lg mb-6">
           Usá nuestro anotador digital para llevar la cuenta de los puntos con comodidad y claridad.
         </p>
-        <a href="/truco/anotador" className="btn btn-primary">
-          Utilizar anotador
-        </a>
+        <div className="flex flex-wrap justify-center gap-3">
+          <a href="/truco/anotador" className="btn btn-primary">
+            Utilizar anotador
+          </a>
+          <a href="/truco/torneo" className="btn btn-outline btn-secondary">
+            Armar un torneo
+          </a>
+        </div>
       </motion.section>
     </div>
   );

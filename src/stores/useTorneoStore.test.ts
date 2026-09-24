@@ -18,7 +18,7 @@ const jugarPendientes = () => {
 };
 
 const crearConEquipos = (formato: "liga" | "eliminacion", modoCruces: "automatico" | "manual", n: number) => {
-  store().crearTorneo({ nombre: "Copa Asado", formato, modoCruces, puntosPartida: 15 });
+  store().crearTorneo({ nombre: "Copa Asado", formato, modoCruces, puntosPartida: 15, jugadoresPorEquipo: 2 });
   for (let i = 1; i <= n; i++) {
     store().agregarEquipo({ nombre: `Equipo ${i}`, participantes: [`Jugador ${i}a`, `Jugador ${i}b`] });
   }
@@ -35,27 +35,27 @@ afterEach(() => jest.useRealTimers());
 
 describe("configuración y ABM de equipos", () => {
   test("crea el torneo en estado configurando", () => {
-    expect(store().crearTorneo({ nombre: "  Copa  ", formato: "liga", modoCruces: "automatico", puntosPartida: 18 })).toBe(true);
-    expect(torneo()).toMatchObject({ nombre: "Copa", estado: "configurando", puntosPartida: 18, equipos: [] });
+    expect(store().crearTorneo({ nombre: "  Copa  ", formato: "liga", modoCruces: "automatico", puntosPartida: 18, jugadoresPorEquipo: 3 })).toBe(true);
+    expect(torneo()).toMatchObject({ nombre: "Copa", estado: "configurando", puntosPartida: 18, jugadoresPorEquipo: 3, equipos: [] });
   });
 
   test("no deja crear otro torneo si ya hay uno", () => {
     crearConEquipos("liga", "automatico", 0);
-    expect(store().crearTorneo({ nombre: "Otro", formato: "liga", modoCruces: "automatico", puntosPartida: 15 })).toBe(false);
+    expect(store().crearTorneo({ nombre: "Otro", formato: "liga", modoCruces: "automatico", puntosPartida: 15, jugadoresPorEquipo: 2 })).toBe(false);
   });
 
   test("valida nombres y no permite equipos repetidos", () => {
     crearConEquipos("liga", "automatico", 1);
-    expect(store().agregarEquipo({ nombre: "equipo 1", participantes: [] })).toBe(false);
+    expect(store().agregarEquipo({ nombre: " EQUIPO   1 ", participantes: ["Ana", "Beto"] })).toBe(false);
     expect(ultimoAviso()).toMatch(/Ya existe/);
-    expect(store().agregarEquipo({ nombre: "   ", participantes: [] })).toBe(false);
+    expect(store().agregarEquipo({ nombre: "   ", participantes: ["Ana", "Beto"] })).toBe(false);
     expect(torneo().equipos).toHaveLength(1);
   });
 
   test("descarta participantes vacíos", () => {
     crearConEquipos("liga", "automatico", 0);
-    store().agregarEquipo({ nombre: "Los Pibes", participantes: ["Ana", " ", ""] });
-    expect(torneo().equipos[0].participantes).toEqual(["Ana"]);
+    store().agregarEquipo({ nombre: "Los Pibes", participantes: ["Ana", " ", "Beto", ""] });
+    expect(torneo().equipos[0].participantes).toEqual(["Ana", "Beto"]);
   });
 
   test("se necesitan al menos 2 equipos para iniciar", () => {
@@ -68,12 +68,93 @@ describe("configuración y ABM de equipos", () => {
     crearConEquipos("liga", "automatico", 3);
     store().iniciarTorneo();
     const [primero] = torneo().equipos;
+    const { participantes } = primero;
 
-    expect(store().agregarEquipo({ nombre: "Tarde", participantes: [] })).toBe(false);
+    expect(store().agregarEquipo({ nombre: "Tarde", participantes: ["Zoe", "Yago"] })).toBe(false);
     expect(store().eliminarEquipo(primero.id)).toBe(false);
-    expect(store().editarEquipo(primero.id, { nombre: "Renombrado", participantes: [] })).toBe(true);
+    expect(store().editarEquipo(primero.id, { nombre: "Renombrado", participantes })).toBe(true);
     expect(torneo().equipos[0].nombre).toBe("Renombrado");
     expect(store().actualizarConfig({ puntosPartida: 30 })).toBe(false);
+  });
+});
+
+describe("jugadores por equipo", () => {
+  const crear = (jugadoresPorEquipo: 1 | 2 | 3) =>
+    store().crearTorneo({ nombre: "Copa", formato: "liga", modoCruces: "automatico", puntosPartida: 15, jugadoresPorEquipo });
+
+  test("exige exactamente la cantidad configurada", () => {
+    crear(2);
+    expect(store().agregarEquipo({ nombre: "Solos", participantes: ["Ana"] })).toBe(false);
+    expect(ultimoAviso()).toMatch(/2 jugadores/);
+    expect(store().agregarEquipo({ nombre: "Muchos", participantes: ["Ana", "Beto", "Caro"] })).toBe(false);
+    expect(store().agregarEquipo({ nombre: "Justos", participantes: ["Ana", "Beto"] })).toBe(true);
+  });
+
+  test("con 1 jugador el nombre del equipo es opcional y por defecto es el del jugador", () => {
+    crear(1);
+    expect(store().agregarEquipo({ nombre: "  ", participantes: ["  Ana  "] })).toBe(true);
+    expect(store().agregarEquipo({ nombre: "El Tano", participantes: ["Beto"] })).toBe(true);
+    expect(torneo().equipos.map((e) => e.nombre)).toEqual(["Ana", "El Tano"]);
+    // El nombre por defecto también cuenta para no repetir equipos
+    expect(store().agregarEquipo({ nombre: "", participantes: ["El Tano"] })).toBe(false);
+    expect(ultimoAviso()).toMatch(/Ya existe/);
+  });
+
+  test("con más de 1 jugador el nombre del equipo es obligatorio", () => {
+    crear(2);
+    expect(store().agregarEquipo({ nombre: "", participantes: ["Ana", "Beto"] })).toBe(false);
+  });
+
+  test("un participante no puede estar en dos equipos (sin distinguir mayúsculas ni espacios)", () => {
+    crear(2);
+    store().agregarEquipo({ nombre: "A", participantes: ["Juan Pablo", "Beto"] });
+    expect(store().agregarEquipo({ nombre: "B", participantes: ["  juan   PABLO ", "Caro"] })).toBe(false);
+    expect(ultimoAviso()).toMatch(/ya juega en A/);
+    expect(store().agregarEquipo({ nombre: "B", participantes: ["Caro", "caro"] })).toBe(false);
+    expect(torneo().equipos).toHaveLength(1);
+  });
+
+  test("al editar, el equipo puede conservar sus propios participantes", () => {
+    crear(2);
+    store().agregarEquipo({ nombre: "A", participantes: ["Ana", "Beto"] });
+    store().agregarEquipo({ nombre: "B", participantes: ["Caro", "Dani"] });
+    const [a] = torneo().equipos;
+    expect(store().editarEquipo(a.id, { nombre: "A2", participantes: ["Beto", "ana"] })).toBe(true);
+    expect(store().editarEquipo(a.id, { nombre: "A2", participantes: ["Beto", "Dani"] })).toBe(false);
+  });
+
+  test("si cambia la cantidad, no se puede iniciar hasta corregir los equipos", () => {
+    crear(2);
+    store().agregarEquipo({ nombre: "A", participantes: ["Ana", "Beto"] });
+    store().agregarEquipo({ nombre: "B", participantes: ["Caro", "Dani"] });
+    expect(store().actualizarConfig({ jugadoresPorEquipo: 3 })).toBe(true);
+    expect(torneo().equipos).toHaveLength(2);
+
+    expect(store().iniciarTorneo()).toBe(false);
+    expect(ultimoAviso()).toMatch(/Corregí los jugadores de: A, B/);
+
+    const [a, b] = torneo().equipos;
+    store().editarEquipo(a.id, { nombre: "A", participantes: ["Ana", "Beto", "Eli"] });
+    expect(store().iniciarTorneo()).toBe(false);
+    expect(ultimoAviso()).toMatch(/de: B$/);
+
+    store().editarEquipo(b.id, { nombre: "B", participantes: ["Caro", "Dani", "Fede"] });
+    expect(store().iniciarTorneo()).toBe(true);
+  });
+
+  test("migra torneos guardados sin jugadoresPorEquipo", async () => {
+    localStorage.setItem(
+      "torneo-storage",
+      JSON.stringify({
+        version: 0,
+        state: {
+          torneoActual: { id: "t", nombre: "Viejo", formato: "liga", modoCruces: "automatico", puntosPartida: 15, estado: "configurando", fecha: "", equipos: [], rondas: [], podio: null },
+          historial: [],
+        },
+      })
+    );
+    await useTorneoStore.persist.rehydrate();
+    expect(torneo().jugadoresPorEquipo).toBe(2);
   });
 });
 
@@ -131,6 +212,17 @@ describe("liga", () => {
 
     jugarPendientes();
     expect(store().finalizarTorneo()).toBe(true);
+  });
+
+  test("manual: puede iniciar con la 1ª ronda armada", () => {
+    crearConEquipos("liga", "manual", 3);
+    const [a, b, c] = torneo().equipos.map((e) => e.id);
+
+    expect(store().iniciarTorneo({ cruces: [[a, a]], pasesLibres: [] })).toBe(false);
+    expect(torneo().estado).toBe("configurando");
+    expect(store().iniciarTorneo({ cruces: [[a, b]], pasesLibres: [] })).toBe(true);
+    expect(torneo().rondas).toHaveLength(1);
+    expect(torneo().rondas[0].equipoLibre).toBe(c);
   });
 });
 

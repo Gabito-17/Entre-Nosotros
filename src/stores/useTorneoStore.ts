@@ -15,10 +15,12 @@ import {
   reemplazarPartido,
   validarResultado,
 } from "../utils/torneo/partido.ts";
+import { equiposQueNoCumplen, normalizarNombre } from "../utils/torneo/equipos.ts";
 import { calcularTabla, podioEliminacion, podioLiga } from "../utils/torneo/tabla.ts";
 import {
   Cruce,
   Formato,
+  JugadoresPorEquipo,
   ModoCruces,
   OrigenResultado,
   PuntosPartida,
@@ -52,6 +54,7 @@ export type ConfigTorneo = {
   formato: Formato;
   modoCruces: ModoCruces;
   puntosPartida: PuntosPartida;
+  jugadoresPorEquipo: JugadoresPorEquipo;
 };
 
 export type DatosEquipo = { nombre: string; participantes: string[] };
@@ -85,25 +88,50 @@ type TorneoState = {
   abandonarTorneo: () => void;
 };
 
-// Valida nombre y participantes de un equipo, y que el nombre no se repita.
+// Valida un equipo: exactamente jugadoresPorEquipo participantes, que no estén
+// en otro equipo, y un nombre que no se repita. Con 1 jugador por equipo el
+// nombre es opcional y por defecto es el del jugador.
 const validarEquipo = (torneo: Torneo, datos: DatosEquipo, idEditado?: string) => {
-  const nombre = validar(equipoNombreSchema, datos.nombre);
-  if (nombre === null) return null;
-
-  const repetido = torneo.equipos.some(
-    (e) => e.id !== idEditado && e.nombre.toLowerCase() === nombre.toLowerCase()
-  );
-  if (repetido) {
-    notify("Ya existe un equipo con ese nombre", "error");
-    return null;
-  }
-
   const participantes: string[] = [];
   for (const p of datos.participantes.filter((p) => p.trim() !== "")) {
     const valido = validar(participanteNombreSchema, p);
     if (valido === null) return null;
     participantes.push(valido);
   }
+
+  const n = torneo.jugadoresPorEquipo;
+  if (participantes.length !== n) {
+    notify(
+      n === 1 ? "Cargá el nombre del jugador" : `Cada equipo tiene que tener ${n} jugadores`,
+      "error"
+    );
+    return null;
+  }
+
+  const claves = participantes.map(normalizarNombre);
+  if (new Set(claves).size !== claves.length) {
+    notify("Un jugador no puede estar dos veces en el mismo equipo", "error");
+    return null;
+  }
+  const otros = torneo.equipos.filter((e) => e.id !== idEditado);
+  const ocupados = new Map(
+    otros.flatMap((e) => e.participantes.map((p) => [normalizarNombre(p), e.nombre] as const))
+  );
+  const enOtro = participantes.find((p) => ocupados.has(normalizarNombre(p)));
+  if (enOtro) {
+    notify(`${enOtro} ya juega en ${ocupados.get(normalizarNombre(enOtro))}`, "error");
+    return null;
+  }
+
+  const nombreIngresado = datos.nombre.trim() === "" && n === 1 ? participantes[0] : datos.nombre;
+  const nombre = validar(equipoNombreSchema, nombreIngresado);
+  if (nombre === null) return null;
+
+  if (otros.some((e) => normalizarNombre(e.nombre) === normalizarNombre(nombre))) {
+    notify("Ya existe un equipo con ese nombre", "error");
+    return null;
+  }
+
   return { nombre, participantes };
 };
 
@@ -260,14 +288,32 @@ export const useTorneoStore = create<TorneoState>()(
             notify("Se necesitan al menos 2 equipos para iniciar", "error");
             return false;
           }
+          const incompletos = equiposQueNoCumplen(torneo.equipos, torneo.jugadoresPorEquipo);
+          if (incompletos.length > 0) {
+            notify(
+              `Corregí los jugadores de: ${incompletos.map((e) => e.nombre).join(", ")}`,
+              "error"
+            );
+            return false;
+          }
 
           const ids = torneo.equipos.map((e) => e.id);
           const sortear = torneo.modoCruces === "automatico";
           let rondas: Torneo["rondas"] = [];
 
           if (torneo.formato === "liga") {
-            // En liga manual se arranca sin rondas y se agregan de a una.
-            if (sortear) rondas = generarFixtureLiga(ids, { sortear });
+            // En liga manual las rondas se agregan de a una; si viene la 1ª
+            // armada, se valida y se carga junto con el inicio.
+            if (sortear) {
+              rondas = generarFixtureLiga(ids, { sortear });
+            } else if (primeraRonda) {
+              const error = validarRondaManualLiga(primeraRonda.cruces, ids, []);
+              if (error) {
+                notify(error, "error");
+                return false;
+              }
+              rondas = [crearRondaManualLiga(1, primeraRonda.cruces, ids)];
+            }
           } else if (sortear) {
             rondas = [generarPrimeraRonda(ids, { sortear })];
           } else {
@@ -352,6 +398,21 @@ export const useTorneoStore = create<TorneoState>()(
     },
     {
       name: "torneo-storage",
+      // v1: se agrega jugadoresPorEquipo. Los torneos guardados antes quedan
+      // en 2 (lo más común en truco); si algún equipo no cumple, se marca en la UI.
+      version: 1,
+      migrate: (persistido: any, version) => {
+        if (version < 1) {
+          const conJugadores = (t: Torneo | null) =>
+            t && { ...t, jugadoresPorEquipo: t.jugadoresPorEquipo ?? 2 };
+          return {
+            ...persistido,
+            torneoActual: conJugadores(persistido?.torneoActual ?? null),
+            historial: (persistido?.historial ?? []).map(conJugadores),
+          };
+        }
+        return persistido;
+      },
     }
   )
 );

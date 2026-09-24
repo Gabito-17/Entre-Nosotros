@@ -68,7 +68,7 @@ Se respeta la organización `components/<Juego>/{pages,…}`, con la lógica en 
 
 ### F1 — Modelo y store
 - `utils/torneo/tipos.ts` define:
-  - `Torneo`: id, nombre, formato, modoCruces, puntosPartida, estado (`configurando | en_curso | finalizado`), fecha,
+  - `Torneo`: id, nombre, formato, modoCruces, puntosPartida, jugadoresPorEquipo (`1 | 2 | 3`), estado (`configurando | en_curso | finalizado`), fecha,
     equipos, rondas, podio
   - `Equipo`: id, nombre, participantes
   - `Ronda`: numero, partidos, equipoLibre
@@ -78,6 +78,13 @@ Se respeta la organización `components/<Juego>/{pages,…}`, con la lógica en 
   - `registrarResultado`, `corregirResultado`, `finalizarTorneo` (pasa el torneo al historial), `abandonarTorneo`
   - Reglas de la spec: no se puede iniciar con menos de 2 equipos, y con el torneo en curso no hay alta ni baja
     de equipos, solo edición de nombres. Los errores se muestran con el patrón `notify` de `useGameBritneyStore`.
+  - Regla de jugadores por equipo (agregada durante F3): `agregarEquipo`/`editarEquipo` exigen exactamente
+    `jugadoresPorEquipo` participantes, que no estén en otro equipo ni repetidos en el mismo. Con 1 jugador,
+    el nombre del equipo vacío toma el del jugador. `actualizarConfig` permite cambiar la cantidad aunque haya
+    equipos cargados, pero `iniciarTorneo` se niega mientras alguno no cumpla y los nombra en el aviso.
+  - Participantes y nombres de equipo se comparan con `normalizarNombre` (`utils/torneo/equipos.ts`):
+    trim, espacios internos colapsados y minúsculas.
+  - `torneo-storage` pasa a `version: 1`; la migración completa `jugadoresPorEquipo = 2` en torneos guardados antes.
 - `validation/validation.ts` agrega los schemas.
 
 ### F2 — Motor de cruces y tests
@@ -100,8 +107,12 @@ Se respeta la organización `components/<Juego>/{pages,…}`, con la lógica en 
   - Tabla con desempates, podio con 2 y 3 equipos, e invalidación en cascada.
 
 ### F3 — Configuración y ABM de equipos
-- `NuevoTorneoTrucoPage`, `ConfigTorneoForm` (nombre, 15/18/30, formato, modo de cruces) y `EquiposAbm`
-  (alta, edición y baja de equipos con participantes).
+- `NuevoTorneoTrucoPage`, `ConfigTorneoForm` (nombre, 15/18/30, jugadores por equipo, formato, modo de cruces)
+  y `EquiposAbm` (alta, edición y baja de equipos con participantes).
+- `EquiposAbm` muestra un campo por jugador y deshabilita "Agregar equipo" hasta completarlos. Los equipos que
+  no cumplen la cantidad se marcan en amarillo, y "Iniciar torneo" queda deshabilitado con un aviso.
+  Al editar un equipo con jugadores de más no se descarta ninguno: se muestran todos, cada uno con un botón
+  para quitarlo, con el aviso "Sobra(n) N jugador(es)", y "Guardar" queda deshabilitado hasta llegar a la cantidad.
 - `CrucesManualesEditor` para el modo manual.
 - Rutas en `App.js`, más los accesos en `Drawer.tsx` y `TrucoPage.tsx`.
 - Supuestos del modo manual:

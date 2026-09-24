@@ -9,6 +9,7 @@ torneo para juntadas con muchos equipos, que reutiliza ese anotador.
 ### 1. Configuración del torneo
 - Nombre del torneo.
 - Puntos por partida: 15, 18 o 30 (se pasan al anotador).
+- Jugadores por equipo: 1, 2 o 3.
 - Formato:
   - **Liga (todos contra todos):** gana quien encabeza la tabla.
   - **Eliminación directa:** el que pierde queda afuera.
@@ -16,6 +17,15 @@ torneo para juntadas con muchos equipos, que reutiliza ese anotador.
 
 ### 2. ABM de equipos
 - Crear, editar y eliminar equipos (nombre del equipo + participantes).
+- Los participantes son obligatorios: cada equipo tiene **exactamente** la cantidad
+  de jugadores por equipo configurada. No se puede agregar un equipo incompleto.
+- Con 1 jugador por equipo, el nombre del equipo es opcional y por defecto es
+  el nombre del jugador. Con 2 o 3, el nombre del equipo es obligatorio.
+- Un mismo participante no puede estar en dos equipos, ni dos veces en el mismo.
+  Los nombres de participantes y de equipos se comparan sin distinguir mayúsculas
+  y sin espacios de más.
+- Si se cambia la cantidad de jugadores por equipo con equipos ya cargados, los
+  equipos que no cumplen se marcan y el torneo no se puede iniciar hasta corregirlos.
 - Mínimo 2 equipos para iniciar.
 - Una vez iniciado el torneo, no se pueden agregar ni quitar equipos (sí editar nombres).
 
@@ -47,7 +57,7 @@ torneo para juntadas con muchos equipos, que reutiliza ese anotador.
 - Historial de torneos terminados con su podio.
 
 ## Modelo de datos (orientativo)
-- Torneo: id, nombre, formato, modoCruces, puntosPartida, estado, fecha
+- Torneo: id, nombre, formato, modoCruces, puntosPartida, jugadoresPorEquipo, estado, fecha
 - Equipo: id, nombre, participantes[]
 - Ronda: número, partidos[], equipoLibre?
 - Partido: id, equipoA, equipoB, tantosA, tantosB, ganador, estado

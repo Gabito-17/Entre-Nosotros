@@ -3,6 +3,7 @@
 export type Formato = "liga" | "eliminacion";
 export type ModoCruces = "automatico" | "manual";
 export type PuntosPartida = 15 | 18 | 30;
+export type JugadoresPorEquipo = 1 | 2 | 3;
 export type EstadoTorneo = "configurando" | "en_curso" | "finalizado";
 export type EstadoPartido = "pendiente" | "jugado" | "pase_libre";
 export type OrigenResultado = "anotador" | "manual";
@@ -46,6 +47,7 @@ export type Torneo = {
   formato: Formato;
   modoCruces: ModoCruces;
   puntosPartida: PuntosPartida;
+  jugadoresPorEquipo: JugadoresPorEquipo;
   estado: EstadoTorneo;
   fecha: string; // ISO
   equipos: Equipo[];

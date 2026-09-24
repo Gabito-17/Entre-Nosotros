@@ -19,6 +19,8 @@ import RulesBritneyPage from "./components/Britney/pages/RulesBritneyPage.tsx";
 import AnotadorTrucoPage from "./components/Truco/pages/AnotattorTrucoPage.tsx";
 import TrucoPage from "./components/Truco/pages/TrucoPage.tsx";
 import RulesTrucoPage from "./components/Truco/pages/TrucoRulesPage.tsx";
+import TorneoTrucoPage from "./components/Truco/pages/TorneoTrucoPage.tsx";
+import NuevoTorneoTrucoPage from "./components/Truco/pages/NuevoTorneoTrucoPage.tsx";
 
 // User
 import ProfileSettings from "./components/Users/ProfileSettings.tsx";
@@ -50,6 +52,11 @@ const App = () => {
               <Route path="/truco" element={<TrucoPage />} />
               <Route path="/truco/reglas" element={<RulesTrucoPage />} />
               <Route path="/truco/anotador" element={<AnotadorTrucoPage />} />
+              <Route path="/truco/torneo" element={<TorneoTrucoPage />} />
+              <Route
+                path="/truco/torneo/nuevo"
+                element={<NuevoTorneoTrucoPage />}
+              />
 
               {/* Mafia routes */}
               <Route path="/mafia/reglas" element={<RulesMafiaPage />} />
