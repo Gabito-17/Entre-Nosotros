@@ -4,6 +4,18 @@ import { persist } from "zustand/middleware";
 type PointStyle = "fosforo" | "lines" | "cafe";
 type Winner = "equipo1" | "equipo2" | null;
 
+type PartidoTorneo = { torneoId: string; partidoId: string };
+
+// Partida libre que se guarda mientras se juega un partido del torneo
+type PartidaLibre = {
+  maxScore: number;
+  score1: number;
+  score2: number;
+  winner: Winner;
+  nombre1: string;
+  nombre2: string;
+};
+
 interface GameTrucoState {
   maxScore: number;
   pointStyle: PointStyle;
@@ -13,6 +25,18 @@ interface GameTrucoState {
 
   nombre1: string;
   nombre2: string;
+
+  // Contexto de torneo: mientras hay un partido abierto, la partida libre queda guardada
+  partidoTorneo: PartidoTorneo | null;
+  partidaLibreGuardada: PartidaLibre | null;
+  iniciarPartidoTorneo: (datos: {
+    torneoId: string;
+    partidoId: string;
+    nombre1: string;
+    nombre2: string;
+    maxScore: number;
+  }) => void;
+  salirPartidoTorneo: () => void;
 
   setMaxScore: (score: number) => void;  // <-- nuevo método
   setPointStyle: (style: PointStyle) => void;
@@ -34,6 +58,39 @@ export const useGameTrucoStore = create<GameTrucoState>()(
 
       nombre1: "NOSOTROS",
       nombre2: "ELLOS",
+
+      partidoTorneo: null,
+      partidaLibreGuardada: null,
+
+      // Si ya hay un partido de torneo abierto, la partida libre ya está guardada
+      // y no se pisa con el avance de ese partido.
+      iniciarPartidoTorneo: ({ torneoId, partidoId, nombre1, nombre2, maxScore }) =>
+        set((state) => ({
+          partidaLibreGuardada: state.partidoTorneo
+            ? state.partidaLibreGuardada
+            : {
+                maxScore: state.maxScore,
+                score1: state.score1,
+                score2: state.score2,
+                winner: state.winner,
+                nombre1: state.nombre1,
+                nombre2: state.nombre2,
+              },
+          partidoTorneo: { torneoId, partidoId },
+          nombre1,
+          nombre2,
+          maxScore,
+          score1: 0,
+          score2: 0,
+          winner: null,
+        })),
+
+      salirPartidoTorneo: () =>
+        set((state) => ({
+          ...(state.partidaLibreGuardada ?? {}),
+          partidoTorneo: null,
+          partidaLibreGuardada: null,
+        })),
 
       setMaxScore: (score) => {
         // Reiniciamos los puntajes al cambiar el maxScore para evitar inconsistencias

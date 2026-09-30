@@ -126,7 +126,7 @@ Se respeta la organización `components/<Juego>/{pages,…}`, con la lógica en 
   (partidos jugados sobre n·(n−1)/2 en liga, o sobre n − 1 en eliminación).
 - `PartidoCard` muestra los equipos uno debajo del otro, para que entren nombres largos en el celular,
   con los tantos y una tilde en el ganador. Tiene tres acciones:
-  - "Anotador" queda deshabilitado hasta F5.
+  - "Anotador" abre el partido en el anotador (F5); queda deshabilitado mientras no se conocen los dos equipos.
   - "Cargar a mano" se deshabilita mientras no se conocen los dos equipos.
   - "Corregir" aparece cuando el partido ya se jugó.
 - `ResultadoManualModal` es una hoja inferior en el celular y un modal centrado en pantallas grandes:
@@ -168,11 +168,29 @@ Se respeta la organización `components/<Juego>/{pages,…}`, con la lógica en 
   La UI pide confirmación, y el botón queda deshabilitado con el motivo si ya hay resultados.
 - `claveCruce` pasó a `partido.ts` y la comparten el motor y el editor.
 
-### F5 — Integración con el anotador
-- Cambios en `useGameTrucoStore.ts` (contexto de torneo, guardar y restaurar la partida libre),
-  `TanteadorTruco.tsx`, `ConfigurationBar.tsx`, `PanelEquipo.tsx` y `GameOverTrucoModal.tsx`, según la sección 1.
-- Incluye la corrección de los dos bugs (nombre del ganador y color por equipo).
-- "Continuar partido en curso" en `TorneoTrucoPage` si `partidoTorneo` está activo.
+### F5 — Integración con el anotador (hecha)
+- `useGameTrucoStore` suma `partidoTorneo`, `partidaLibreGuardada`, `iniciarPartidoTorneo` y `salirPartidoTorneo`
+  (persistidos). Si ya hay un partido de torneo abierto, `iniciarPartidoTorneo` no pisa la partida libre guardada.
+  La lógica de puntos no se tocó.
+- `TanteadorTruco`: en modo torneo muestra el encabezado "Torneo · Ronda N" (en eliminación, el nombre de la
+  etapa) con "Volver al torneo" (sale sin guardar). El modal de fin usa los nombres reales del ganador (bug 1)
+  y su botón pasa a "Guardar resultado": `registrarResultado(..., "anotador")`, `salirPartidoTorneo()` y
+  navegación a `/truco/torneo`. Si el registro falla, el partido sigue abierto.
+- Un contexto viejo (torneo abandonado, o partido que ya se cargó a mano) se limpia solo al abrir el anotador,
+  y "Abandonar torneo" también restaura la partida libre.
+- `ConfigurationBar` bloquea el selector 15/18/30 y `PanelEquipo` oculta la edición de nombres en torneo.
+  El color de `PanelEquipo` depende de `equipo === "equipo1"` (bug 2).
+- `PartidoCard` habilita "Anotador" (`onAnotador`, pasado por `RondaDesplegable`, `RondasLiga` y `LlaveEliminacion`).
+- `TorneoTrucoPage`: aviso "Continuar partido en curso" con el marcador si hay un partido pendiente abierto.
+  Abrir otro partido con tantos cargados pide confirmación, porque se pierde el avance del anterior.
+- El modal de fin en torneo tiene "Seguir anotando": cierra sin guardar ni reiniciar, para restar un punto
+  sumado por error. Si el marcador deja de tener ganador el partido sigue normal, y si vuelve a haber ganador
+  el modal se reabre solo. Si se cierra y el marcador sigue con ganador, aparece el botón
+  "Terminó el partido · Guardar resultado" para reabrirlo (si no, no habría forma de guardar).
+- Tests: `stores/useGameTrucoStore.test.ts` (9) cubre guardar y restaurar la partida libre, no pisarla al
+  cambiar de partido, el contexto viejo sin partida guardada, e idempotencia de `salirPartidoTorneo`. También
+  cubre la persistencia en `truco-config` y el retome tras rehidratar. La limpieza del contexto viejo que hace
+  `TanteadorTruco` (torneo abandonado o partido ya jugado) es del componente y no tiene test automático.
 
 ### F6 — Tabla, llaves, podio e historial
 - `TablaPosiciones` (liga), la vista final de `LlaveEliminacion` y `Podio` (1°, 2° y 3°), que aparece al finalizar.
@@ -181,7 +199,7 @@ Se respeta la organización `components/<Juego>/{pages,…}`, con la lógica en 
 
 ## Verificación
 - `npm install` (no hay `node_modules`).
-- Motor: `CI=true npm test -- src/utils/torneo`. Se filtra por ruta porque `src/App.test.js` es el test por defecto
+- Motor y stores: `CI=true npm test -- src/utils/torneo src/stores`. Se filtra por ruta porque `src/App.test.js` es el test por defecto
   de CRA y falla.
 - Manual con `npm start`:
   1. Liga con 5 equipos: el fixture tiene 5 rondas y cada equipo queda libre una vez.

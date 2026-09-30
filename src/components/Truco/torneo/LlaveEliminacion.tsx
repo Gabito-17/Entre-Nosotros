@@ -12,13 +12,14 @@ import RondaDesplegable from "./RondaDesplegable.tsx";
 type Props = {
   torneo: Torneo;
   nombre: (id: string | null) => string;
+  onAnotador: (partido: Partido) => void;
   onCargar: (partido: Partido, contexto: string) => void;
   onCorregir: (partido: Partido, contexto: string) => void;
 };
 
 // Llave por rondas, una debajo de la otra (una llave horizontal no entra en
 // el celular). Las rondas que todavía no se armaron se muestran bloqueadas.
-export default function LlaveEliminacion({ torneo, nombre, onCargar, onCorregir }: Props) {
+export default function LlaveEliminacion({ torneo, nombre, onAnotador, onCargar, onCorregir }: Props) {
   const { rondas } = torneo;
   const totalRondas = totalRondasEliminacion(rondas);
   // Cada partido real elimina a un equipo: hay n − 1 partidos en total
@@ -60,6 +61,7 @@ export default function LlaveEliminacion({ torneo, nombre, onCargar, onCorregir 
           ronda={ronda}
           abierta={ronda === rondaActual}
           nombre={nombre}
+          onAnotador={onAnotador}
           onCargar={onCargar}
           onCorregir={onCorregir}
         />

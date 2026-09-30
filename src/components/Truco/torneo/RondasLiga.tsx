@@ -22,6 +22,7 @@ import RondaDesplegable from "./RondaDesplegable.tsx";
 type Props = {
   torneo: Torneo;
   nombre: (id: string | null) => string;
+  onAnotador: (partido: Partido) => void;
   onCargar: (partido: Partido, contexto: string) => void;
   onCorregir: (partido: Partido, contexto: string) => void;
 };
@@ -76,7 +77,7 @@ function CrucesPorJugar({ torneo }: { torneo: Torneo }) {
   );
 }
 
-export default function RondasLiga({ torneo, nombre, onCargar, onCorregir }: Props) {
+export default function RondasLiga({ torneo, nombre, onAnotador, onCargar, onCorregir }: Props) {
   const agregarRondaManual = useTorneoStore((s) => s.agregarRondaManual);
   const quitarUltimaRonda = useTorneoStore((s) => s.quitarUltimaRonda);
   const openConfirmationModal = useUiStore((s) => s.openConfirmationModal);
@@ -151,6 +152,7 @@ export default function RondasLiga({ torneo, nombre, onCargar, onCorregir }: Pro
             ronda={ronda}
             abierta={ronda === rondaActual}
             nombre={nombre}
+            onAnotador={onAnotador}
             onCargar={onCargar}
             onCorregir={onCorregir}
           >

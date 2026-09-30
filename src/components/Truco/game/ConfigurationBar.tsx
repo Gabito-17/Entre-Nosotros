@@ -15,7 +15,9 @@ const ConfigurationBar = () => {
     score1,
     score2,
     winner,
+    partidoTorneo,
   } = useGameTrucoStore();
+  const enTorneo = partidoTorneo !== null;
 
   const addNotification = useUiNotificationStore((s) => s.addNotification);
   const openConfirmationModal = useUiStore((s) => s.openConfirmationModal);
@@ -126,16 +128,28 @@ const ConfigurationBar = () => {
 
         {/* Centro: Selector de puntaje máximo */}
         <div className="dropdown dropdown-bottom dropdown-center">
-          <label
-            tabIndex={0}
-            className="btn btn-sm btn-outline btn-primary w-full cursor-pointer"
-          >
-            A {maxScore}
-          </label>
+          {enTorneo ? (
+            // En torneo el puntaje lo define la configuración del torneo
+            <div
+              className="btn btn-sm btn-outline btn-primary w-full btn-disabled"
+              title="Lo define el torneo"
+            >
+              A {maxScore}
+            </div>
+          ) : (
+            <label
+              tabIndex={0}
+              className="btn btn-sm btn-outline btn-primary w-full cursor-pointer"
+            >
+              A {maxScore}
+            </label>
+          )}
 
           <ul
             tabIndex={0}
-            className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full max-w-xs"
+            className={`dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full max-w-xs ${
+              enTorneo ? "hidden" : ""
+            }`}
           >
             {[15, 18, 30].map((score) => (
               <li key={score} className="p-2">

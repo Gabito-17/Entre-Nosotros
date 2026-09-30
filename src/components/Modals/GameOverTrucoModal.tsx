@@ -6,11 +6,17 @@ import { useUiStore } from "../../stores/useUiStore.ts";
 interface GameOverTrucoModalProps {
   handleContinueGame: () => void;
   handleEndGame: () => void;
+  // En torneo el botón guarda el resultado en vez de pedir revancha
+  labelAccion?: string;
+  // Si se pasa, agrega un botón que cierra el modal sin guardar ni reiniciar
+  labelSeguir?: string;
 }
 
 export default function GameOverTrucoModal({
   handleContinueGame,
   handleEndGame,
+  labelAccion = "¡Revancha!",
+  labelSeguir,
 }: GameOverTrucoModalProps) {
   const isOpen = useUiStore((state) => state.isGameOverModalOpen);
   const losingPlayer = useUiStore((state) => state.losingPlayer); // En este contexto, lo usamos para mostrar el ganador
@@ -32,6 +38,11 @@ export default function GameOverTrucoModal({
           ha ganado la partida.
         </p>
         <div className="modal-action flex justify-center gap-2">
+          {labelSeguir && (
+            <button className="btn btn-outline" onClick={closeGameOverModal}>
+              {labelSeguir}
+            </button>
+          )}
           <button
             className="btn btn-error"
             onClick={() => {
@@ -39,7 +50,7 @@ export default function GameOverTrucoModal({
               closeGameOverModal();
             }}
           >
-            ¡Revancha!
+            {labelAccion}
           </button>
         </div>
       </div>

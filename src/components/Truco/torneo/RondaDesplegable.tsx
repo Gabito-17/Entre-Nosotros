@@ -9,6 +9,7 @@ type Props = {
   ronda: Ronda;
   abierta: boolean;
   nombre: (id: string | null) => string;
+  onAnotador: (partido: Partido) => void;
   onCargar: (partido: Partido, contexto: string) => void;
   onCorregir: (partido: Partido, contexto: string) => void;
   children?: ReactNode; // equipo libre, acciones de la ronda
@@ -20,6 +21,7 @@ export default function RondaDesplegable({
   ronda,
   abierta,
   nombre,
+  onAnotador,
   onCargar,
   onCorregir,
   children,
@@ -42,6 +44,7 @@ export default function RondaDesplegable({
             key={p.id}
             partido={p}
             nombre={nombre}
+            onAnotador={onAnotador}
             onCargar={(partido) => onCargar(partido, titulo)}
             onCorregir={(partido) => onCorregir(partido, titulo)}
           />

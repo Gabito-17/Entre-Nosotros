@@ -1,9 +1,11 @@
 "use client";
 
-import { ArrowRightIcon, PlusIcon, TrashIcon, TrophyIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon, PlayIcon, PlusIcon, TrashIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { fadeUp } from "../../../lib/Animations.ts";
+import { useGameTrucoStore } from "../../../stores/useGameTrucoStore.ts";
 import { useTorneoStore } from "../../../stores/useTorneoStore.ts";
 import { useUiStore } from "../../../stores/useUiStore.ts";
 import {
@@ -27,6 +29,12 @@ export default function TorneoTrucoPage() {
   const registrarResultado = useTorneoStore((s) => s.registrarResultado);
   const corregirResultado = useTorneoStore((s) => s.corregirResultado);
   const openConfirmationModal = useUiStore((s) => s.openConfirmationModal);
+  const partidoTorneo = useGameTrucoStore((s) => s.partidoTorneo);
+  const score1 = useGameTrucoStore((s) => s.score1);
+  const score2 = useGameTrucoStore((s) => s.score2);
+  const iniciarPartidoTorneo = useGameTrucoStore((s) => s.iniciarPartidoTorneo);
+  const salirPartidoTorneo = useGameTrucoStore((s) => s.salirPartidoTorneo);
+  const navigate = useNavigate();
   const [edicion, setEdicion] = useState<Edicion | null>(null);
 
   const nombreEquipo = (id: string | null) =>
@@ -36,7 +44,11 @@ export default function TorneoTrucoPage() {
     openConfirmationModal({
       title: "¿Abandonar torneo?",
       message: "Se pierden el fixture y todos los resultados cargados. No se puede deshacer.",
-      onConfirm: abandonarTorneo,
+      onConfirm: () => {
+        // Si había un partido abierto, se devuelve la partida libre
+        if (partidoTorneo) salirPartidoTorneo();
+        abandonarTorneo();
+      },
     });
   };
 
@@ -76,8 +88,42 @@ export default function TorneoTrucoPage() {
 
   const esLiga = torneo.formato === "liga";
 
+  // Partido abierto en el anotador que todavía sigue pendiente en este torneo
+  const partidoEnCurso =
+    partidoTorneo && partidoTorneo.torneoId === torneo.id
+      ? torneo.rondas
+          .flatMap((r) => r.partidos)
+          .find((p) => p.id === partidoTorneo.partidoId && p.estado === "pendiente")
+      : undefined;
+
+  const abrirAnotador = (partido: Partido) => {
+    const abrir = () => {
+      iniciarPartidoTorneo({
+        torneoId: torneo.id,
+        partidoId: partido.id,
+        nombre1: nombreEquipo(partido.equipoA),
+        nombre2: nombreEquipo(partido.equipoB),
+        maxScore: torneo.puntosPartida,
+      });
+      navigate("/truco/anotador");
+    };
+
+    if (partidoEnCurso && partidoEnCurso.id === partido.id) {
+      navigate("/truco/anotador");
+    } else if (partidoEnCurso && (score1 > 0 || score2 > 0)) {
+      openConfirmationModal({
+        title: "¿Cambiar de partido?",
+        message: "Tenés otro partido del torneo a medias. Se pierde su avance.",
+        onConfirm: abrir,
+      });
+    } else {
+      abrir();
+    }
+  };
+
   const acciones = {
     nombre: nombreEquipo,
+    onAnotador: abrirAnotador,
     onCargar: (partido: Partido, contexto: string) =>
       setEdicion({ partido, contexto, corrigiendo: false }),
     onCorregir: (partido: Partido, contexto: string) =>
@@ -113,6 +159,18 @@ export default function TorneoTrucoPage() {
             </span>
           </div>
         </div>
+
+        {partidoEnCurso && (
+          <div role="alert" className="alert alert-info flex-wrap">
+            <span className="flex-1 min-w-0">
+              Hay un partido en curso: <b>{nombreEquipo(partidoEnCurso.equipoA)}</b> {score1} –{" "}
+              {score2} <b>{nombreEquipo(partidoEnCurso.equipoB)}</b>
+            </span>
+            <button className="btn btn-sm btn-primary" onClick={() => navigate("/truco/anotador")}>
+              <PlayIcon className="h-4 w-4" /> Continuar partido en curso
+            </button>
+          </div>
+        )}
 
         <section className="card bg-base-100 shadow-lg p-3 sm:p-6">
           <h2 className="text-xl font-bold text-secondary mb-3">

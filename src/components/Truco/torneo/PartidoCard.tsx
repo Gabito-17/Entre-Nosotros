@@ -6,13 +6,14 @@ import { Partido } from "../../../utils/torneo/tipos.ts";
 type Props = {
   partido: Partido;
   nombre: (id: string | null) => string;
+  onAnotador: (partido: Partido) => void;
   onCargar: (partido: Partido) => void;
   onCorregir: (partido: Partido) => void;
 };
 
 // Un partido del torneo. Los equipos van uno debajo del otro para que los
 // nombres largos entren en el celular.
-export default function PartidoCard({ partido, nombre, onCargar, onCorregir }: Props) {
+export default function PartidoCard({ partido, nombre, onAnotador, onCargar, onCorregir }: Props) {
   const { equipoA, equipoB, tantosA, tantosB, ganador, estado, origen } = partido;
 
   if (estado === "pase_libre") {
@@ -76,8 +77,11 @@ export default function PartidoCard({ partido, nombre, onCargar, onCorregir }: P
 
       {!jugado && (
         <div className="grid grid-cols-2 gap-2">
-          {/* El anotador se conecta al torneo en la próxima etapa */}
-          <button className="btn btn-sm btn-primary flex-nowrap whitespace-nowrap px-2" disabled title="Próximamente">
+          <button
+            className="btn btn-sm btn-primary flex-nowrap whitespace-nowrap px-2"
+            disabled={!definido}
+            onClick={() => onAnotador(partido)}
+          >
             <PlayIcon className="h-4 w-4" /> Anotador
           </button>
           <button

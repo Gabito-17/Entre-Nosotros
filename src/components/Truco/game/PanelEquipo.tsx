@@ -22,6 +22,7 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
   const setNombre = useGameTrucoStore((state) => state.setNombre);
   const addPoint = useGameTrucoStore((state) => state.addPoint);
   const maxScore = useGameTrucoStore((state) => state.maxScore);
+  const enTorneo = useGameTrucoStore((state) => state.partidoTorneo !== null);
 
   const [editing, setEditing] = useState(false);
   const [tempNombre, setTempNombre] = useState(nombre);
@@ -35,7 +36,7 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
 
   const playSound = usePlaySound();
 
-  const color = nombre === "NOSOTROS" ? "text-primary" : "text-secondary";
+  const color = equipo === "equipo1" ? "text-primary" : "text-secondary";
 
   useEffect(() => {
     upSound.current = new Audio("/assets/sounds/point-Sound.wav");
@@ -100,6 +101,7 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
         ) : (
           <>
             <span className="truncate">{nombre}</span>
+            {!enTorneo && (
             <button
               onClick={handleEdit}
               className="ml-3 p-1 rounded hover:bg-primary-focus transition"
@@ -107,6 +109,7 @@ export default function PanelEquipo({ equipo }: PanelEquipoProps) {
             >
               <PencilIcon className="h-5 w-5 text-white" />
             </button>
+            )}
           </>
         )}
       </div>
