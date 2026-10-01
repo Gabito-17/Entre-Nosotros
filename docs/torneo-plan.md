@@ -192,10 +192,23 @@ Se respeta la organización `components/<Juego>/{pages,…}`, con la lógica en 
   cubre la persistencia en `truco-config` y el retome tras rehidratar. La limpieza del contexto viejo que hace
   `TanteadorTruco` (torneo abandonado o partido ya jugado) es del componente y no tiene test automático.
 
-### F6 — Tabla, llaves, podio e historial
-- `TablaPosiciones` (liga), la vista final de `LlaveEliminacion` y `Podio` (1°, 2° y 3°), que aparece al finalizar.
-- `HistorialTorneos` se muestra en `/truco/torneo` cuando no hay torneo en curso, con el podio de cada torneo terminado.
-- La persistencia ya queda resuelta en F1. En esta fase se verifica que se pueda retomar el torneo al recargar.
+### F6 — Tabla, podio e historial (hecha)
+- `TablaPosiciones` (liga, arriba de las rondas): usa `calcularTabla`. En el celular no hay scroll horizontal:
+  columnas #, Equipo, PJ, PG, PP y DIF, con TF/TC debajo del nombre; desde `sm` TF y TC son columnas propias.
+- "Finalizar torneo" (`TorneoTrucoPage`): se habilita con `estaCompleto()` (liga completa o final jugada) y,
+  deshabilitado, explica por qué. Pide confirmación mostrando quién ganó y avisa que después no se corrige nada.
+  Al confirmar libera el contexto del anotador si había uno abierto y pasa el torneo al historial.
+- `Podio` (2°-1°-3°, nombres largos con salto de línea, con los jugadores si el equipo tiene más de uno).
+  Con 2 equipos no hay 3°: se omite el puesto y se aclara. Se muestra apenas se finaliza, en la pantalla de inicio.
+- `HistorialTorneos` en `/truco/torneo` sin torneo en curso (también con uno en preparación): nombre, fecha, formato,
+  puntos, cantidad de equipos y podio de cada torneo terminado, del más nuevo al más viejo.
+- Retomar al recargar: tests de rehidratación en `useTorneoStore.test.ts` para torneo configurando, liga a mitad,
+  eliminación tras una corrección y finalizado, más "no se finaliza dos veces ni se corrige después de finalizar".
+- Notas: en liga, si siguen empatados PG/DIF/TF el podio desempata por nombre (supuesto de F2). `LlaveEliminacion`
+  se dejó como está: ya muestra las llaves por ronda y el aviso de final; el podio se ve al finalizar.
+- Sin test automático: los componentes (`TablaPosiciones`, `Podio`, `HistorialTorneos`, flujo de finalizar).
+- `npm run build` con `CI=true` falla por warnings de ESLint que ya existían y no son del torneo
+  (`App.js`: `PlayerProvider`/`UserProvider`; `ProfileSettings.tsx`: `newAvatarUrl`).
 
 ## Verificación
 - `npm install` (no hay `node_modules`).

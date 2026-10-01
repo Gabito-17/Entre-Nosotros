@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightIcon, PlayIcon, PlusIcon, TrashIcon, TrophyIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon, FlagIcon, PlayIcon, PlusIcon, TrashIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,20 +12,26 @@ import {
   nombreRondaEliminacion,
   partidosAfectadosPorCorreccion,
 } from "../../../utils/torneo/llaveEliminacion.ts";
-import { Partido } from "../../../utils/torneo/tipos.ts";
+import { calcularTabla, podioEliminacion, podioLiga } from "../../../utils/torneo/tabla.ts";
+import { Partido, Torneo } from "../../../utils/torneo/tipos.ts";
 import Toaster from "../../Toaster.tsx";
 import EquiposAbm from "../torneo/EquiposAbm.tsx";
+import HistorialTorneos from "../torneo/HistorialTorneos.tsx";
 import LlaveEliminacion from "../torneo/LlaveEliminacion.tsx";
+import Podio from "../torneo/Podio.tsx";
 import ResultadoManualModal from "../torneo/ResultadoManualModal.tsx";
 import RondasLiga from "../torneo/RondasLiga.tsx";
+import TablaPosiciones from "../torneo/TablaPosiciones.tsx";
 
 type Edicion = { partido: Partido; contexto: string; corrigiendo: boolean };
 
-// Torneo en curso: rondas con resultados y equipos. La tabla, el podio y el
-// historial llegan en F6.
+// Torneo en curso: posiciones (liga), rondas con resultados y equipos. Sin
+// torneo en curso muestra el inicio con el historial de torneos terminados.
 export default function TorneoTrucoPage() {
   const torneo = useTorneoStore((s) => s.torneoActual);
   const abandonarTorneo = useTorneoStore((s) => s.abandonarTorneo);
+  const finalizarTorneo = useTorneoStore((s) => s.finalizarTorneo);
+  const completo = useTorneoStore((s) => s.estaCompleto());
   const registrarResultado = useTorneoStore((s) => s.registrarResultado);
   const corregirResultado = useTorneoStore((s) => s.corregirResultado);
   const openConfirmationModal = useUiStore((s) => s.openConfirmationModal);
@@ -36,6 +42,8 @@ export default function TorneoTrucoPage() {
   const salirPartidoTorneo = useGameTrucoStore((s) => s.salirPartidoTorneo);
   const navigate = useNavigate();
   const [edicion, setEdicion] = useState<Edicion | null>(null);
+  // Torneo que se acaba de finalizar en esta pantalla, para mostrar su podio
+  const [terminado, setTerminado] = useState<Torneo | null>(null);
 
   const nombreEquipo = (id: string | null) =>
     torneo?.equipos.find((e) => e.id === id)?.nombre ?? "A definir";
@@ -52,14 +60,45 @@ export default function TorneoTrucoPage() {
     });
   };
 
+  const handleFinalizar = () => {
+    if (!torneo) return;
+    const podio =
+      torneo.formato === "liga"
+        ? podioLiga(calcularTabla(torneo.equipos, torneo.rondas))
+        : podioEliminacion(torneo.equipos, torneo.rondas);
+    const campeon = nombreEquipo(podio?.primero ?? null);
+    openConfirmationModal({
+      title: "¿Finalizar el torneo?",
+      message: `Ganó ${campeon}. Después de finalizar no se pueden corregir resultados ni volver atrás.`,
+      actions: [
+        {
+          label: "Finalizar torneo",
+          className: "btn-primary",
+          onClick: () => {
+            // Un partido ya cargado a mano puede seguir abierto en el anotador
+            if (partidoTorneo) salirPartidoTorneo();
+            if (finalizarTorneo()) setTerminado(useTorneoStore.getState().historial[0]);
+          },
+        },
+        { label: "Todavía no", className: "btn-ghost" },
+      ],
+    });
+  };
+
   if (!torneo || torneo.estado !== "en_curso") {
     return (
       <motion.section
-        className="py-16 text-center flex flex-col items-center gap-4"
+        className="py-8 sm:py-16 text-center flex flex-col items-center gap-4"
         variants={fadeUp}
         initial="hidden"
         animate="visible"
       >
+        {terminado && (
+          <div className="card bg-base-100 shadow-lg p-4 sm:p-6 w-full max-w-2xl flex flex-col gap-4">
+            <h2 className="text-2xl font-bold text-primary break-words">¡{terminado.nombre} terminó!</h2>
+            <Podio podio={terminado.podio} equipos={terminado.equipos} />
+          </div>
+        )}
         <TrophyIcon className="h-16 w-16 text-primary" />
         <h1 className="text-3xl font-bold text-primary">Torneo de Truco</h1>
         {torneo ? (
@@ -81,6 +120,7 @@ export default function TorneoTrucoPage() {
             </a>
           </>
         )}
+        <HistorialTorneos excluirId={terminado?.id} />
         <Toaster />
       </motion.section>
     );
@@ -172,6 +212,13 @@ export default function TorneoTrucoPage() {
           </div>
         )}
 
+        {esLiga && (
+          <section className="card bg-base-100 shadow-lg p-3 sm:p-6">
+            <h2 className="text-xl font-bold text-secondary mb-3">Posiciones</h2>
+            <TablaPosiciones equipos={torneo.equipos} rondas={torneo.rondas} />
+          </section>
+        )}
+
         <section className="card bg-base-100 shadow-lg p-3 sm:p-6">
           <h2 className="text-xl font-bold text-secondary mb-3">
             {esLiga ? "Rondas" : "Llave"}
@@ -181,6 +228,20 @@ export default function TorneoTrucoPage() {
           ) : (
             <LlaveEliminacion torneo={torneo} {...acciones} />
           )}
+        </section>
+
+        <section className="card bg-base-100 shadow-lg p-4 sm:p-6 flex flex-col gap-3">
+          <h2 className="text-xl font-bold text-secondary">Finalizar torneo</h2>
+          <p className="text-sm text-base-content/70">
+            {completo
+              ? "Ya se jugó todo. Al finalizar se arma el podio y no se pueden corregir resultados."
+              : esLiga
+                ? "Se habilita cuando jugaron todos contra todos."
+                : "Se habilita cuando se juega la final."}
+          </p>
+          <button className="btn btn-primary w-full sm:w-auto sm:self-start" disabled={!completo} onClick={handleFinalizar}>
+            <FlagIcon className="h-5 w-5" /> Finalizar torneo
+          </button>
         </section>
 
         <section className="card bg-base-100 shadow-lg p-4 sm:p-6">

@@ -310,3 +310,76 @@ test("persiste el torneo en localStorage", () => {
   crearConEquipos("liga", "automatico", 2);
   expect(JSON.parse(localStorage.getItem("torneo-storage")!).state.torneoActual.nombre).toBe("Copa Asado");
 });
+
+// Simula cerrar y reabrir la app: memoria limpia, storage intacto
+const recargar = async () => {
+  const snapshot = localStorage.getItem("torneo-storage") as string;
+  useTorneoStore.setState({ torneoActual: null, historial: [] });
+  localStorage.setItem("torneo-storage", snapshot);
+  await useTorneoStore.persist.rehydrate();
+};
+
+describe("retomar al recargar", () => {
+  test("configurando: conserva config y equipos", async () => {
+    crearConEquipos("liga", "manual", 3);
+    await recargar();
+    expect(torneo()).toMatchObject({ estado: "configurando", nombre: "Copa Asado" });
+    expect(torneo().equipos).toHaveLength(3);
+    expect(store().iniciarTorneo()).toBe(true);
+  });
+
+  test("liga a mitad: conserva rondas y resultados, y se puede seguir hasta finalizar", async () => {
+    crearConEquipos("liga", "automatico", 4);
+    store().iniciarTorneo();
+    const primero = torneo().rondas[0].partidos[0];
+    store().registrarResultado(primero.id, 15, 7, "manual");
+    await recargar();
+
+    const jugados = torneo().rondas.flatMap((r) => r.partidos).filter((p) => p.estado === "jugado");
+    expect(jugados).toHaveLength(1);
+    expect(jugados[0]).toMatchObject({ tantosA: 15, tantosB: 7 });
+    expect(store().estaCompleto()).toBe(false);
+    jugarPendientes();
+    expect(store().finalizarTorneo()).toBe(true);
+  });
+
+  test("eliminación después de corregir y a mitad de llave", async () => {
+    crearConEquipos("eliminacion", "automatico", 6);
+    store().iniciarTorneo();
+    jugarPendientes();
+    const semi = torneo().rondas[1].partidos[0];
+    store().corregirResultado(semi.id, 10, 15);
+    await recargar();
+
+    expect(torneo().estado).toBe("en_curso");
+    expect(store().estaCompleto()).toBe(false);
+    jugarPendientes();
+    expect(store().finalizarTorneo()).toBe(true);
+  });
+
+  test("finalizado: el historial conserva el podio y no queda torneo en curso", async () => {
+    crearConEquipos("eliminacion", "automatico", 2);
+    store().iniciarTorneo();
+    jugarPendientes();
+    store().finalizarTorneo();
+    await recargar();
+
+    expect(store().torneoActual).toBeNull();
+    expect(store().historial).toHaveLength(1);
+    const podio = store().historial[0].podio!;
+    expect(podio.primero).toBeTruthy();
+    expect(podio.segundo).toBeTruthy();
+    expect(podio.tercero).toBeNull();
+  });
+
+  test("no se puede finalizar dos veces ni corregir después de finalizar", () => {
+    crearConEquipos("liga", "automatico", 2);
+    store().iniciarTorneo();
+    jugarPendientes();
+    const partido = torneo().rondas[0].partidos[0];
+    expect(store().finalizarTorneo()).toBe(true);
+    expect(store().finalizarTorneo()).toBe(false);
+    expect(store().corregirResultado(partido.id, 15, 0)).toBe(false);
+    expect(store().historial).toHaveLength(1);
+  });
+});
