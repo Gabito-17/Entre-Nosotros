@@ -24,6 +24,7 @@ const sections = [
     items: [
       { label: "Acerca de", href: "/truco" },
       { label: "Anotador", href: "/truco/anotador" },
+      { label: "Torneo", href: "/truco/torneo" },
       { label: "Reglas", href: "/truco/reglas" },
     ],
   },
