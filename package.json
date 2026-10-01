@@ -1,6 +1,9 @@
 {
   "name": "entrenosotros",
-  "version": "1.0",
+  "version": "2.3",
+    "engines": {
+    "node": "24.x"
+  },
   "private": true,
   "dependencies": {
     "@heroicons/react": "^2.1.5",
