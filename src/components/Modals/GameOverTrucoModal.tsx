@@ -2,13 +2,13 @@
 
 import { TrophyIcon } from "@heroicons/react/24/outline";
 import { useUiStore } from "../../stores/useUiStore.ts";
+// 1. Importa el gif (asegúrate de que la ruta relativa sea la correcta según tu proyecto)
+import gohanGif from "../../assets/gohan.gif"; 
 
 interface GameOverTrucoModalProps {
   handleContinueGame: () => void;
   handleEndGame: () => void;
-  // En torneo el botón guarda el resultado en vez de pedir revancha
   labelAccion?: string;
-  // Si se pasa, agrega un botón que cierra el modal sin guardar ni reiniciar
   labelSeguir?: string;
 }
 
@@ -19,7 +19,7 @@ export default function GameOverTrucoModal({
   labelSeguir,
 }: GameOverTrucoModalProps) {
   const isOpen = useUiStore((state) => state.isGameOverModalOpen);
-  const losingPlayer = useUiStore((state) => state.losingPlayer); // En este contexto, lo usamos para mostrar el ganador
+  const losingPlayer = useUiStore((state) => state.losingPlayer);
   const closeGameOverModal = useUiStore((state) => state.closeGameOverModal);
 
   if (!isOpen || !losingPlayer) return null;
@@ -37,6 +37,16 @@ export default function GameOverTrucoModal({
           El equipo <strong>{equipoGanador}</strong> alcanzó el puntaje máximo y
           ha ganado la partida.
         </p>
+
+        {/* 2. Contenedor para el GIF de Gohan */}
+        <div className="my-4 flex justify-center">
+          <img 
+            src={gohanGif.src || gohanGif} 
+            alt="Gohan celebrando" 
+            className="w-48 h-auto rounded-lg shadow-md"
+          />
+        </div>
+
         <div className="modal-action flex justify-center gap-2">
           {labelSeguir && (
             <button className="btn btn-outline" onClick={closeGameOverModal}>
@@ -57,3 +67,4 @@ export default function GameOverTrucoModal({
     </div>
   );
 }
+
