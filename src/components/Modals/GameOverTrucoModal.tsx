@@ -31,17 +31,22 @@ export default function GameOverTrucoModal({
           <TrophyIcon className="h-6 w-6 text-yellow-500" />
           ¡Ganó {equipoGanador}!
         </h2>
+        
         <p className="py-2">
-          El equipo <strong>{equipoGanador}</strong> alcanzó el puntaje máximo y
-          ha ganado la partida.
+          El equipo <strong>{equipoGanador}</strong> alcanzó el puntaje máximo y ha ganado la partida.
         </p>
 
-        {/* Contenedor del GIF apuntando a la carpeta public */}
+        {/* Contenedor seguro para el GIF */}
         <div className="my-4 flex justify-center">
           <img 
             src="/assets/images/gohan.gif" 
             alt="Gohan celebrando" 
             className="w-48 h-auto rounded-lg shadow-md"
+            onError={(e) => {
+              // Si la ruta está mal, esto evita que la página quede en blanco
+              console.error("No se pudo cargar el gif en /assets/images/gohan.gif");
+              e.currentTarget.style.display = 'none'; 
+            }}
           />
         </div>
 
@@ -65,4 +70,3 @@ export default function GameOverTrucoModal({
     </div>
   );
 }
-
