@@ -2,8 +2,6 @@
 
 import { TrophyIcon } from "@heroicons/react/24/outline";
 import { useUiStore } from "../../stores/useUiStore.ts";
-// 1. Importa el gif (asegúrate de que la ruta relativa sea la correcta según tu proyecto)
-import gohanGif from "../../../public/assets/images/gohan.gif"; 
 
 interface GameOverTrucoModalProps {
   handleContinueGame: () => void;
@@ -38,10 +36,10 @@ export default function GameOverTrucoModal({
           ha ganado la partida.
         </p>
 
-        {/* 2. Contenedor para el GIF de Gohan */}
+        {/* Contenedor del GIF apuntando a la carpeta public */}
         <div className="my-4 flex justify-center">
           <img 
-            src={gohanGif.src || gohanGif} 
+            src="/assets/images/gohan.gif" 
             alt="Gohan celebrando" 
             className="w-48 h-auto rounded-lg shadow-md"
           />
