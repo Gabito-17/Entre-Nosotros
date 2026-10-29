@@ -3,7 +3,7 @@
 import { TrophyIcon } from "@heroicons/react/24/outline";
 import { useUiStore } from "../../stores/useUiStore.ts";
 // 1. Importa el gif (asegúrate de que la ruta relativa sea la correcta según tu proyecto)
-import gohanGif from "../../assets/gohan.gif"; 
+import gohanGif from "../../../public/assets/images/gohan.gif"; 
 
 interface GameOverTrucoModalProps {
   handleContinueGame: () => void;
