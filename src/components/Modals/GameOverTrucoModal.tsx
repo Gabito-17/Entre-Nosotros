@@ -36,25 +36,19 @@ export default function GameOverTrucoModal({
           El equipo <strong>{equipoGanador}</strong> alcanzó el puntaje máximo y ha ganado la partida.
         </p>
 
-        {/* Contenedor seguro para el GIF */}
-        <div className="my-4 flex justify-center">
-          <img 
-            src="/assets/images/gohan.gif" 
-            alt="Gohan celebrando" 
-            className="w-48 h-auto rounded-lg shadow-md"
-            onError={(e) => {
-              // Si la ruta está mal, esto evita que la página quede en blanco
-              console.error("No se pudo cargar el gif en /assets/images/gohan.gif");
-              e.currentTarget.style.display = 'none'; 
-            }}
-          />
-        </div>
+     
 
         <div className="modal-action flex justify-center gap-2">
           {labelSeguir && (
-            <button className="btn btn-outline" onClick={closeGameOverModal}>
-              {labelSeguir}
-            </button>
+            <button
+  className="btn btn-outline"
+  onClick={() => {
+    handleContinueGame();
+    closeGameOverModal();
+  }}
+>
+  {labelSeguir}
+</button>
           )}
           <button
             className="btn btn-error"
