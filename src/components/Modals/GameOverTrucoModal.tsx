@@ -36,7 +36,13 @@ export default function GameOverTrucoModal({
           El equipo <strong>{equipoGanador}</strong> alcanzó el puntaje máximo y ha ganado la partida.
         </p>
 
-     
+        <div className="my-4 flex justify-center">
+          <img
+            src="/assets/images/gohan.gif"
+            alt="Gohan celebrando la victoria"
+            className="h-auto w-48 rounded-lg shadow-md"
+          />
+        </div>
 
         <div className="modal-action flex justify-center gap-2">
           {labelSeguir && (
