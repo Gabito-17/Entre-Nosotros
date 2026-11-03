@@ -40,7 +40,7 @@ export default function GameOverTrucoModal({
           <img
             src="/assets/images/gohan.gif"
             alt="Gohan celebrando la victoria"
-            className="h-auto w-48 rounded-lg shadow-md"
+            className="h-auto w-64 rounded-lg"
           />
         </div>
 
